@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{30c9da29-bc05-4de2-8e26-18a1a10ba98c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Socket">
+      <UniqueIdentifier>{2da254bf-9ff7-4cb3-8dff-958d787f47c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Thread">
+      <UniqueIdentifier>{15f317e0-5ce4-41c6-a7cc-abc3015c222d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\ClientSession">
+      <UniqueIdentifier>{5e27d06d-59ee-4d7f-92b6-644837dcdc04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\ServerSocket.cpp">
+      <Filter>Server\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\WorkerThread.cpp">
+      <Filter>Server\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainServer.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession\ClientSession.cpp">
+      <Filter>Server\ClientSession</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Socket\ServerSocket.h">
+      <Filter>Server\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread\WorkerThread.h">
+      <Filter>Server\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainServer.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession\ClientSession.h">
+      <Filter>Server\ClientSession</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
