@@ -1,6 +1,8 @@
 #include "MainServer.h"
 
+
 MainServer::MainServer()
+	: m_ServerSocket(nullptr)
 {
 
 }
@@ -15,8 +17,15 @@ void MainServer::runServer()
 
 }
 
+void MainServer::updateServer(float fDelta)
+{
+
+}
+
 bool MainServer::initMainServer()
 {
+
+
 	return true;
 }
 

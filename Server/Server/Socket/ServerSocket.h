@@ -3,6 +3,8 @@
 
 #define BACK_LOG_COUNT 5
 
+#include "ServerHeader.h"
+
 class ServerSocket
 {
 private:

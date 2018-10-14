@@ -1,10 +1,5 @@
-#include <WinSock2.h>
-#include <Windows.h>
-#pragma comment(lib, "ws2_32.lib")
-
 #include "ServerSocket.h"
-#include "ServerIP.h"
-#include "ServerUtils.h"
+
 
 ServerSocket::ServerSocket()
 {

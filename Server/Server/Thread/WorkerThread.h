@@ -1,8 +1,7 @@
 #ifndef __WORKER_THREAD_H__
 #define __WORKER_THREAD_H__
 
-#include <Windows.h>
-#include <process.h>
+#include "ServerHeader.h"
 
 class WorkerThread
 {
@@ -13,6 +12,7 @@ public:
 
 public:
 	bool isRunning() { return m_isRunning; }
+	void setOff() { m_isLoop = false; }
 
 public:
 	void workBegin(HANDLE hComPort);
@@ -23,9 +23,10 @@ private:
 	HANDLE m_hComport;
 	unsigned int m_dwThreadID;
 	bool m_isRunning;
+	bool m_isLoop;
 
 public:
-	static WorkerThread* createThread();
+	static WorkerThread* create();
 	static unsigned int WINAPI entryThread(LPVOID pParameter);
 };
 

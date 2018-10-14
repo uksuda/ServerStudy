@@ -34,6 +34,12 @@
     <ClCompile Include="ClientSession\ClientSession.cpp">
       <Filter>Server\ClientSession</Filter>
     </ClCompile>
+    <ClCompile Include="Thread\WorkerThreadManager.cpp">
+      <Filter>Server\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession\ClientSessionManager.cpp">
+      <Filter>Server\ClientSession</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ServerSocket.h">
@@ -46,6 +52,12 @@
       <Filter>Server</Filter>
     </ClInclude>
     <ClInclude Include="ClientSession\ClientSession.h">
+      <Filter>Server\ClientSession</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread\WorkerThreadManager.h">
+      <Filter>Server\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession\ClientSessionManager.h">
       <Filter>Server\ClientSession</Filter>
     </ClInclude>
   </ItemGroup>

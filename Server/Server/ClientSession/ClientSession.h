@@ -1,10 +1,8 @@
 #ifndef __CLIENT_SESSION_H__
 #define __CLIENT_SESSION_H__
 
-#include <WinSock2.h>
-#include <Windows.h>
 
-#include "ServerUtils.h"
+#include "ServerHeader.h"
 
 class ClientSession
 {

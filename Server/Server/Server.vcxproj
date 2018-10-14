@@ -143,16 +143,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClientSession\ClientSession.cpp" />
+    <ClCompile Include="ClientSession\ClientSessionManager.cpp" />
     <ClCompile Include="Socket\ServerSocket.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\MainServer.cpp" />
     <ClCompile Include="Thread\WorkerThread.cpp" />
+    <ClCompile Include="Thread\WorkerThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientSession\ClientSession.h" />
+    <ClInclude Include="ClientSession\ClientSessionManager.h" />
     <ClInclude Include="Socket\ServerSocket.h" />
     <ClInclude Include="Source\MainServer.h" />
     <ClInclude Include="Thread\WorkerThread.h" />
+    <ClInclude Include="Thread\WorkerThreadManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

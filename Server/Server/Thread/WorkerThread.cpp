@@ -1,11 +1,11 @@
 #include "WorkerThread.h"
-#include "ServerUtils.h"
 
 WorkerThread::WorkerThread()
 	: m_ThreadHandle(INVALID_HANDLE_VALUE)
 	, m_hComport(INVALID_HANDLE_VALUE)
 	, m_dwThreadID(0)
 	, m_isRunning(false)
+	, m_isLoop(false)
 {
 
 }
@@ -30,6 +30,7 @@ void WorkerThread::workBegin(HANDLE hComPort)
 	}
 
 	m_isRunning = true;
+	m_isLoop = true;
 }
 
 void WorkerThread::workRunning()
@@ -37,13 +38,13 @@ void WorkerThread::workRunning()
 	DWORD bytesTrans;
 	DWORD flags = 0;
 
-	while (true)
+	while (m_isLoop)
 	{
-		GetQueuedCompletionStatus(m_hComport, &bytesTrans, nullptr, nullptr, INFINITE);		
+		GetQueuedCompletionStatus(m_hComport, &bytesTrans, nullptr, nullptr, INFINITE);
 	}
 }
 
-WorkerThread* WorkerThread::createThread()
+WorkerThread* WorkerThread::create()
 {
 	WorkerThread* pThread = new WorkerThread;
 	if (pThread)

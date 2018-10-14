@@ -1,7 +1,6 @@
 #ifndef __MAIN_SERVER_H__
 #define __MAIN_SERVER_H__
 
-
 class ServerSocket;
 class MainServer
 {
@@ -12,10 +11,10 @@ public:
 
 public:
 	void runServer();
+	void updateServer(float fDelta);
 
 private:
-	// ServerSocket
-	// WorkerThread
+	ServerSocket* m_ServerSocket;
 
 private:
 	bool initMainServer();
