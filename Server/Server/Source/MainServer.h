@@ -14,7 +14,7 @@ public:
 	void updateServer(float fDelta);
 
 private:
-	ServerSocket* m_ServerSocket;
+	ServerSocket* m_pServerSocket;
 
 private:
 	bool initMainServer();

@@ -27,7 +27,7 @@ void ClientSessionManager::removeSession()
 
 void ClientSessionManager::release()
 {
-	std::for_each(m_SessionMap.begin(), m_SessionMap.end(), [&](std::pair<int, ClientSession*> pPair) {
+	std::for_each(m_SessionMap.begin(), m_SessionMap.end(), [&](std::pair<unsigned int, ClientSession*> pPair) {
 		SAFE_DELETE(pPair.second);
 	});
 

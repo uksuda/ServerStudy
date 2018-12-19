@@ -5,6 +5,8 @@
 
 #include <map>
 
+#define SESSIONMGR ClientSessionManager::getInstance()
+
 class ClientSession;
 class ClientSessionManager
 {
@@ -13,8 +15,8 @@ DECLARE_SINGLETON(ClientSessionManager);
 public:
 	~ClientSessionManager();
 
-	typedef std::map<int, ClientSession*> CLIENT_SESSION;
-	typedef std::map<int, ClientSession*>::iterator SESSION_ITER;
+	typedef std::map<unsigned int, ClientSession*> CLIENT_SESSION;
+	typedef std::map<unsigned int, ClientSession*>::iterator SESSION_ITER;
 
 public:
 	bool initClientSessionManager();
