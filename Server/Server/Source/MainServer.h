@@ -1,6 +1,8 @@
 #ifndef __MAIN_SERVER_H__
 #define __MAIN_SERVER_H__
 
+#include "ServerHeader.h"
+
 class ServerSocket;
 class MainServer
 {
@@ -14,7 +16,9 @@ public:
 	void updateServer(float fDelta);
 
 private:
-	ServerSocket* m_pServerSocket;
+	bool m_bRunServer;
+	HANDLE m_hComPort;
+	ServerSocket* m_pServerSocket;	
 
 private:
 	bool initMainServer();

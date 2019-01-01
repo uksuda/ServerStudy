@@ -12,7 +12,7 @@ WorkerThread::WorkerThread()
 
 WorkerThread::~WorkerThread()
 {
-	//CloseHandle(m_ThreadHandle);
+	CloseHandle(m_ThreadHandle);
 }
 
 void WorkerThread::workBegin(HANDLE hComPort)

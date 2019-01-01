@@ -1,42 +1,24 @@
 #include "ServerSocket.h"
 
-
 ServerSocket::ServerSocket()
 {
 
 }
 ServerSocket::~ServerSocket()
 {
-
-}
-
-void ServerSocket::closeSocket(bool bTimeWait)
-{
-	if (bTimeWait == false)
-	{
-		LINGER      lingerStruct;
-		lingerStruct.l_onoff = SOCKET_OPTION_TRUE;
-		lingerStruct.l_linger = 0;
-
-		setsockopt(m_ServerSocket, SOL_SOCKET, SO_LINGER, (char *)&lingerStruct, sizeof(lingerStruct));
-	}
-
-	shutdown(m_ServerSocket, SD_BOTH);
 	closesocket(m_ServerSocket);
+	cleanUpSocket();
 }
+
 void ServerSocket::cleanUpSocket()
 {
 	WSACleanup();
 }
 
-SOCKET ServerSocket::startAcception()
+SOCKET ServerSocket::startAcception(SOCKADDR_IN& clientAddr)
 {
-	SOCKET hClientSock;
-	SOCKADDR_IN clientAddr;
-
 	int addrLen = sizeof(clientAddr);
-	hClientSock = accept(m_ServerSocket, (SOCKADDR*)&clientAddr, &addrLen);
-	return hClientSock;
+	return accept(m_ServerSocket, (SOCKADDR*)&clientAddr, &addrLen);
 }
 
 bool ServerSocket::startUpSocket()
@@ -63,28 +45,20 @@ bool ServerSocket::initSocket(const char* szServerIP, int iServerPort, int iBack
 	m_ServerSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (m_ServerSocket == INVALID_SOCKET)
 	{
-		cleanUpSocket();
 		return false;
 	}
 
 	// TODO socket option fail check?
 	bool isReuse = SOCKET_OPTION_TRUE;
-	//int iBufferSize = BUFFER_SIZE;
 	setsockopt(m_ServerSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&isReuse, sizeof(isReuse));	
-	//setsockopt(m_ServerSocket, SOL_SOCKET, SO_SNDBUF, (char*)&iBufferSize, sizeof(iBufferSize));
-	//setsockopt(m_ServerSocket, SOL_SOCKET, SO_RCVBUF, (char*)&iBufferSize, sizeof(iBufferSize));
 
 	if (bind(m_ServerSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
 	{
-		closeSocket();
-		cleanUpSocket();
 		return false;
 	}
 
 	if (listen(m_ServerSocket, iBackLogCount) == SOCKET_ERROR)
 	{
-		closeSocket();
-		cleanUpSocket();
 		return false;
 	}
 	

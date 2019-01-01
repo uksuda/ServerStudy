@@ -11,7 +11,8 @@ public:
 	~WorkerThread();
 
 public:
-	bool isRunning() { return m_isRunning; }
+	HANDLE getThreadHandle() const { return m_ThreadHandle; }
+	bool isRunning() const { return m_isRunning; }
 	void setOff() { m_isLoop = false; }
 
 public:

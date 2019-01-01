@@ -5,25 +5,43 @@
 
 
 MainServer::MainServer()
-	: m_pServerSocket(nullptr)
+	: m_bRunServer(false)
+	, m_hComPort(INVALID_HANDLE_VALUE)
+	, m_pServerSocket(nullptr)	
 {
-
+	
 }
 
 MainServer::~MainServer()
 {
 	SESSIONMGR->destroyInstance();
 	THREADMGR->destroyInstance();
-	m_pServerSocket->closeSocket();
-	m_pServerSocket->cleanUpSocket();
+	SAFE_DELETE(m_pServerSocket);
+	CloseHandle(m_hComPort);
 }
 
 void MainServer::runServer()
 {
-	while (true)
+	THREADMGR->workBegin(m_hComPort);
+	if (THREADMGR->isRunning() == false)
 	{
+		// thread fail
+		return;
+	}
+
+	while (m_bRunServer)
+	{
+		SOCKADDR_IN clientAddr;
+		SOCKET hClientSocket = m_pServerSocket->startAcception(clientAddr);
+		if (hClientSocket == INVALID_SOCKET)
+		{
+			// client socket error
+			continue;
+		}
 
 	}
+
+
 }
 
 void MainServer::updateServer(float fDelta)
@@ -33,17 +51,33 @@ void MainServer::updateServer(float fDelta)
 
 bool MainServer::initMainServer()
 {
-	SESSIONMGR->initClientSessionManager();
-
-	//CreateIoCompletionPort();
+	if (SESSIONMGR->initClientSessionManager() == false)
+	{
+		return false;
+	}
 
 	SYSTEM_INFO systemInfo;
 	GetSystemInfo(&systemInfo);
 
-	THREADMGR->initWorkThreadManager(systemInfo.dwNumberOfProcessors);
+	int iThreadCount = systemInfo.dwNumberOfProcessors * 2 + 1;
+
+	m_hComPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+	if (m_hComPort == NULL)
+	{
+		//GetLastError();
+		return false;
+	}
+
+	if (THREADMGR->initWorkThreadManager(iThreadCount) == false)
+	{
+		return false;
+	}
 
 	m_pServerSocket = ServerSocket::createSocket(SERVER_HOST, SERVER_PORT);
-
+	if (m_pServerSocket == nullptr)
+	{
+		return false;
+	}
 
 	return true;
 }

@@ -6,7 +6,7 @@
 
 #define SOCKET_TIME_WAIT_FALSE 0
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 #define SAFE_DELETE(p) {if (p) { delete (p); (p) = nullptr; }}
 #define SAFE_DELETE_ARRAY(p) {if (p) { delete [] (p); (p) = nullptr; }}
@@ -27,6 +27,13 @@
 			return m_pInstance;}								\
 		void classname::destroyInstance(){						\
 			SAFE_DELETE(m_pInstance);}
+
+
+#ifdef _DEBUG
+	#define DEBUG_ASSERT(exp) {if (exp == false) __asm int 3}
+#else
+	#define DEBUG_ASSERT(exp) {}
+#endif
 
 
 #endif

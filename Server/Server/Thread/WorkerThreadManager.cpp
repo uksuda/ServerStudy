@@ -66,6 +66,17 @@ bool WorkerThreadManager::initWorkThreadManager(int iThreadCount)
 
 void WorkerThreadManager::release()
 {
+	int iSize = m_vecThread.size();
+	for (int i = 0; i < iSize; ++i)
+	{
+		WaitForSingleObject(m_vecThread[i]->getThreadHandle(), INFINITE);
+	}
+
+	/*
+	std::for_each(m_vecThread.begin(), m_vecThread.end(), [&](WorkerThread* pThread) {
+		WaitForSingleObject(pThread->getThreadHandle(), INFINITE);
+	});*/
+
 	std::for_each(m_vecThread.begin(), m_vecThread.end(), [&](WorkerThread* pThread) {
 		SAFE_DELETE(pThread);
 	});

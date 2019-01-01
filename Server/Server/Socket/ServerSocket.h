@@ -13,9 +13,8 @@ public:
 	~ServerSocket();
 
 public:
-	void closeSocket(bool bTimeWait = false);
 	void cleanUpSocket();
-	SOCKET startAcception();
+	SOCKET startAcception(SOCKADDR_IN& clientAddr);
 
 private:
 	SOCKET m_ServerSocket;
