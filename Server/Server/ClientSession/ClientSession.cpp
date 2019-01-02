@@ -2,12 +2,13 @@
 
 ClientSession::ClientSession()
 {
-
+	memset(&m_stSessionInfo, 0, sizeof(stSessionInfo));
 }
 
 ClientSession::~ClientSession()
 {
-
+	shutdown(m_stSessionInfo.m_ClientSocket, SD_BOTH);
+	closesocket(m_stSessionInfo.m_ClientSocket);
 }
 
 bool ClientSession::initClientSession()

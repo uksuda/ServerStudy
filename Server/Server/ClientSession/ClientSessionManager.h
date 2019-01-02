@@ -19,9 +19,12 @@ public:
 	typedef std::map<unsigned int, ClientSession*>::iterator SESSION_ITER;
 
 public:
+	unsigned int getCurrentSessionCount() { return m_SessionMap.size(); }
+
+public:
 	bool initClientSessionManager();
-	void insertNewSession();
-	void removeSession();
+	void insertNewSession(ClientSession* pClientSession);
+	void removeSession(unsigned int iKey);
 
 private:
 	CLIENT_SESSION m_SessionMap;

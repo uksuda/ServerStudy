@@ -1,7 +1,6 @@
 #ifndef __CLIENT_SESSION_H__
 #define __CLIENT_SESSION_H__
 
-
 #include "ServerHeader.h"
 
 class ClientSession
@@ -13,18 +12,32 @@ public:
 		MODE_WRITE
 	};
 
+	struct stSessionInfo
+	{
+		// io info
+		OVERLAPPED m_Overlapped;
+		WSABUF m_Wsabuf;
+		char m_Buffer[BUFFER_SIZE];
+		IO_MODE eMode;
+		
+		// socket info
+		SOCKET m_ClientSocket;
+		SOCKADDR_IN m_ClientAddr;
+
+		// user data
+		unsigned int m_userSeq;
+	};
+
 private:
 	explicit ClientSession();
 public:
 	~ClientSession();
 
+public:
+	stSessionInfo& getSessionInfo() { return m_stSessionInfo; }
+
 private:
-	SOCKET m_ClientSocket;
-	SOCKADDR_IN m_ClientAddr;
-	OVERLAPPED m_Overlapped;
-	IO_MODE eMode;
-	WSABUF m_Wsabuf;
-	char m_Buffer[BUFFER_SIZE];
+	stSessionInfo m_stSessionInfo;
 
 private:
 	bool initClientSession();

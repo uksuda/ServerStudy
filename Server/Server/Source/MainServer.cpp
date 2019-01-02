@@ -1,4 +1,5 @@
 #include "MainServer.h"
+#include "ClientSession.h"
 #include "ClientSessionManager.h"
 #include "WorkerThreadManager.h"
 #include "ServerSocket.h"
@@ -38,10 +39,38 @@ void MainServer::runServer()
 			// client socket error
 			continue;
 		}
+		
+		ClientSession* pSession = ClientSession::createSession();
+		ClientSession::stSessionInfo& refSessionInfo = pSession->getSessionInfo();
 
+		refSessionInfo.m_ClientSocket = hClientSocket;
+		refSessionInfo.m_ClientAddr = clientAddr;
+		refSessionInfo.m_userSeq = SESSIONMGR->getCurrentSessionCount();
+
+		SESSIONMGR->insertNewSession(pSession);
+		
+		HANDLE hComPort = CreateIoCompletionPort(&refSessionInfo.m_ClientSocket, m_hComPort, (ULONG_PTR)pSession, 0);
+
+		if (hComPort == NULL || hComPort != m_hComPort)
+		{
+			// error
+			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
+			continue;
+		}
+
+		DWORD dwFlag = 0;
+		DWORD dwRecvNumBytes = 0;
+
+		refSessionInfo.m_Wsabuf.len = BUFFER_SIZE;
+		refSessionInfo.m_Wsabuf.buf = refSessionInfo.m_Buffer;
+		refSessionInfo.eMode = ClientSession::IO_MODE::MODE_READ;
+		
+		int iRetValue = WSARecv(refSessionInfo.m_ClientSocket, &refSessionInfo.m_Wsabuf, 1, &dwRecvNumBytes, &dwFlag, &refSessionInfo.m_Overlapped, NULL);
+		if (iRetValue != SOCKET_ERROR && (WSAGetLastError() != WSA_IO_PENDING))
+		{
+			continue;
+		}
 	}
-
-
 }
 
 void MainServer::updateServer(float fDelta)
