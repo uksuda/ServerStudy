@@ -13,7 +13,7 @@ public:
 public:
 	HANDLE getThreadHandle() const { return m_ThreadHandle; }
 	bool isRunning() const { return m_isRunning; }
-	void setOff() { m_isLoop = false; }
+	void setOff() { m_isRunning = false; }
 
 public:
 	void workBegin(HANDLE hComPort);
@@ -24,7 +24,6 @@ private:
 	HANDLE m_hComport;
 	unsigned int m_dwThreadID;
 	bool m_isRunning;
-	bool m_isLoop;
 
 public:
 	static WorkerThread* create();

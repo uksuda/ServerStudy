@@ -1,11 +1,12 @@
 #include "WorkerThread.h"
+#include "ClientSession.h"
+#include "ClientSessionManager.h"
 
 WorkerThread::WorkerThread()
 	: m_ThreadHandle(INVALID_HANDLE_VALUE)
 	, m_hComport(INVALID_HANDLE_VALUE)
 	, m_dwThreadID(0)
 	, m_isRunning(false)
-	, m_isLoop(false)
 {
 
 }
@@ -30,7 +31,6 @@ void WorkerThread::workBegin(HANDLE hComPort)
 	}
 
 	m_isRunning = true;
-	m_isLoop = true;
 }
 
 void WorkerThread::workRunning()
@@ -38,9 +38,34 @@ void WorkerThread::workRunning()
 	DWORD bytesTrans;
 	DWORD flags = 0;
 
-	while (m_isLoop)
+	LPOVERLAPPED lpOverlapped = nullptr;
+	ClientSession* pClientSession = nullptr;
+
+	while (m_isRunning)
 	{
-		GetQueuedCompletionStatus(m_hComport, &bytesTrans, nullptr, nullptr, INFINITE);
+		BOOL bResult = GetQueuedCompletionStatus(m_hComport, &bytesTrans, (PULONG_PTR)&pClientSession, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
+
+		if (pClientSession == nullptr || lpOverlapped == nullptr)
+			continue;
+
+		ClientSession::stSessionInfo& refSessionInfo = pClientSession->getSessionInfo();
+
+		if (bResult == FALSE && bytesTrans == 0)
+		{
+			// client socket disconnected
+			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
+			continue;
+		}
+
+		switch (refSessionInfo.eMode)
+		{
+		case ClientSession::IO_MODE::MODE_READ:
+			break;
+		case ClientSession::IO_MODE::MODE_WRITE:
+			break;
+		default:
+			break;
+		}
 	}
 }
 

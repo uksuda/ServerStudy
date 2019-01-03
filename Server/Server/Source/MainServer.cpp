@@ -71,6 +71,8 @@ void MainServer::runServer()
 			continue;
 		}
 	}
+
+	THREADMGR->setOff();
 }
 
 void MainServer::updateServer(float fDelta)
