@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2CF6018E-1A4C-4C4F-9F55-8B3B9BE55EBA}"
 	ProjectSection(SolutionItems) = preProject
-		Packet\Packet.cpp = Packet\Packet.cpp
-		Packet\Packet.h = Packet\Packet.h
 		ServerHeader.h = ServerHeader.h
 		ServerIP.h = ServerIP.h
 		ServerUtils.h = ServerUtils.h
@@ -15,6 +13,18 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{A2B33101-DC50-4588-8675-E9E516E4E530}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{C072EA8B-8907-4CB4-98C6-8DAE088B5F6C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packet", "Packet", "{D44370C7-C7A3-4346-99D9-EC1C581E4A85}"
+	ProjectSection(SolutionItems) = preProject
+		Packet\Packet.cpp = Packet\Packet.cpp
+		Packet\Packet.h = Packet\Packet.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Log", "Log", "{CFE4AD95-BFD7-45D1-B1AE-6963262456E9}"
+	ProjectSection(SolutionItems) = preProject
+		Log\Log.cpp = Log\Log.cpp
+		Log\Log.h = Log\Log.h
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +53,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D44370C7-C7A3-4346-99D9-EC1C581E4A85} = {2CF6018E-1A4C-4C4F-9F55-8B3B9BE55EBA}
+		{CFE4AD95-BFD7-45D1-B1AE-6963262456E9} = {2CF6018E-1A4C-4C4F-9F55-8B3B9BE55EBA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AC6F3DD-F012-4BB0-BFC8-C59F83DA7668}

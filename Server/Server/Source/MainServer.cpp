@@ -3,6 +3,7 @@
 #include "ClientSessionManager.h"
 #include "WorkerThreadManager.h"
 #include "ServerSocket.h"
+#include "Log.h"
 
 
 MainServer::MainServer()
@@ -96,6 +97,10 @@ bool MainServer::initMainServer()
 	if (m_hComPort == NULL)
 	{
 		//GetLastError();
+		char szMsg[64];
+		sprintf(szMsg, "CreateIoCompletionPort Error : %d", WSAGetLastError());
+		CLog::LOG(szMsg);
+
 		return false;
 	}
 
