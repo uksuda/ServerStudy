@@ -16,10 +16,16 @@
     <ClCompile Include="Socket\ClientSocket.cpp">
       <Filter>Socket</Filter>
     </ClCompile>
+    <ClCompile Include="..\Log\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ClientSocket.h">
       <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Log\Log.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

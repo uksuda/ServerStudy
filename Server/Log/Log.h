@@ -3,12 +3,14 @@
 
 class CLog
 {
-private:
+public:
 	explicit CLog();
 	~CLog();
 
 public:
+	static void LOG(int iErrorNo);
 	static void LOG(const char* szMsg);
+	static void LOG(const char* szErrorName, int iErrorNo);
 };
 
 #endif

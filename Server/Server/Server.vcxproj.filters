@@ -40,6 +40,9 @@
     <ClCompile Include="ClientSession\ClientSessionManager.cpp">
       <Filter>Server\ClientSession</Filter>
     </ClCompile>
+    <ClCompile Include="..\Log\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ServerSocket.h">
@@ -59,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="ClientSession\ClientSessionManager.h">
       <Filter>Server\ClientSession</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Log\Log.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

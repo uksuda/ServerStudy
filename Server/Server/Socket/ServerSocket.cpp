@@ -1,4 +1,5 @@
 #include "ServerSocket.h"
+#include "Log.h"
 
 ServerSocket::ServerSocket()
 {
@@ -25,7 +26,10 @@ bool ServerSocket::startUpSocket()
 {
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		CLog::LOG("WSAStartup", WSAGetLastError());
 		return false;
+	}		
 
 	return true;
 }
@@ -45,6 +49,7 @@ bool ServerSocket::initSocket(const char* szServerIP, int iServerPort, int iBack
 	m_ServerSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (m_ServerSocket == INVALID_SOCKET)
 	{
+		CLog::LOG("WSASocket", WSAGetLastError());
 		return false;
 	}
 
@@ -54,11 +59,13 @@ bool ServerSocket::initSocket(const char* szServerIP, int iServerPort, int iBack
 
 	if (bind(m_ServerSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
 	{
+		CLog::LOG("bind", GetLastError());
 		return false;
 	}
 
 	if (listen(m_ServerSocket, iBackLogCount) == SOCKET_ERROR)
 	{
+		CLog::LOG("listen", GetLastError());
 		return false;
 	}
 	

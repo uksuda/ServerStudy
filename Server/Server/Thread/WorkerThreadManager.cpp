@@ -54,7 +54,6 @@ bool WorkerThreadManager::initWorkThreadManager(int iThreadCount)
 		WorkerThread* pThread = WorkerThread::create();
 		if (pThread == nullptr)
 		{
-			release();
 			return false;
 		}
 

@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Log\Log.cpp" />
     <ClCompile Include="ClientSession\ClientSession.cpp" />
     <ClCompile Include="ClientSession\ClientSessionManager.cpp" />
     <ClCompile Include="Socket\ServerSocket.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Thread\WorkerThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Log\Log.h" />
     <ClInclude Include="ClientSession\ClientSession.h" />
     <ClInclude Include="ClientSession\ClientSessionManager.h" />
     <ClInclude Include="Socket\ServerSocket.h" />

@@ -28,6 +28,7 @@ void MainServer::runServer()
 	if (THREADMGR->isRunning() == false)
 	{
 		// thread fail
+		CLog::LOG("Thread begin Fail");
 		return;
 	}
 
@@ -38,6 +39,7 @@ void MainServer::runServer()
 		if (hClientSocket == INVALID_SOCKET)
 		{
 			// client socket error
+			CLog::LOG("Client Accept", WSAGetLastError());
 			continue;
 		}
 		
@@ -56,6 +58,8 @@ void MainServer::runServer()
 		{
 			// error
 			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
+
+			CLog::LOG("CreateIoCompletionPort Connect", GetLastError());
 			continue;
 		}
 
@@ -69,11 +73,14 @@ void MainServer::runServer()
 		int iRetValue = WSARecv(refSessionInfo.m_ClientSocket, &refSessionInfo.m_Wsabuf, 1, &dwRecvNumBytes, &dwFlag, &refSessionInfo.m_Overlapped, NULL);
 		if (iRetValue != SOCKET_ERROR && (WSAGetLastError() != WSA_IO_PENDING))
 		{
+			CLog::LOG("WSARecv", WSAGetLastError());
 			continue;
 		}
 	}
 
 	THREADMGR->setOff();
+
+	CLog::LOG("Server End...");
 }
 
 void MainServer::updateServer(float fDelta)
@@ -85,6 +92,7 @@ bool MainServer::initMainServer()
 {
 	if (SESSIONMGR->initClientSessionManager() == false)
 	{
+		CLog::LOG("Session Manager Fail");
 		return false;
 	}
 
@@ -97,23 +105,27 @@ bool MainServer::initMainServer()
 	if (m_hComPort == NULL)
 	{
 		//GetLastError();
-		char szMsg[64];
-		sprintf(szMsg, "CreateIoCompletionPort Error : %d", WSAGetLastError());
-		CLog::LOG(szMsg);
+		CLog::LOG("CreateIoCompletionPort", GetLastError());
 
 		return false;
 	}
 
 	if (THREADMGR->initWorkThreadManager(iThreadCount) == false)
 	{
+		CLog::LOG("Thread Manager Fail");
 		return false;
 	}
 
 	m_pServerSocket = ServerSocket::createSocket(SERVER_HOST, SERVER_PORT);
 	if (m_pServerSocket == nullptr)
 	{
+		CLog::LOG("ServerSocket Fail");
 		return false;
 	}
+
+	char szMsg[64];
+	sprintf_s(szMsg, sizeof(szMsg), "Server Started : %s Port : %d", SERVER_HOST, SERVER_PORT);
+	CLog::LOG(szMsg);
 
 	return true;
 }

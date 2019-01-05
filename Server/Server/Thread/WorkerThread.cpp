@@ -1,6 +1,7 @@
 #include "WorkerThread.h"
 #include "ClientSession.h"
 #include "ClientSessionManager.h"
+#include "Log.h"
 
 WorkerThread::WorkerThread()
 	: m_ThreadHandle(INVALID_HANDLE_VALUE)
@@ -45,27 +46,29 @@ void WorkerThread::workRunning()
 	{
 		BOOL bResult = GetQueuedCompletionStatus(m_hComport, &bytesTrans, (PULONG_PTR)&pClientSession, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
 
-		if (pClientSession == nullptr || lpOverlapped == nullptr)
+		if (pClientSession == nullptr)
+		{
+			CLog::LOG("GetQueuedCompletion Key NULL");
 			continue;
+		}
+
+		if (lpOverlapped == nullptr)
+		{
+			CLog::LOG("GetQueuedCompletion lpOverlapped NULL", GetLastError());
+			continue;
+		}
 
 		ClientSession::stSessionInfo& refSessionInfo = pClientSession->getSessionInfo();
 
 		if (bResult == FALSE && bytesTrans == 0)
 		{
 			// client socket disconnected
+			CLog::LOG("Client disconnected", refSessionInfo.m_userSeq);
 			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
 			continue;
 		}
 
-		switch (refSessionInfo.eMode)
-		{
-		case ClientSession::IO_MODE::MODE_READ:
-			break;
-		case ClientSession::IO_MODE::MODE_WRITE:
-			break;
-		default:
-			break;
-		}
+		// packet dispatch
 	}
 }
 
