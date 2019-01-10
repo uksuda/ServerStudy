@@ -11,6 +11,14 @@ ClientSession::~ClientSession()
 	closesocket(m_stSessionInfo.m_ClientSocket);
 }
 
+void ClientSession::packetDispatch(DWORD dwBytesTrans)
+{
+	if (dwBytesTrans == 0)
+		return;
+
+
+}
+
 bool ClientSession::initClientSession()
 {
 	return true;

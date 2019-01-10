@@ -69,6 +69,7 @@ void WorkerThread::workRunning()
 		}
 
 		// packet dispatch
+		pClientSession->packetDispatch(bytesTrans);
 	}
 }
 

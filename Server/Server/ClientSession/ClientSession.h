@@ -36,6 +36,9 @@ public:
 public:
 	stSessionInfo& getSessionInfo() { return m_stSessionInfo; }
 
+public:
+	void packetDispatch(DWORD dwBytesTrans);
+
 private:
 	stSessionInfo m_stSessionInfo;
 
