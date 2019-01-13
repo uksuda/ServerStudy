@@ -18,28 +18,20 @@
 
 class ClientSocket
 {
-public:
-	enum class SOCKET_TAG
-	{
-		NAT_TAG_INGAME = 0,
-		NAT_TAG_VERSION,
-		NAT_TAG_END
-	};
-
 private:
 	explicit ClientSocket();
 public:
 	~ClientSocket();
 
 public:
-	bool connectTo(const char* szServerIP, int iServerPort, SOCKET_TAG eSocketTag);
+	bool connectTo(const char* szServerIP, int iServerPort);
 	void closeSocket();
 
 	// send receive
+	void clientStart();
 
 private:
 	SOCKET m_Socket;
-	SOCKET_TAG m_SocketTag;
 
 private:
 	bool initSocket();

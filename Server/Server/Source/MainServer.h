@@ -12,6 +12,12 @@ public:
 	~MainServer();
 
 public:
+	void setServerState(bool bRunServer)
+	{
+		m_bRunServer = bRunServer;
+	}
+
+public:
 	void runServer();
 	void updateServer(float fDelta);
 
