@@ -12,6 +12,15 @@
 
 // TODO 모바일 환경 작업 필요
 #include <sys/socket.h>
+#include <arpa/inet.h>
+
+#define INVALID_SOCKET	-1
+#define SOCKET_ERROR	-1
+
+#define SD_BOTH         0x02
+
+typedef int SOCKET;
+//using SOCKET = int;
 
 #endif
 

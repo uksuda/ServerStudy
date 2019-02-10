@@ -12,7 +12,11 @@ ClientSocket::ClientSocket()
 
 ClientSocket::~ClientSocket()
 {
+#ifdef WIN32
 	WSACleanup();
+#else
+
+#endif
 }
 
 bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
@@ -32,16 +36,28 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 		return false;
 	}
 
+#ifdef WIN32
 	unsigned long dwBlocking = SOCKET_OPTION_FALSE;
 	if (ioctlsocket(m_Socket, FIONBIO, &dwBlocking) == SOCKET_ERROR)
 	{
 		CLog::LOG("ioctlsocket : FIONBIO");
 		return false;
 	}
+#else
+	//fcntl(m_Socket, F_SETFL, O_NONBLOCK);
+#endif
 
 	memset(&serverAddr, 0, sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = InetPton(serverAddr.sin_family, (PCWSTR)szServerIP, &serverAddr.sin_addr);//inet_addr(szServerIP);
+	//serverAddr.sin_addr.s_addr = InetPton(serverAddr.sin_family, (PCWSTR)szServerIP, &serverAddr.sin_addr); //inet_addr(szServerIP);
+	//serverAddr.sin_addr.s_addr = inet_addr(szServerIP);
+
+#ifdef WIN32
+	serverAddr.sin_addr.s_addr = InetPtonA(serverAddr.sin_family, szServerIP, &serverAddr.sin_addr);
+#else
+	serverAddr.sin_addr.s_addr = inet_pton(serverAddr.sin_family, szServerIP, &serverAddr.sin_addr);
+#endif
+
 	serverAddr.sin_port = htons(iServerPort);
 
 	if (connect(m_Socket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
@@ -51,7 +67,6 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 		return false;
 	}
 
-	//fcntl(m_Socket, F_SETFL, O_NONBLOCK);
 	return true;
 }
 
@@ -104,13 +119,16 @@ void ClientSocket::clientStart()
 
 bool ClientSocket::initSocket()
 {
+#ifdef WIN32
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
 		CLog::LOG("WSAStartup", WSAGetLastError());
 		return false;
 	}
+#else
 
+#endif
 	return true;
 }
 
