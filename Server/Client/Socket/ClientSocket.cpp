@@ -49,14 +49,24 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 
 	memset(&serverAddr, 0, sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
-	//serverAddr.sin_addr.s_addr = InetPton(serverAddr.sin_family, (PCWSTR)szServerIP, &serverAddr.sin_addr); //inet_addr(szServerIP);
+	//InetPton(serverAddr.sin_family, (PCWSTR)szServerIP, &serverAddr.sin_addr);
 	//serverAddr.sin_addr.s_addr = inet_addr(szServerIP);
 
+	int iRet = 1;
 #ifdef WIN32
-	serverAddr.sin_addr.s_addr = InetPtonA(serverAddr.sin_family, szServerIP, &serverAddr.sin_addr);
+	iRet = InetPtonA(serverAddr.sin_family, szServerIP, &serverAddr.sin_addr);
 #else
-	serverAddr.sin_addr.s_addr = inet_pton(serverAddr.sin_family, szServerIP, &serverAddr.sin_addr);
+	iRet = inet_pton(serverAddr.sin_family, szServerIP, &serverAddr.sin_addr);
 #endif
+
+	// 1 : success
+	// 0 : invalid address family value
+	// -1 : invalid address value - EAFNOSUPPORT
+	if (iRet != 1)
+	{
+		CLog::LOG("inet_Addr invalid value : %d", iRet);
+		return false;
+	}
 
 	serverAddr.sin_port = htons(iServerPort);
 
@@ -116,7 +126,6 @@ void ClientSocket::clientStart()
 	}
 }
 
-
 bool ClientSocket::initSocket()
 {
 #ifdef WIN32
@@ -127,7 +136,7 @@ bool ClientSocket::initSocket()
 		return false;
 	}
 #else
-
+	return true;
 #endif
 	return true;
 }

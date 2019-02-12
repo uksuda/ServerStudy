@@ -58,7 +58,6 @@ void MainServer::runServer()
 		{
 			// error
 			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
-
 			CLog::LOG("CreateIoCompletionPort Connect", GetLastError());
 			continue;
 		}
