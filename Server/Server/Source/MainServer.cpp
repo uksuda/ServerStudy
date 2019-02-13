@@ -52,7 +52,7 @@ void MainServer::runServer()
 
 		SESSIONMGR->insertNewSession(pSession);
 		
-		HANDLE hComPort = CreateIoCompletionPort(&refSessionInfo.m_ClientSocket, m_hComPort, (ULONG_PTR)pSession, 0);
+		HANDLE hComPort = CreateIoCompletionPort((HANDLE)refSessionInfo.m_ClientSocket, m_hComPort, (ULONG_PTR)pSession, 0);
 
 		if (hComPort == NULL || hComPort != m_hComPort)
 		{
