@@ -22,7 +22,7 @@ public:
 private:
 	HANDLE m_ThreadHandle;
 	HANDLE m_hComport;
-	unsigned int m_dwThreadID;
+	unsigned int m_iThreadID;
 	bool m_isRunning;
 
 public:

@@ -4,8 +4,9 @@
 #include <iostream>
 
 
-ClientSocket::ClientSocket()
+ClientSocket::ClientSocket(int iSeed)
 	: m_Socket(INVALID_SOCKET)
+	, m_Seed(iSeed)
 {
 
 }
@@ -37,7 +38,7 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 	}
 
 #ifdef WIN32
-	unsigned long dwBlocking = SOCKET_OPTION_FALSE;
+	unsigned long dwBlocking = SOCKET_OPTION_TRUE;
 	if (ioctlsocket(m_Socket, FIONBIO, &dwBlocking) == SOCKET_ERROR)
 	{
 		CLog::LOG("ioctlsocket : FIONBIO");
@@ -72,9 +73,16 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 
 	if (connect(m_Socket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
 	{
-		CLog::LOG("connect", GetLastError());
-		closeSocket();
-		return false;
+#ifdef WIN32
+		if (WSAGetLastError() != WSAEWOULDBLOCK)
+#else
+		if (GetLastError() != EWOULDBLOCK)
+#endif
+		{
+			CLog::LOG("connect", GetLastError());
+			closeSocket();
+			return false;
+		}		
 	}
 
 	return true;
@@ -96,12 +104,6 @@ void ClientSocket::clientStart()
 		printf("input message (exit 0): ");
 		fgets(szMessage, sizeof(szMessage), stdin);
 
-		if (!strcmp(szMessage, "0"))
-		{
-			CLog::LOG("Client End...");
-			break;
-		}
-
 		int iRet = send(m_Socket, szMessage, sizeof(szMessage), NULL);
 		if (iRet == SOCKET_ERROR)
 		{
@@ -122,7 +124,7 @@ void ClientSocket::clientStart()
 		}
 
 		szMessage[BUFFER_SIZE - 1] = NULL;
-		printf("received from server : %s\n\n\n", szMessage);
+		printf("received from server : %s\n\n", szMessage);
 	}
 }
 
@@ -141,9 +143,9 @@ bool ClientSocket::initSocket()
 	return true;
 }
 
-ClientSocket* ClientSocket::createSocket()
+ClientSocket* ClientSocket::createSocket(int iSeed)
 {
-	ClientSocket* pSocket = new ClientSocket;
+	ClientSocket* pSocket = new ClientSocket(iSeed);
 	if (pSocket && pSocket->initSocket())
 		return pSocket;
 

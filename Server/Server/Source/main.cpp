@@ -12,5 +12,7 @@ int main()
 	server->setServerState(true);
 	server->runServer();
 	
+	SAFE_DELETE(server);
+
 	return 0;
 }

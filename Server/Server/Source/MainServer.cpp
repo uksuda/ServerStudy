@@ -2,6 +2,7 @@
 #include "ClientSession.h"
 #include "ClientSessionManager.h"
 #include "WorkerThreadManager.h"
+#include "Synchro.h"
 #include "ServerSocket.h"
 #include "Log.h"
 
@@ -18,6 +19,7 @@ MainServer::~MainServer()
 {
 	SESSIONMGR->destroyInstance();
 	THREADMGR->destroyInstance();
+	SYNCHRO->destroyInstance();
 	SAFE_DELETE(m_pServerSocket);
 	CloseHandle(m_hComPort);
 }
@@ -46,18 +48,23 @@ void MainServer::runServer()
 		ClientSession* pSession = ClientSession::createSession();
 		ClientSession::stSessionInfo& refSessionInfo = pSession->getSessionInfo();
 
+		SYNCHRO->enterCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
+
 		refSessionInfo.m_ClientSocket = hClientSocket;
 		refSessionInfo.m_ClientAddr = clientAddr;
 		refSessionInfo.m_userSeq = SESSIONMGR->getCurrentSessionCount();
-
+		
 		SESSIONMGR->insertNewSession(pSession);
+		SYNCHRO->leaveCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
 		
 		HANDLE hComPort = CreateIoCompletionPort((HANDLE)refSessionInfo.m_ClientSocket, m_hComPort, (ULONG_PTR)pSession, 0);
 
 		if (hComPort == NULL || hComPort != m_hComPort)
 		{
 			// error
+			SYNCHRO->enterCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
 			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
+			SYNCHRO->leaveCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
 			CLog::LOG("CreateIoCompletionPort Connect", GetLastError());
 			continue;
 		}
@@ -70,7 +77,7 @@ void MainServer::runServer()
 		refSessionInfo.eMode = ClientSession::IO_MODE::MODE_READ;
 		
 		int iRetValue = WSARecv(refSessionInfo.m_ClientSocket, &refSessionInfo.m_Wsabuf, 1, &dwRecvNumBytes, &dwFlag, &refSessionInfo.m_Overlapped, NULL);
-		if (iRetValue != SOCKET_ERROR && (WSAGetLastError() != WSA_IO_PENDING))
+		if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != WSA_IO_PENDING))
 		{
 			CLog::LOG("WSARecv", WSAGetLastError());
 			continue;
@@ -89,6 +96,12 @@ void MainServer::updateServer(float fDelta)
 
 bool MainServer::initMainServer()
 {
+	if (SYNCHRO->initSynchro() == false)
+	{
+		CLog::LOG("Synchro Fail");
+		return false;
+	}
+
 	if (SESSIONMGR->initClientSessionManager() == false)
 	{
 		CLog::LOG("Session Manager Fail");

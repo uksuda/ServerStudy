@@ -19,6 +19,10 @@ void ServerSocket::cleanUpSocket()
 SOCKET ServerSocket::startAcception(SOCKADDR_IN& clientAddr)
 {
 	int addrLen = sizeof(clientAddr);
+
+	unsigned long dwBlocking = SOCKET_OPTION_FALSE;
+	ioctlsocket(m_ServerSocket, FIONBIO, &dwBlocking);
+
 	return accept(m_ServerSocket, (SOCKADDR*)&clientAddr, &addrLen);
 }
 

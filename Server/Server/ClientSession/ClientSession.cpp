@@ -1,5 +1,6 @@
 #include "ClientSession.h"
 #include "Log.h"
+#include "ClientSessionManager.h"
 #include <stdio.h>
 
 ClientSession::ClientSession()
@@ -49,7 +50,7 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 	m_stSessionInfo.eMode = IO_MODE::MODE_WRITE;
 
 	int iRetValue = WSASend(m_stSessionInfo.m_ClientSocket, &m_stSessionInfo.m_Wsabuf, 1, &dwSentNumBytes, dwFlag, &m_stSessionInfo.m_Overlapped, NULL);
-	if (iRetValue != SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
+	if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
 	{
 		CLog::LOG("WSASend", WSAGetLastError());
 	}
@@ -69,7 +70,7 @@ void ClientSession::dispatchSend(DWORD dwBytesTrans)
 	m_stSessionInfo.eMode = ClientSession::IO_MODE::MODE_READ;
 
 	int iRetValue = WSARecv(m_stSessionInfo.m_ClientSocket, &m_stSessionInfo.m_Wsabuf, 1, &dwRecvNumBytes, &dwFlag, &m_stSessionInfo.m_Overlapped, NULL);
-	if (iRetValue != SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
+	if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
 	{
 		CLog::LOG("WSARecv", WSAGetLastError());
 	}

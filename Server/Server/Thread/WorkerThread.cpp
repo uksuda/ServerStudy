@@ -1,12 +1,13 @@
 #include "WorkerThread.h"
 #include "ClientSession.h"
 #include "ClientSessionManager.h"
+#include "Synchro.h"
 #include "Log.h"
 
 WorkerThread::WorkerThread()
 	: m_ThreadHandle(INVALID_HANDLE_VALUE)
 	, m_hComport(INVALID_HANDLE_VALUE)
-	, m_dwThreadID(0)
+	, m_iThreadID(0)
 	, m_isRunning(false)
 {
 
@@ -24,7 +25,7 @@ void WorkerThread::workBegin(HANDLE hComPort)
 
 	m_hComport = hComPort;
 
-	m_ThreadHandle = (HANDLE)_beginthreadex(nullptr, 0, this->entryThread, (LPVOID)this, 0, &m_dwThreadID);
+	m_ThreadHandle = (HANDLE)_beginthreadex(nullptr, 0, this->entryThread, (LPVOID)this, 0, &m_iThreadID);
 	if (m_ThreadHandle == 0)
 	{
 		// Thread fail
@@ -64,7 +65,9 @@ void WorkerThread::workRunning()
 		{
 			// client socket disconnected
 			CLog::LOG("Client disconnected", refSessionInfo.m_userSeq);
+			SYNCHRO->enterCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
 			SESSIONMGR->removeSession(refSessionInfo.m_userSeq);
+			SYNCHRO->leaveCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
 			continue;
 		}
 

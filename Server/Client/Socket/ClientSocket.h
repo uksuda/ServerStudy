@@ -28,7 +28,7 @@ typedef int SOCKET;
 class ClientSocket
 {
 private:
-	explicit ClientSocket();
+	explicit ClientSocket(int iSeed = 0);
 public:
 	~ClientSocket();
 
@@ -42,11 +42,13 @@ public:
 private:
 	SOCKET m_Socket;
 
+	int m_Seed;
+
 private:
 	bool initSocket();
 
 public:
-	static ClientSocket* createSocket();
+	static ClientSocket* createSocket(int iSeed = 0);
 };
 
 #endif
