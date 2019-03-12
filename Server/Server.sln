@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packet", "Packet", "{D44370
 	ProjectSection(SolutionItems) = preProject
 		Packet\Packet.cpp = Packet\Packet.cpp
 		Packet\Packet.h = Packet\Packet.h
+		Packet\PacketID.h = Packet\PacketID.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Log", "Log", "{CFE4AD95-BFD7-45D1-B1AE-6963262456E9}"

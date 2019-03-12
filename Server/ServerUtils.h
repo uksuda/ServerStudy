@@ -6,8 +6,6 @@
 
 #define SOCKET_TIME_WAIT_FALSE 0
 
-#define BUFFER_SIZE 4096
-
 #define SAFE_DELETE(p) {if (p) { delete (p); (p) = nullptr; }}
 #define SAFE_DELETE_ARRAY(p) {if (p) { delete [] (p); (p) = nullptr; }}
 

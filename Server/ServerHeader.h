@@ -3,6 +3,7 @@
 
 #include "ServerIP.h"
 #include "ServerUtils.h"
+#include "Packet.h"
 
 #include <WinSock2.h>
 #include <Windows.h>
