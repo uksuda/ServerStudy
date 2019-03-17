@@ -9,8 +9,17 @@
 
 #define PACKET_ENUM(x) static_cast<unsigned int>(x)
 
+constexpr int ERROR_MSG_LENGTH = 256;
+
 class Packet
 {
+public:
+	enum class E_ERROR_TYPE
+	{
+		E_BUFFER_OUT_OF_SIZE = 0,
+		E_BUfFER_OUT_OF_READ_SIZE
+	};
+
 public:
 	Packet() = delete;
 	Packet(unsigned int iPacketID);
@@ -33,6 +42,7 @@ public:
 	//
 	bool getDataFromPacket(unsigned char* pData);
 	bool getDataFromPacket(char* pData);
+	bool getDataFromPacket(char* pData, int iDataLength);
 	bool getDataFromPacket(unsigned short* pData);
 	bool getDataFromPacket(short* pData);
 	bool getDataFromPacket(unsigned int* pData);
@@ -42,18 +52,22 @@ public:
 	bool getDataFromPacket(float* pData);
 	bool getDataFromPacket(double* pData);
 	bool getDataFromPacket(bool* pData);
-	bool getDataFromPacket(void* pData);
-
 
 	int passDataToBuffer(char* pBuffer);
+	bool getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize);
 	bool clearPacket();
 
 private:
 	unsigned int m_iPacketID;
 	unsigned int m_iPacketSize;
 
-	unsigned int m_iBufferPosition;
+	unsigned int m_iBufferSize;
+	unsigned int m_iReadPosition;
 	char m_Buffer[PACKET_BUFFER_SIZE];
+	char m_szError[ERROR_MSG_LENGTH];
+
+private:
+	void setErrorMessage(const char* szTypeName, E_ERROR_TYPE eErrorType);
 };
 
 #endif
