@@ -17,12 +17,15 @@ public:
 	enum class E_ERROR_TYPE
 	{
 		E_BUFFER_OUT_OF_SIZE = 0,
-		E_BUfFER_OUT_OF_READ_SIZE
+		E_BUFFER_OUT_OF_DATA_SIZE,
+		E_BUfFER_OUT_OF_READ_SIZE,
+		E_BUFFER_OUT_OF_DATA_READ_SIZE
 	};
 
 public:
 	Packet() = delete;
 	Packet(unsigned int iPacketID);
+	Packet(const Packet& packet);
 	~Packet();
 
 public:
@@ -54,6 +57,7 @@ public:
 	bool getDataFromPacket(bool* pData);
 
 	int passDataToBuffer(char* pBuffer);
+	void setPacketID(unsigned int iPacketID) { m_iPacketID = iPacketID; };
 	bool getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize);
 	bool clearPacket();
 
