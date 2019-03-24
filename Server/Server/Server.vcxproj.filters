@@ -52,6 +52,9 @@
     <ClCompile Include="DB\DBConnector.cpp">
       <Filter>Server\DB</Filter>
     </ClCompile>
+    <ClCompile Include="..\Packet\Packet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ServerSocket.h">
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="DB\DBConnector.h">
       <Filter>Server\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Packet\Packet.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

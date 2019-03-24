@@ -19,12 +19,18 @@
     <ClCompile Include="..\Log\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Packet\Packet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ClientSocket.h">
       <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="..\Log\Log.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Packet\Packet.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

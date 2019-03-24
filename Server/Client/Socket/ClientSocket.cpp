@@ -1,4 +1,5 @@
 #include "ClientSocket.h"
+#include "Packet.h"
 #include "ServerUtils.h"
 #include "Log.h"
 #include <iostream>

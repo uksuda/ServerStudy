@@ -1,5 +1,6 @@
 #include "Packet.h"
 #include "../Log/Log.h"
+#include <iostream>
 
 Packet::Packet(unsigned int iPacketID)
 	: m_iPacketID(iPacketID)
@@ -11,7 +12,7 @@ Packet::Packet(unsigned int iPacketID)
 	memset(m_szError, 0, sizeof(m_szError));
 }
 
-Packet::(const Packet& packet)
+Packet::Packet(const Packet& packet)
 {
 
 }
@@ -165,19 +166,19 @@ bool Packet::add(bool bData)
 {
 	if (m_iBufferSize + sizeof(bool) > PACKET_BUFFER_SIZE)
 	{
-		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
+		setErrorMessage(typeid(bData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(bool));
+	memcpy(m_Buffer + m_iBufferSize, &bData, sizeof(bool));
 	m_iBufferSize += sizeof(bool);
 	return true;
 }
 
 bool Packet::add(char* pData, int iDataLength)
 {
-	if (m_iBuffer + sizeof(char) * iDataLength > PACKET_BUFFER_SIZE)
+	if (m_iBufferSize + sizeof(char) * iDataLength > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(char).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_DATA_SIZE);
 		CLog::LOG(m_szError);
@@ -185,7 +186,7 @@ bool Packet::add(char* pData, int iDataLength)
 	}
 
 	memcpy(m_Buffer + m_iBufferSize, pData, sizeof(char) * iDataLength);
-	m_iBuffer += sizeof(char) * iDataLength;
+	m_iBufferSize += sizeof(char) * iDataLength;
 	return true;
 }
 
