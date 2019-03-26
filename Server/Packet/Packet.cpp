@@ -4,8 +4,7 @@
 
 Packet::Packet(unsigned int iPacketID)
 	: m_iPacketID(iPacketID)
-	, m_iPacketSize(0)
-	, m_iBufferSize(PACKET_HEADER_SIZE/*sizeof(m_iPacketID) + sizeof(m_iPacketSize)*/)
+	, m_iPacketSize(PACKET_HEADER_SIZE/*sizeof(m_iPacketID) + sizeof(m_iPacketSize)*/)
 	, m_iReadPosition(PACKET_HEADER_SIZE)
 {
 	memset(m_Buffer, 0, sizeof(m_Buffer));
@@ -24,172 +23,173 @@ Packet::~Packet()
 
 bool Packet::add(unsigned char nData)
 {
-	if (m_iBufferSize + sizeof(unsigned char) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(unsigned char) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(unsigned char));
-	m_iBufferSize += sizeof(unsigned char);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(unsigned char));
+	m_iPacketSize += sizeof(unsigned char);
 	return true;
 }
 
 bool Packet::add(char nData)
 {
-	if (m_iBufferSize + sizeof(char) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(char) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(char));
-	m_iBufferSize += sizeof(char);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(char));
+	m_iPacketSize += sizeof(char);
 	return true;
 }
 
 bool Packet::add(unsigned short nData)
 {
-	if (m_iBufferSize + sizeof(unsigned short) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(unsigned short) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(unsigned short));
-	m_iBufferSize += sizeof(unsigned short);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(unsigned short));
+	m_iPacketSize += sizeof(unsigned short);
 	return true;
 }
 
 bool Packet::add(short nData)
 {
-	if (m_iBufferSize + sizeof(short) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(short) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(short));
-	m_iBufferSize += sizeof(short);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(short));
+	m_iPacketSize += sizeof(short);
 	return true;
 }
 
 bool Packet::add(unsigned int nData)
 {
-	if (m_iBufferSize + sizeof(unsigned int) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(unsigned int) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(unsigned int));
-	m_iBufferSize += sizeof(unsigned int);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(unsigned int));
+	m_iPacketSize += sizeof(unsigned int);
 	return true;
 }
 
 bool Packet::add(int nData)
 {
-	if (m_iBufferSize + sizeof(int) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(int) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(int));
-	m_iBufferSize += sizeof(int);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(int));
+	m_iPacketSize += sizeof(int);
 	return true;
 }
 
 bool Packet::add(unsigned long nData)
 {
-	if (m_iBufferSize + sizeof(unsigned long) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(unsigned long) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(unsigned long));
-	m_iBufferSize += sizeof(unsigned long);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(unsigned long));
+	m_iPacketSize += sizeof(unsigned long);
 	return true;
 }
 
 bool Packet::add(long nData)
 {
-	if (m_iBufferSize + sizeof(long) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(long) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(long));
-	m_iBufferSize += sizeof(long);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(long));
+	m_iPacketSize += sizeof(long);
 	return true;
 }
 
 bool Packet::add(float nData)
 {
-	if (m_iBufferSize + sizeof(float) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(float) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(float));
-	m_iBufferSize += sizeof(float);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(float));
+	m_iPacketSize += sizeof(float);
 	return true;
 }
 
 bool Packet::add(double nData)
 {
-	if (m_iBufferSize + sizeof(double) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(double) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(nData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &nData, sizeof(double));
-	m_iBufferSize += sizeof(double);
+	memcpy(m_Buffer + m_iPacketSize, &nData, sizeof(double));
+	m_iPacketSize += sizeof(double);
 	return true;
 }
 
 bool Packet::add(bool bData)
 {
-	if (m_iBufferSize + sizeof(bool) > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(bool) > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(bData).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, &bData, sizeof(bool));
-	m_iBufferSize += sizeof(bool);
+	memcpy(m_Buffer + m_iPacketSize, &bData, sizeof(bool));
+	m_iPacketSize += sizeof(bool);
 	return true;
 }
 
 bool Packet::add(char* pData, int iDataLength)
 {
-	if (m_iBufferSize + sizeof(char) * iDataLength > PACKET_BUFFER_SIZE)
+	if (m_iPacketSize + sizeof(char) * iDataLength > PACKET_BUFFER_SIZE)
 	{
 		setErrorMessage(typeid(char).name(), E_ERROR_TYPE::E_BUFFER_OUT_OF_DATA_SIZE);
 		CLog::LOG(m_szError);
 		return false;
 	}
 
-	memcpy(m_Buffer + m_iBufferSize, pData, sizeof(char) * iDataLength);
-	m_iBufferSize += sizeof(char) * iDataLength;
+	memcpy(m_Buffer + m_iPacketSize, pData, sizeof(char) * iDataLength);
+	m_iPacketSize += sizeof(char) * iDataLength;
 	return true;
 }
 
+//
 bool Packet::getDataFromPacket(unsigned char* pData)
 {
 	if (m_iReadPosition + sizeof(unsigned char) > PACKET_BUFFER_SIZE)
@@ -200,6 +200,7 @@ bool Packet::getDataFromPacket(unsigned char* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(unsigned char));
+	m_iReadPosition += sizeof(unsigned char);
 	return true;
 }
 
@@ -213,6 +214,7 @@ bool Packet::getDataFromPacket(char* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(char));
+	m_iReadPosition += sizeof(char);
 	return true;
 }
 
@@ -225,6 +227,7 @@ bool Packet::getDataFromPacket(char* pData, int iDataLength)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(char) * iDataLength);
+	m_iReadPosition += sizeof(char) * iDataLength;
 	return true;
 }
 
@@ -238,6 +241,7 @@ bool Packet::getDataFromPacket(unsigned short* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(unsigned short));
+	m_iReadPosition += sizeof(unsigned short);
 	return true;
 }
 
@@ -251,6 +255,7 @@ bool Packet::getDataFromPacket(short* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(short));
+	m_iReadPosition += sizeof(short);
 	return true;
 }
 
@@ -264,6 +269,7 @@ bool Packet::getDataFromPacket(unsigned int* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(unsigned int));
+	m_iReadPosition += sizeof(unsigned int);
 	return true;
 }
 
@@ -277,6 +283,7 @@ bool Packet::getDataFromPacket(int* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(int));
+	m_iReadPosition += sizeof(int);
 	return true;
 }
 
@@ -290,6 +297,7 @@ bool Packet::getDataFromPacket(unsigned long* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(unsigned long));
+	m_iReadPosition += sizeof(unsigned long);
 	return true;
 }
 
@@ -303,6 +311,7 @@ bool Packet::getDataFromPacket(long* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(long));
+	m_iReadPosition += sizeof(long);
 	return true;
 }
 
@@ -316,6 +325,7 @@ bool Packet::getDataFromPacket(float* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(float));
+	m_iReadPosition += sizeof(float);
 	return true;
 }
 
@@ -329,6 +339,7 @@ bool Packet::getDataFromPacket(double* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(double));
+	m_iReadPosition += sizeof(double);
 	return true;
 }
 
@@ -342,12 +353,20 @@ bool Packet::getDataFromPacket(bool* pData)
 	}
 
 	memcpy(pData, m_Buffer + m_iReadPosition, sizeof(bool));
+	m_iReadPosition += sizeof(bool);
 	return true;
 }
 
-int Packet::passDataToBuffer(char* pBuffer)
+void Packet::setPacketHeaderData()
 {
-	return true;
+	if (m_iPacketID == PACKET_ENUM(E_PID_CTS::ID_INVALID) || m_iPacketSize == 0)
+	{
+		setErrorMessage(typeid(E_PID_CTS).name(), E_ERROR_TYPE::E_BUFFER_INVALID_SIZE);
+		CLog::LOG(m_szError);
+		return;
+	}
+	memcpy(m_Buffer, &m_iPacketID, sizeof(unsigned int));
+	memcpy(m_Buffer + sizeof(unsigned int), &m_iPacketSize, sizeof(unsigned int));
 }
 
 bool Packet::getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize)
@@ -363,9 +382,8 @@ bool Packet::getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize)
 
 bool Packet::clearPacket()
 {
-	m_iBufferSize = PACKET_HEADER_SIZE;
+	m_iPacketSize = PACKET_HEADER_SIZE;
 	m_iPacketID = 0;
-	m_iPacketSize = 0;
 	m_iReadPosition = PACKET_HEADER_SIZE;
 	memset(m_Buffer, 0, sizeof(m_Buffer));
 	memset(m_szError, 0, sizeof(m_szError));
@@ -392,6 +410,9 @@ void Packet::setErrorMessage(const char* szTypeName, E_ERROR_TYPE eErrorType)
 		break;
 	case E_ERROR_TYPE::E_BUFFER_OUT_OF_DATA_READ_SIZE:
 		snprintf(m_szError, sizeof(m_szError), "Out of Data Read Position : %s", szTypeName);
+		break;
+	case E_ERROR_TYPE::E_BUFFER_INVALID_SIZE:
+		snprintf(m_szError, sizeof(m_szError), "Invalid Packet ID or Packet size");
 		break;
 	default:
 		break;

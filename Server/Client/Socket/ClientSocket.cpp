@@ -95,6 +95,19 @@ void ClientSocket::closeSocket()
 	closesocket(m_Socket);
 }
 
+bool ClientSocket::sendPacket(Packet& packet)
+{
+	packet.setPacketHeaderData();
+	send(m_Socket, packet.getPacketBuffer(), packet.getPacketSize, NULL);
+	return false;
+}
+
+bool ClientSocket::receivePacket(Packet& packet)
+{
+	return false;
+}
+
+/*
 void ClientSocket::clientStart()
 {
 	char szMessage[BUFFER_SIZE];
@@ -127,7 +140,7 @@ void ClientSocket::clientStart()
 		szMessage[BUFFER_SIZE - 1] = NULL;
 		printf("received from server : %s\n\n", szMessage);
 	}
-}
+}*/
 
 bool ClientSocket::initSocket()
 {

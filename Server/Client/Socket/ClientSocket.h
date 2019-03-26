@@ -24,7 +24,7 @@ typedef int SOCKET;
 
 #endif
 
-
+class Packet;
 class ClientSocket
 {
 private:
@@ -35,9 +35,10 @@ public:
 public:
 	bool connectTo(const char* szServerIP, int iServerPort);
 	void closeSocket();
-
+	bool sendPacket(Packet& packet);
+	bool receivePacket(Packet& packet);
 	// send receive
-	void clientStart();
+	//void clientStart();
 
 private:
 	SOCKET m_Socket;

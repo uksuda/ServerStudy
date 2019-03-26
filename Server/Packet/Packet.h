@@ -19,7 +19,8 @@ public:
 		E_BUFFER_OUT_OF_SIZE = 0,
 		E_BUFFER_OUT_OF_DATA_SIZE,
 		E_BUfFER_OUT_OF_READ_SIZE,
-		E_BUFFER_OUT_OF_DATA_READ_SIZE
+		E_BUFFER_OUT_OF_DATA_READ_SIZE,
+		E_BUFFER_INVALID_SIZE
 	};
 
 public:
@@ -56,8 +57,10 @@ public:
 	bool getDataFromPacket(double* pData);
 	bool getDataFromPacket(bool* pData);
 
-	int passDataToBuffer(char* pBuffer);
+	char* getPacketBuffer() { return m_Buffer; };
+	unsigned int getPacketSize() const { return m_iPacketSize; };
 	void setPacketID(unsigned int iPacketID) { m_iPacketID = iPacketID; };
+	void setPacketHeaderData();
 	bool getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize);
 	bool clearPacket();
 
@@ -65,7 +68,6 @@ private:
 	unsigned int m_iPacketID;
 	unsigned int m_iPacketSize;
 
-	unsigned int m_iBufferSize;
 	unsigned int m_iReadPosition;
 	char m_Buffer[PACKET_BUFFER_SIZE];
 	char m_szError[ERROR_MSG_LENGTH];
