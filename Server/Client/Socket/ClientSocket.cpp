@@ -98,12 +98,27 @@ void ClientSocket::closeSocket()
 bool ClientSocket::sendPacket(Packet& packet)
 {
 	packet.setPacketHeaderData();
-	send(m_Socket, packet.getPacketBuffer(), packet.getPacketSize, NULL);
-	return false;
+	int iRet = send(m_Socket, packet.getPacketBuffer(), packet.getPacketSize(), NULL);
+	if (iRet == SOCKET_ERROR)
+	{
+		if (GetLastError() == EWOULDBLOCK)
+		{
+			CLog::LOG("send buffer is full");
+		}
+		else
+		{
+			CLog::LOG("send buffer", GetLastError());
+		}
+		return false;
+	}
+	
+	return true;
 }
 
 bool ClientSocket::receivePacket(Packet& packet)
 {
+	packet.clearPacket();
+	
 	return false;
 }
 
