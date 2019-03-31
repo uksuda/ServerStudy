@@ -8,8 +8,9 @@
 ClientSocket::ClientSocket(int iSeed)
 	: m_Socket(INVALID_SOCKET)
 	, m_Seed(iSeed)
+	, m_iBufferPosition(0)
 {
-
+	memset(m_Buffer, 0, sizeof(m_Buffer));
 }
 
 ClientSocket::~ClientSocket()
@@ -19,6 +20,7 @@ ClientSocket::~ClientSocket()
 #else
 
 #endif
+	memset(m_Buffer, 0, sizeof(m_Buffer));
 }
 
 bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
@@ -95,31 +97,95 @@ void ClientSocket::closeSocket()
 	closesocket(m_Socket);
 }
 
-bool ClientSocket::sendPacket(Packet& packet)
+void ClientSocket::resetBuffer()
 {
-	packet.setPacketHeaderData();
-	int iRet = send(m_Socket, packet.getPacketBuffer(), packet.getPacketSize(), NULL);
+	memset(m_Buffer, 0, sizeof(m_Buffer));
+	m_iBufferPosition = 0;
+}
+
+bool ClientSocket::sendFlush()
+{
+	int iRet = send(m_Socket, m_Buffer, m_iBufferPosition, NULL);
 	if (iRet == SOCKET_ERROR)
 	{
 		if (GetLastError() == EWOULDBLOCK)
 		{
 			CLog::LOG("send buffer is full");
+			return false;
 		}
-		else
-		{
-			CLog::LOG("send buffer", GetLastError());
-		}
+
+		CLog::LOG("Socket send", GetLastError());
 		return false;
 	}
-	
+
+	resetBuffer();
 	return true;
 }
 
-bool ClientSocket::receivePacket(Packet& packet)
+bool ClientSocket::sendPacket(Packet& packet)
 {
-	packet.clearPacket();
+	packet.setPacketHeaderData();
 	
-	return false;
+	if (m_iBufferPosition + packet.getPacketSize() > C_BUFFER_SIZE)
+	{
+		if (sendFlush() == false)
+		{
+			return false;
+		}
+	}
+	
+	memcpy(m_Buffer, packet.getPacketBuffer(), packet.getPacketSize());
+	m_iBufferPosition += packet.getPacketSize();
+
+	return true;
+}
+
+bool ClientSocket::receivePacket()
+{
+	Packet receivePacket(PACKET_ENUM(E_PID_STC::ID_INVALID));
+	receivePacket.clearPacket();
+
+	int iRet = recv(m_Socket, receivePacket.getPacketBuffer(), PACKET_HEADER_SIZE, NULL);
+	if (iRet == SOCKET_ERROR)
+	{
+		if (GetLastError() == EWOULDBLOCK)
+		{
+			CLog::LOG("recv buffer is empty");
+			return false;
+		}
+
+		CLog::LOG("Socket recv", GetLastError());
+		return false;
+	}
+
+	if (iRet < PACKET_HEADER_SIZE)
+	{
+		CLog::LOG("Invalid Packet");
+		return false;
+	}
+		
+	unsigned int iPacketID = 0;
+	unsigned int iPacketSize = 0;
+	receivePacket.getHeader(&iPacketID, &iPacketSize);
+
+	iRet = recv(m_Socket, receivePacket.getPacketBuffer() + PACKET_HEADER_SIZE, iPacketSize - PACKET_HEADER_SIZE, NULL);
+	if (iRet == SOCKET_ERROR)
+	{
+		if (GetLastError() == EWOULDBLOCK)
+		{
+			// need this?
+			CLog::LOG("Packet need more size");
+			return false;
+		}
+
+		CLog::LOG("Socket recv failed", GetLastError());
+		return false;
+	}
+
+	// dispatch packet
+
+	
+	return true;
 }
 
 /*

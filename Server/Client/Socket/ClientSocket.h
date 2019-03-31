@@ -1,6 +1,8 @@
 #ifndef __CLIENT_SOCKET_H__
 #define __CLIENT_SOCKET_H__
 
+constexpr int C_BUFFER_SIZE = 4096;
+
 #ifdef WIN32
 
 #include <WinSock2.h>
@@ -35,15 +37,16 @@ public:
 public:
 	bool connectTo(const char* szServerIP, int iServerPort);
 	void closeSocket();
+	void resetBuffer();
+	bool sendFlush();
 	bool sendPacket(Packet& packet);
-	bool receivePacket(Packet& packet);
-	// send receive
-	//void clientStart();
+	bool receivePacket();
 
 private:
 	SOCKET m_Socket;
-
 	int m_Seed;
+	char m_Buffer[C_BUFFER_SIZE];
+	unsigned int m_iBufferPosition;
 
 private:
 	bool initSocket();
