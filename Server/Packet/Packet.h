@@ -58,10 +58,17 @@ public:
 	bool getDataFromPacket(bool* pData);
 
 	char* getPacketBuffer() { return m_Buffer; };
-	unsigned int getPacketSize() const { return m_iPacketSize; };
+	char* getPacketReceiveBuffer() { return m_Buffer + PACKET_HEADER_SIZE; }
+	unsigned int getPacketReceiveSize() { return m_iPacketSize - PACKET_HEADER_SIZE; }
+
+	unsigned int getPacketSize() const { return m_iPacketSize; }
+	unsigned int getPacketID() const { return m_iPacketID; }
+
 	void setPacketID(unsigned int iPacketID) { m_iPacketID = iPacketID; };
+	void setPacketSize(unsigned int iPacketSize) { m_iPacketSize = iPacketSize; }
+	
 	void setPacketHeaderData();
-	bool getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize);
+	bool setReceivePacketHeaderData();
 	bool clearPacket();
 
 private:

@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packet", "Packet", "{D44370
 	ProjectSection(SolutionItems) = preProject
 		Packet\Packet.cpp = Packet\Packet.cpp
 		Packet\Packet.h = Packet\Packet.h
+		Packet\PacketDispatcher.cpp = Packet\PacketDispatcher.cpp
+		Packet\PacketDispatcher.h = Packet\PacketDispatcher.h
 		Packet\PacketID.h = Packet\PacketID.h
 	EndProjectSection
 EndProject

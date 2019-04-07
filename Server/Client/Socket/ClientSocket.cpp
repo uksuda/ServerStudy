@@ -163,12 +163,10 @@ bool ClientSocket::receivePacket()
 		CLog::LOG("Invalid Packet");
 		return false;
 	}
-		
-	unsigned int iPacketID = 0;
-	unsigned int iPacketSize = 0;
-	receivePacket.getHeader(&iPacketID, &iPacketSize);
 
-	iRet = recv(m_Socket, receivePacket.getPacketBuffer() + PACKET_HEADER_SIZE, iPacketSize - PACKET_HEADER_SIZE, NULL);
+	receivePacket.setReceivePacketHeaderData();
+
+	iRet = recv(m_Socket, receivePacket.getPacketReceiveBuffer(), receivePacket.getPacketReceiveSize(), NULL);
 	if (iRet == SOCKET_ERROR)
 	{
 		if (GetLastError() == EWOULDBLOCK)

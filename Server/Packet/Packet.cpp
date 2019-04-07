@@ -369,14 +369,16 @@ void Packet::setPacketHeaderData()
 	memcpy(m_Buffer + sizeof(unsigned int), &m_iPacketSize, sizeof(unsigned int));
 }
 
-bool Packet::getHeader(unsigned int* pHeaderID, unsigned int* pPacketSize)
+bool Packet::setReceivePacketHeaderData()
 {
-	if (pHeaderID == nullptr || pPacketSize == nullptr)
+	if (m_Buffer == nullptr || strlen(m_Buffer) < PACKET_HEADER_SIZE)
 	{
 		return false;
 	}
-	memcpy(pHeaderID, m_Buffer, sizeof(unsigned int));
-	memcpy(pPacketSize, m_Buffer + sizeof(unsigned int), sizeof(unsigned int));
+
+	memcpy(&m_iPacketID, m_Buffer, sizeof(unsigned int));
+	memcpy(&m_iPacketSize, m_Buffer + sizeof(unsigned int), sizeof(unsigned int));
+
 	return true;
 }
 
