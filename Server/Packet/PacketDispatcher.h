@@ -6,7 +6,7 @@ class PacketDispatcher
 protected:
 	PacketDispatcher() = delete;
 	PacketDispatcher(E_DISPATCH eDispatch);
-	virtual ~PacketDispatcher();
+	virtual ~PacketDispatcher() = 0;
 	
 public:
 	enum class E_DISPATCH
@@ -19,7 +19,7 @@ public:
 	virtual bool PacketDispatch(Packet receivePacket);
 	
 private:
-	E_DISPATCH eDispatcherType;
+	E_DISPATCH m_eDispatcherType;
 }
 
 #endif
