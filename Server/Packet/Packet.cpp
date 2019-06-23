@@ -12,8 +12,12 @@ Packet::Packet(unsigned int iPacketID)
 }
 
 Packet::Packet(const Packet& packet)
+	:m_iPacketID(packet.m_iPacketID)
+	, m_iPacketSize(packet.m_iPacketSize)
+	, m_iReadPosition(packet.m_iReadPosition)
 {
-
+	memcpy(m_Buffer, packet.m_Buffer, sizeof(m_Buffer));
+	memcpy(m_szError, packet.m_szError, sizeof(m_szError));
 }
 
 Packet::~Packet()
