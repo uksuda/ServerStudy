@@ -144,13 +144,17 @@
   <ItemGroup>
     <ClCompile Include="..\Log\Log.cpp" />
     <ClCompile Include="..\Packet\Packet.cpp" />
+    <ClCompile Include="..\Packet\PacketDispatcher.cpp" />
     <ClCompile Include="Socket\ClientSocket.cpp" />
+    <ClCompile Include="Socket\DispatcherClient.cpp" />
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Log\Log.h" />
     <ClInclude Include="..\Packet\Packet.h" />
+    <ClInclude Include="..\Packet\PacketDispatcher.h" />
     <ClInclude Include="Socket\ClientSocket.h" />
+    <ClInclude Include="Socket\DispatcherClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

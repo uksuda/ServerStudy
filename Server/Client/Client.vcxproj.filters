@@ -8,6 +8,9 @@
     <Filter Include="Socket">
       <UniqueIdentifier>{d4774cf6-18cd-4643-a427-64205fcb3d1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainProcess">
+      <UniqueIdentifier>{fa3d4847-2016-439a-b232-8ceda6e4bb12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -22,6 +25,12 @@
     <ClCompile Include="..\Packet\Packet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Socket\DispatcherClient.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Packet\PacketDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ClientSocket.h">
@@ -33,5 +42,9 @@
     <ClInclude Include="..\Packet\Packet.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Socket\DispatcherClient.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Packet\PacketDispatcher.h" />
   </ItemGroup>
 </Project>

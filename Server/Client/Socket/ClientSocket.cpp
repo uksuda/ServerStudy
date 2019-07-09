@@ -2,15 +2,18 @@
 #include "Packet.h"
 #include "ServerUtils.h"
 #include "Log.h"
+#include "DispatcherClient.h"
 #include <iostream>
 
 
 ClientSocket::ClientSocket(int iSeed)
 	: m_Socket(INVALID_SOCKET)
 	, m_Seed(iSeed)
-	, m_iBufferPosition(0)
+	, m_iSendBufferPosition(0)
+	, m_iReceiveBufferPosition(0)
 {
-	memset(m_Buffer, 0, sizeof(m_Buffer));
+	memset(m_SendBuffer, 0, sizeof(m_SendBuffer));
+	memset(m_ReceiveBuffer, 0, sizeof(m_ReceiveBuffer));
 }
 
 ClientSocket::~ClientSocket()
@@ -20,7 +23,8 @@ ClientSocket::~ClientSocket()
 #else
 
 #endif
-	memset(m_Buffer, 0, sizeof(m_Buffer));
+	memset(m_SendBuffer, 0, sizeof(m_SendBuffer));
+	memset(m_ReceiveBuffer, 0, sizeof(m_ReceiveBuffer));
 }
 
 bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
@@ -97,28 +101,53 @@ void ClientSocket::closeSocket()
 	closesocket(m_Socket);
 }
 
-void ClientSocket::resetBuffer()
+void ClientSocket::resetSendBuffer()
 {
-	memset(m_Buffer, 0, sizeof(m_Buffer));
-	m_iBufferPosition = 0;
+	memset(m_SendBuffer, 0, sizeof(m_SendBuffer));
+	m_iSendBufferPosition = 0;
+}
+
+void ClientSocket::resetReceiveBuffer()
+{
+	memset(m_ReceiveBuffer, 0, sizeof(m_ReceiveBuffer));
+	m_iReceiveBufferPosition = 0;
 }
 
 bool ClientSocket::sendFlush()
 {
-	int iRet = send(m_Socket, m_Buffer, m_iBufferPosition, NULL);
+	if (m_SendBuffer == nullptr || m_iSendBufferPosition == 0)
+	{
+		CLog::LOG("Send Buffer is null");
+		return false;
+	}
+
+	int iRet = send(m_Socket, m_SendBuffer, m_iSendBufferPosition, NULL);
 	if (iRet == SOCKET_ERROR)
 	{
 		if (GetLastError() == EWOULDBLOCK)
 		{
-			CLog::LOG("send buffer is full");
+			CLog::LOG("send buffer is busy");
 			return false;
 		}
 
 		CLog::LOG("Socket send", GetLastError());
 		return false;
 	}
+	/*else if (iRet < iLength)
+	{
+		if (pBuffer + (C_BUFFER_SIZE - 1) < pBuffer + iRet)
+		{
+			iRet = C_BUFFER_SIZE - 1;
+		}
 
-	resetBuffer();
+		sendFlush(pBuffer + iRet, iLength - iRet);
+	}*/
+
+	if (iRet == m_iSendBufferPosition)
+	{
+		resetSendBuffer();
+	}		
+
 	return true;
 }
 
@@ -126,7 +155,7 @@ bool ClientSocket::sendPacket(Packet& packet)
 {
 	packet.setPacketHeaderData();
 	
-	if (m_iBufferPosition + packet.getPacketSize() > C_BUFFER_SIZE)
+	if (m_iSendBufferPosition + packet.getPacketSize() > C_BUFFER_SIZE)
 	{
 		if (sendFlush() == false)
 		{
@@ -134,18 +163,17 @@ bool ClientSocket::sendPacket(Packet& packet)
 		}
 	}
 	
-	memcpy(m_Buffer, packet.getPacketBuffer(), packet.getPacketSize());
-	m_iBufferPosition += packet.getPacketSize();
+	memcpy(m_SendBuffer + m_iSendBufferPosition, packet.getPacketBuffer(), packet.getPacketSize());
+	m_iSendBufferPosition += packet.getPacketSize();
+
+	sendFlush();
 
 	return true;
 }
 
 bool ClientSocket::receivePacket()
 {
-	Packet receivePacket(PACKET_ENUM(E_PID_STC::ID_INVALID));
-	receivePacket.clearPacket();
-
-	int iRet = recv(m_Socket, receivePacket.getPacketBuffer(), PACKET_HEADER_SIZE, NULL);
+	int iRet = recv(m_Socket, m_ReceiveBuffer, PACKET_BUFFER_SIZE, NULL);
 	if (iRet == SOCKET_ERROR)
 	{
 		if (GetLastError() == EWOULDBLOCK)
@@ -158,25 +186,10 @@ bool ClientSocket::receivePacket()
 		return false;
 	}
 
-	if (iRet < PACKET_HEADER_SIZE)
+	m_iReceiveBufferPosition += iRet;
+	
+	if (m_iReceiveBufferPosition < PACKET_HEADER_SIZE)
 	{
-		CLog::LOG("Invalid Packet");
-		return false;
-	}
-
-	receivePacket.setReceivePacketHeaderData();
-
-	iRet = recv(m_Socket, receivePacket.getPacketReceiveBuffer(), receivePacket.getPacketReceiveSize(), NULL);
-	if (iRet == SOCKET_ERROR)
-	{
-		if (GetLastError() == EWOULDBLOCK)
-		{
-			// need this?
-			CLog::LOG("Packet need more size");
-			return false;
-		}
-
-		CLog::LOG("Socket recv failed", GetLastError());
 		return false;
 	}
 

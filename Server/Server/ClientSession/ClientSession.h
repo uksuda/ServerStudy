@@ -46,7 +46,7 @@ private:
 	bool initClientSession();
 	void dispatchReceive(DWORD dwBytesTrans);
 	void dispatchSend(DWORD dwBytesTrans);
-
+	
 public:
 	static ClientSession* createSession();
 };
