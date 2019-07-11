@@ -45,6 +45,8 @@
     <ClInclude Include="Socket\DispatcherClient.h">
       <Filter>Socket</Filter>
     </ClInclude>
-    <ClInclude Include="..\Packet\PacketDispatcher.h" />
+    <ClInclude Include="..\Packet\PacketDispatcher.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

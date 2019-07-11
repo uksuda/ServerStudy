@@ -143,10 +143,14 @@ bool ClientSocket::sendFlush()
 		sendFlush(pBuffer + iRet, iLength - iRet);
 	}*/
 
-	if (iRet == m_iSendBufferPosition)
+	if (m_iSendBufferPosition - iRet <= 0)
 	{
 		resetSendBuffer();
-	}		
+	}
+
+	m_iSendBufferPosition -= iRet;
+
+	memmove(m_SendBuffer, m_SendBuffer + iRet, m_iSendBufferPosition);
 
 	return true;
 }
@@ -173,7 +177,7 @@ bool ClientSocket::sendPacket(Packet& packet)
 
 bool ClientSocket::receivePacket()
 {
-	int iRet = recv(m_Socket, m_ReceiveBuffer, PACKET_BUFFER_SIZE, NULL);
+	int iRet = recv(m_Socket, m_ReceiveBuffer + m_iReceiveBufferPosition, PACKET_BUFFER_SIZE - m_iReceiveBufferPosition, NULL);
 	if (iRet == SOCKET_ERROR)
 	{
 		if (GetLastError() == EWOULDBLOCK)
@@ -193,9 +197,36 @@ bool ClientSocket::receivePacket()
 		return false;
 	}
 
-	// dispatch packet
+	Packet receivePacket(PACKET_ENUM(E_PID_STC::ID_INVALID));
+	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, m_iReceiveBufferPosition);
 
-	
+	receivePacket.setReceivePacketHeaderData();
+
+	iRet = recv(m_Socket, m_ReceiveBuffer + m_iReceiveBufferPosition, receivePacket.getPacketReceiveSize(), NULL);
+	if (iRet == SOCKET_ERROR)
+	{
+		if (GetLastError() == EWOULDBLOCK)
+		{
+			CLog::LOG("recv buffer is empty");
+			return false;
+		}
+
+		CLog::LOG("Socket recv", GetLastError());
+		return false;
+	}
+
+	m_iReceiveBufferPosition += iRet;
+
+	if (m_iReceiveBufferPosition < receivePacket.getPacketSize())
+	{
+		return false;
+	}
+
+	// dispatch packet
+	memcpy(receivePacket.getPacketReceiveBuffer(), m_ReceiveBuffer + PACKET_HEADER_SIZE, receivePacket.getPacketReceiveSize());
+	DISPATCHER_CLIENT->PacketDispatch(receivePacket);
+	resetReceiveBuffer();
+
 	return true;
 }
 

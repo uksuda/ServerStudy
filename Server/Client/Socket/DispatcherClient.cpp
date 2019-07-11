@@ -35,7 +35,7 @@ bool DispatcherClient::PacketDispatch(Packet receivePacket)
 		return false;
 	}
 
-
+	receivePacket.getPacketID()
 
 	return true;
 }

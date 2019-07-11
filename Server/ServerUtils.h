@@ -33,5 +33,7 @@
 	#define DEBUG_ASSERT(exp) {}
 #endif
 
+#define CONVERT_STR(str) #str
+
 
 #endif

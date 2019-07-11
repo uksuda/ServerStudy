@@ -4,6 +4,9 @@
 #include "ServerHeader.h"
 #include "PacketDispatcher.h"
 
+#include <map>
+#include <functional>
+
 #define DISPATCHER_CLIENT DispatcherClient::getInstance()
 #define RECV_BUFFER BUFFER_SIZE * 5
 
@@ -16,16 +19,20 @@ private:
 public:
 	virtual ~DispatcherClient();
 
+	using DISPATCH_MAP = std::map<unsigned int, std::function<void(int)>>;
+
 private:
 	static DispatcherClient* m_pInstance;
 	char m_ReceiveBuffer[RECV_BUFFER];
+
+
 
 public:
 	static DispatcherClient* getInstance();
 	static void destroyInstance();
 
 public:
-	virtual bool PacketDispatch(Packet receivePacket);	
+	virtual bool PacketDispatch(Packet receivePacket);
 };
 
 #endif
