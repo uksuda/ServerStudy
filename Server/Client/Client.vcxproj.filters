@@ -31,6 +31,9 @@
     <ClCompile Include="..\Packet\PacketDispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Socket\DispatchFunc.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ClientSocket.h">
@@ -47,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="..\Packet\PacketDispatcher.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\DispatchFunc.h">
+      <Filter>Socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
