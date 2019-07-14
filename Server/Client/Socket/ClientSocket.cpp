@@ -146,10 +146,10 @@ bool ClientSocket::sendFlush()
 	if (m_iSendBufferPosition - iRet <= 0)
 	{
 		resetSendBuffer();
+		return true;
 	}
 
 	m_iSendBufferPosition -= iRet;
-
 	memmove(m_SendBuffer, m_SendBuffer + iRet, m_iSendBufferPosition);
 
 	return true;
@@ -201,31 +201,24 @@ bool ClientSocket::receivePacket()
 	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, m_iReceiveBufferPosition);
 
 	receivePacket.setReceivePacketHeaderData();
-
-	iRet = recv(m_Socket, m_ReceiveBuffer + m_iReceiveBufferPosition, receivePacket.getPacketReceiveSize(), NULL);
-	if (iRet == SOCKET_ERROR)
-	{
-		if (GetLastError() == EWOULDBLOCK)
-		{
-			CLog::LOG("recv buffer is empty");
-			return false;
-		}
-
-		CLog::LOG("Socket recv", GetLastError());
-		return false;
-	}
-
-	m_iReceiveBufferPosition += iRet;
-
 	if (m_iReceiveBufferPosition < receivePacket.getPacketSize())
 	{
 		return false;
 	}
 
-	// dispatch packet
+	unsigned int iReceiveSize = receivePacket.getPacketSize();
 	memcpy(receivePacket.getPacketReceiveBuffer(), m_ReceiveBuffer + PACKET_HEADER_SIZE, receivePacket.getPacketReceiveSize());
+	
+	if (m_iReceiveBufferPosition == iReceiveSize)
+	{
+		resetReceiveBuffer();
+	}
+
+	m_iReceiveBufferPosition -= iReceiveSize;
+	memmove(m_ReceiveBuffer, m_ReceiveBuffer + iReceiveSize, m_iReceiveBufferPosition);
+
+	// dispatch packet
 	DISPATCHER_CLIENT->PacketDispatch(receivePacket);
-	resetReceiveBuffer();
 
 	return true;
 }

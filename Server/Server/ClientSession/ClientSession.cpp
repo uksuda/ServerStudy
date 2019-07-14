@@ -40,25 +40,64 @@ bool ClientSession::initClientSession()
 
 void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 {
-	m_stSessionInfo.m_Buffer[dwBytesTrans] = '\0';
-	printf("client %d : %d [received]. msg : %s", m_stSessionInfo.m_userSeq, dwBytesTrans, m_stSessionInfo.m_Buffer);
-
 	DWORD dwFlag = 0;
-	DWORD dwSentNumBytes = 0;
-	m_stSessionInfo.m_Wsabuf.buf = m_stSessionInfo.m_Buffer;
-	m_stSessionInfo.m_Wsabuf.len = dwBytesTrans;
-	m_stSessionInfo.eMode = IO_MODE::MODE_WRITE;
+	DWORD dwNumBytes = 0;
+	int iRetValue = 0;
 
-	int iRetValue = WSASend(m_stSessionInfo.m_ClientSocket, &m_stSessionInfo.m_Wsabuf, 1, &dwSentNumBytes, dwFlag, &m_stSessionInfo.m_Overlapped, NULL);
+	m_stSessionInfo.m_iReceivePosition += dwBytesTrans;
+
+	if (m_stSessionInfo.m_iReceivePosition < PACKET_HEADER_SIZE)
+	{
+		m_stSessionInfo.m_Wsabuf.buf = m_stSessionInfo.m_ReceiveBuffer + m_stSessionInfo.m_iReceivePosition;
+		m_stSessionInfo.m_Wsabuf.len = S_BUFFER_SIZE - m_stSessionInfo.m_iReceivePosition;
+		m_stSessionInfo.eMode = IO_MODE::MODE_READ;
+		iRetValue = WSARecv(m_stSessionInfo.m_ClientSocket, &m_stSessionInfo.m_Wsabuf, 1, &dwNumBytes, &dwFlag, &m_stSessionInfo.m_Overlapped, NULL);
+		if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
+		{
+			CLog::LOG("WSARecv", WSAGetLastError());
+		}
+		return;
+	}
+
+	Packet receivePacket(PACKET_ENUM(E_PID_CTS::ID_INVALID));
+	memcpy(receivePacket.getPacketBuffer(), m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
+
+	receivePacket.setReceivePacketHeaderData();
+	if (receivePacket.getPacketSize() > m_stSessionInfo.m_iReceivePosition)
+	{
+		m_stSessionInfo.m_Wsabuf.buf = m_stSessionInfo.m_ReceiveBuffer + m_stSessionInfo.m_iReceivePosition;
+		m_stSessionInfo.m_Wsabuf.len = S_BUFFER_SIZE - m_stSessionInfo.m_iReceivePosition;
+		m_stSessionInfo.eMode = IO_MODE::MODE_READ;
+		iRetValue = WSARecv(m_stSessionInfo.m_ClientSocket, &m_stSessionInfo.m_Wsabuf, 1, &dwNumBytes, &dwFlag, &m_stSessionInfo.m_Overlapped, NULL);
+		if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
+		{
+			CLog::LOG("WSARecv", WSAGetLastError());
+		}
+		return;
+	}
+
+	unsigned int iReceiveSize = receivePacket.getPacketSize();
+	memcpy(receivePacket.getPacketReceiveBuffer(), m_stSessionInfo.m_ReceiveBuffer + PACKET_HEADER_SIZE, receivePacket.getPacketReceiveSize());
+
+	m_stSessionInfo.m_iReceivePosition -= iReceiveSize;
+	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iReceiveSize, m_stSessionInfo.m_iReceivePosition);
+
+	// dispatch packet
+
+
+	/*m_stSessionInfo.m_Wsabuf.buf = m_stSessionInfo.m_ReceiveBuffer + m_stSessionInfo.m_iReceivePosition;
+	m_stSessionInfo.m_Wsabuf.len = S_BUFFER_SIZE - m_stSessionInfo.m_iReceivePosition;
+	m_stSessionInfo.eMode = IO_MODE::MODE_READ;
+	iRetValue = WSARecv(m_stSessionInfo.m_ClientSocket, &m_stSessionInfo.m_Wsabuf, 1, &dwNumBytes, &dwFlag, &m_stSessionInfo.m_Overlapped, NULL);
 	if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
 	{
-		CLog::LOG("WSASend", WSAGetLastError());
-	}
+		CLog::LOG("WSARecv", WSAGetLastError());
+	}*/
 }
 
 void ClientSession::dispatchSend(DWORD dwBytesTrans)
 {
-	printf("client %d : %d [send]. msg : %s", m_stSessionInfo.m_userSeq, dwBytesTrans, m_stSessionInfo.m_Buffer);
+	/*printf("client %d : %d [send]. msg : %s", m_stSessionInfo.m_userSeq, dwBytesTrans, m_stSessionInfo.m_Buffer);
 
 	memset(m_stSessionInfo.m_Buffer, 0, sizeof(BUFFER_SIZE));
 
@@ -73,7 +112,7 @@ void ClientSession::dispatchSend(DWORD dwBytesTrans)
 	if (iRetValue == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
 	{
 		CLog::LOG("WSARecv", WSAGetLastError());
-	}
+	}*/
 }
 
 ClientSession* ClientSession::createSession()

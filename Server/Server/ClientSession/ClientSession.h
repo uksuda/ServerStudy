@@ -3,6 +3,8 @@
 
 #include "ServerHeader.h"
 
+#define S_BUFFER_SIZE PACKET_BUFFER_SIZE * 5
+
 class ClientSession
 {
 public:
@@ -17,7 +19,13 @@ public:
 		// io info
 		OVERLAPPED m_Overlapped;
 		WSABUF m_Wsabuf;
-		char m_Buffer[BUFFER_SIZE];
+
+		char m_ReceiveBuffer[S_BUFFER_SIZE];
+		unsigned int m_iReceivePosition;
+
+		char m_SendBuffer[S_BUFFER_SIZE];
+		unsigned int m_iSendPosition;
+
 		IO_MODE eMode;
 		
 		// socket info

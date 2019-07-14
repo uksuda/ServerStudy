@@ -72,8 +72,8 @@ void MainServer::runServer()
 		DWORD dwFlag = 0;
 		DWORD dwRecvNumBytes = 0;
 
-		refSessionInfo.m_Wsabuf.len = BUFFER_SIZE;
-		refSessionInfo.m_Wsabuf.buf = refSessionInfo.m_Buffer;
+		refSessionInfo.m_Wsabuf.len = S_BUFFER_SIZE;
+		refSessionInfo.m_Wsabuf.buf = refSessionInfo.m_ReceiveBuffer;
 		refSessionInfo.eMode = ClientSession::IO_MODE::MODE_READ;
 		
 		int iRetValue = WSARecv(refSessionInfo.m_ClientSocket, &refSessionInfo.m_Wsabuf, 1, &dwRecvNumBytes, &dwFlag, &refSessionInfo.m_Overlapped, NULL);

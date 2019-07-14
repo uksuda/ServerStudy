@@ -38,7 +38,7 @@ void WorkerThread::workBegin(HANDLE hComPort)
 void WorkerThread::workRunning()
 {
 	DWORD bytesTrans;
-	DWORD flags = 0;
+	//DWORD flags = 0;
 
 	LPOVERLAPPED lpOverlapped = nullptr;
 	ClientSession* pClientSession = nullptr;
