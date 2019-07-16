@@ -46,6 +46,9 @@ public:
 
 public:
 	void packetDispatch(DWORD dwBytesTrans);
+	void recvSocket();
+	void sendPacket(Packet& sendPacket);
+	void sendFlush();
 
 private:
 	stSessionInfo m_stSessionInfo;

@@ -158,6 +158,10 @@ bool ClientSocket::sendFlush()
 bool ClientSocket::sendPacket(Packet& packet)
 {
 	packet.setPacketHeaderData();
+	if (packet.isPacket() == false)
+	{
+		return false;
+	}
 	
 	if (m_iSendBufferPosition + packet.getPacketSize() > C_BUFFER_SIZE)
 	{

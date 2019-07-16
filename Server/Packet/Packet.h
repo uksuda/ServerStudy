@@ -70,6 +70,7 @@ public:
 	void setPacketHeaderData();
 	bool setReceivePacketHeaderData();
 	bool clearPacket();
+	bool isPacket();
 
 private:
 	unsigned int m_iPacketID;

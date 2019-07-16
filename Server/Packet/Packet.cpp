@@ -363,7 +363,7 @@ bool Packet::getDataFromPacket(bool* pData)
 
 void Packet::setPacketHeaderData()
 {
-	if (m_iPacketID == PACKET_ENUM(E_PID_CTS::ID_INVALID) || m_iPacketSize == 0)
+	if (isPacket() == false)
 	{
 		setErrorMessage(typeid(E_PID_CTS).name(), E_ERROR_TYPE::E_BUFFER_INVALID_SIZE);
 		CLog::LOG(m_szError);
@@ -393,6 +393,21 @@ bool Packet::clearPacket()
 	m_iReadPosition = PACKET_HEADER_SIZE;
 	memset(m_Buffer, 0, sizeof(m_Buffer));
 	memset(m_szError, 0, sizeof(m_szError));
+	return true;
+}
+
+bool Packet::isPacket()
+{
+	if (m_iPacketSize == 0)
+	{
+		return false;
+	}
+
+	if (m_iPacketID == PACKET_ENUM(E_PID_CTS::ID_INVALID))
+	{
+		return false;
+	}
+
 	return true;
 }
 
