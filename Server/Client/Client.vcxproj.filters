@@ -34,6 +34,12 @@
     <ClCompile Include="Socket\DispatchFunc.cpp">
       <Filter>Socket</Filter>
     </ClCompile>
+    <ClCompile Include="MainProcess\MainClient.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\MainScene.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ClientSocket.h">
@@ -53,6 +59,12 @@
     </ClInclude>
     <ClInclude Include="Socket\DispatchFunc.h">
       <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\MainClient.h">
+      <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\MainScene.h">
+      <Filter>MainProcess</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

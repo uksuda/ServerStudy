@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Packet\;$(ProjectDir)Socket\;$(SolutionDir)Log\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Packet\;$(ProjectDir)Socket\;$(SolutionDir)Log\;$(ProjectDir)MainProcess\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -116,7 +116,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Packet\;$(ProjectDir)Socket\;$(SolutionDir)Log\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Packet\;$(ProjectDir)Socket\;$(SolutionDir)Log\;$(ProjectDir)MainProcess\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -145,6 +145,8 @@
     <ClCompile Include="..\Log\Log.cpp" />
     <ClCompile Include="..\Packet\Packet.cpp" />
     <ClCompile Include="..\Packet\PacketDispatcher.cpp" />
+    <ClCompile Include="MainProcess\MainScene.cpp" />
+    <ClCompile Include="MainProcess\MainClient.cpp" />
     <ClCompile Include="Socket\ClientSocket.cpp" />
     <ClCompile Include="Socket\DispatcherClient.cpp" />
     <ClCompile Include="Socket\DispatchFunc.cpp" />
@@ -154,6 +156,8 @@
     <ClInclude Include="..\Log\Log.h" />
     <ClInclude Include="..\Packet\Packet.h" />
     <ClInclude Include="..\Packet\PacketDispatcher.h" />
+    <ClInclude Include="MainProcess\MainScene.h" />
+    <ClInclude Include="MainProcess\MainClient.h" />
     <ClInclude Include="Socket\ClientSocket.h" />
     <ClInclude Include="Socket\DispatcherClient.h" />
     <ClInclude Include="Socket\DispatchFunc.h" />
