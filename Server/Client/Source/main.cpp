@@ -1,22 +1,14 @@
 #include <iostream>
-#include "ServerIP.h"
-#include "ClientSocket.h"
-#include "Packet.h"
+#include "MainClient.h"
 
 int main()
 {
-	/*
-	ClientSocket* pClient = ClientSocket::createSocket();
-	if (pClient && pClient->connectTo(SERVER_HOST, SERVER_PORT))
+	MainClient* pMain = MainClient::createMainClient();
+	if (pMain == nullptr)
 	{
-		pClient->clientStart();
+		return -1;
 	}
 
-	if (pClient)
-	{
-		delete pClient;
-		pClient = nullptr;
-	}*/
-
+	pMain->runClient();
 	return 0;
 }

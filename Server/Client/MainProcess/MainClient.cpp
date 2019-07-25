@@ -1,8 +1,12 @@
 #include "MainClient.h"
+#include "ClientSocket.h"
+#include "MainScene.h"
 #include "Log.h"
+
 
 MainClient::MainClient()
 	: m_pSocket(nullptr)
+	, m_pMainScene(nullptr)
 	, m_bRunning(false)
 	, m_fAccumulatedTime(0.f)
 {
@@ -26,6 +30,12 @@ MainClient* MainClient::createMainClient()
 	return pMain;
 }
 
+
+void MainClient::stopClient()
+{
+	m_bRunning = false;
+}
+
 bool MainClient::initialize()
 {
 	return true;
@@ -33,6 +43,13 @@ bool MainClient::initialize()
 
 void MainClient::runClient()
 {
+	if (m_bRunning)
+	{
+		return;
+	}
+
+	m_bRunning = true;
+
 	DWORD dwTime = 0;
 	DWORD dwOneFrameTime = 167;
 
@@ -68,5 +85,6 @@ void MainClient::render()
 
 void MainClient::release()
 {
-
+	SAFE_DELETE(m_pMainScene);
+	SAFE_DELETE(m_pSocket);
 }

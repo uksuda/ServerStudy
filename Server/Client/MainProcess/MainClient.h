@@ -4,6 +4,7 @@
 #include "ServerHeader.h"
 
 class ClientSocket;
+class MainScene;
 class MainClient
 {
 private:
@@ -15,11 +16,13 @@ public:
 public:
 	static MainClient* createMainClient();
 
+	void stopClient();
 	bool initialize();
 	void runClient();
 
 private:
 	ClientSocket* m_pSocket;
+	MainScene* m_pMainScene;
 
 	bool m_bRunning;
 	float m_fAccumulatedTime;
