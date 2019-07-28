@@ -1,4 +1,4 @@
-#include "DispatchFunc.h"
+#include "DispatcherFunc.h"
 
 DispatchFunc::DispatchFunc()
 {
@@ -10,7 +10,7 @@ DispatchFunc::~DispatchFunc()
 
 }
 
-void DispatchFunc::funcLoginOK(Packet receivePacket)
+void DispatchFunc::funcLoginReq(Packet receivePacket)
 {
 
 }

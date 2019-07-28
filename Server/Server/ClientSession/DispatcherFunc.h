@@ -1,5 +1,5 @@
-#ifndef _DISPATCH_FUNC_H__
-#define _DISPATCH_FUNC_H__
+#ifndef _DISPATCHER_FUNC_H__
+#define _DISPATCHER_FUNC_H__
 
 #include "ServerHeader.h"
 
@@ -10,7 +10,7 @@ private:
 	~DispatchFunc();
 
 public:
-	static void funcLoginOK(Packet receivePacket);
+	static void funcLoginReq(Packet receivePacket);
 	static void funcChatMessage(Packet receivePacket);
 };
 

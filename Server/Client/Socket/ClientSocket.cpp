@@ -222,7 +222,7 @@ bool ClientSocket::receivePacket()
 	memmove(m_ReceiveBuffer, m_ReceiveBuffer + iReceiveSize, m_iReceiveBufferPosition);
 
 	// dispatch packet
-	DISPATCHER_CLIENT->PacketDispatch(receivePacket);
+	DISPATCHER_CLIENT->packetDispatch(receivePacket);
 
 	return true;
 }

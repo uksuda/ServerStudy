@@ -55,6 +55,15 @@
     <ClCompile Include="..\Packet\Packet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Packet\PacketDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession\DispatcherFunc.cpp">
+      <Filter>Server\ClientSession</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession\DispatcherServer.cpp">
+      <Filter>Server\ClientSession</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket\ServerSocket.h">
@@ -86,6 +95,13 @@
     </ClInclude>
     <ClInclude Include="..\Packet\Packet.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Packet\PacketDispatcher.h" />
+    <ClInclude Include="ClientSession\DispatcherServer.h">
+      <Filter>Server\ClientSession</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession\DispatcherFunc.h">
+      <Filter>Server\ClientSession</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

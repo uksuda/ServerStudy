@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -144,8 +144,11 @@
   <ItemGroup>
     <ClCompile Include="..\Log\Log.cpp" />
     <ClCompile Include="..\Packet\Packet.cpp" />
+    <ClCompile Include="..\Packet\PacketDispatcher.cpp" />
     <ClCompile Include="ClientSession\ClientSession.cpp" />
     <ClCompile Include="ClientSession\ClientSessionManager.cpp" />
+    <ClCompile Include="ClientSession\DispatcherFunc.cpp" />
+    <ClCompile Include="ClientSession\DispatcherServer.cpp" />
     <ClCompile Include="DB\DBConnector.cpp" />
     <ClCompile Include="Socket\ServerSocket.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -157,8 +160,11 @@
   <ItemGroup>
     <ClInclude Include="..\Log\Log.h" />
     <ClInclude Include="..\Packet\Packet.h" />
+    <ClInclude Include="..\Packet\PacketDispatcher.h" />
     <ClInclude Include="ClientSession\ClientSession.h" />
     <ClInclude Include="ClientSession\ClientSessionManager.h" />
+    <ClInclude Include="ClientSession\DispatcherFunc.h" />
+    <ClInclude Include="ClientSession\DispatcherServer.h" />
     <ClInclude Include="DB\DBConnector.h" />
     <ClInclude Include="Socket\ServerSocket.h" />
     <ClInclude Include="Source\MainServer.h" />

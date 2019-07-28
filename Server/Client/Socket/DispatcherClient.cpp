@@ -33,9 +33,9 @@ DispatcherClient::~DispatcherClient()
 	m_mapFunc.clear();
 }
 
-bool DispatcherClient::PacketDispatch(Packet receivePacket)
+bool DispatcherClient::packetDispatch(Packet receivePacket)
 {
-	if (PacketDispatcher::PacketDispatch(receivePacket) == false)
+	if (PacketDispatcher::packetDispatch(receivePacket) == false)
 	{
 		return false;
 	}
@@ -58,4 +58,5 @@ bool DispatcherClient::PacketDispatch(Packet receivePacket)
 void DispatcherClient::registDispatchFunc()
 {
 	m_mapFunc.insert(DISPATCH_MAP::value_type(E_PID_STC::ID_LOGIN_OK, DispatchFunc::funcLoginOK));
+	m_mapFunc.insert(DISPATCH_MAP::value_type(E_PID_STC::ID_CHAT_MESSAGE_FROM, DispatchFunc::funcChatMessage));
 }
