@@ -3,8 +3,9 @@
 
 #include "ServerHeader.h"
 
+#define MESSAGE_SIZE 1024
+
 class ClientSocket;
-class MainScene;
 class MainClient
 {
 private:
@@ -22,7 +23,6 @@ public:
 
 private:
 	ClientSocket* m_pSocket;
-	MainScene* m_pMainScene;
 
 	bool m_bRunning;
 	float m_fAccumulatedTime;
@@ -30,6 +30,8 @@ private:
 private:
 	void update(float fDelta);
 	void render();
+
+	void inputMessage();
 
 public:
 	void release();

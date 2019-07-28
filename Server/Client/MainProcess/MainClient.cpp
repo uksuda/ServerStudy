@@ -1,12 +1,11 @@
 #include "MainClient.h"
 #include "ClientSocket.h"
-#include "MainScene.h"
+#include <iostream>
 #include "Log.h"
 
 
 MainClient::MainClient()
 	: m_pSocket(nullptr)
-	, m_pMainScene(nullptr)
 	, m_bRunning(false)
 	, m_fAccumulatedTime(0.f)
 {
@@ -38,6 +37,24 @@ void MainClient::stopClient()
 
 bool MainClient::initialize()
 {
+	m_pSocket = ClientSocket::createSocket();
+	if (m_pSocket == nullptr)
+	{
+		return false;
+	}
+
+	if (m_pSocket->connectTo(SERVER_HOST, SERVER_PORT) == false)
+	{
+		return false;
+	}
+
+	unsigned int iTempID = 0;
+
+	Packet sendPacket(PACKET_ENUM(E_PID_CTS::ID_LOGIN_REQ));
+	sendPacket.add(iTempID);
+
+	m_pSocket->sendPacket(sendPacket);
+
 	return true;
 }
 
@@ -51,21 +68,13 @@ void MainClient::runClient()
 	m_bRunning = true;
 
 	DWORD dwTime = 0;
-	DWORD dwOneFrameTime = 167;
-
-	float fOneFrameTime = 0.0167f;
-	float fDelta = 0.f;
 	
 	while (m_bRunning)
 	{
 		DWORD dwInterval = GetTickCount() - dwTime;
-		if (dwInterval < dwOneFrameTime)
-		{
-			continue;
-		}
-
+		
 		dwTime = GetTickCount();
-		fDelta += fOneFrameTime;
+		float fDelta = static_cast<float>(dwInterval) * 0.001f;
 
 		update(fDelta);
 		render();
@@ -74,17 +83,38 @@ void MainClient::runClient()
 
 void MainClient::update(float fDelta)
 {
+	m_pSocket->receivePacket();
 	m_fAccumulatedTime += fDelta;
-
 }
 
 void MainClient::render()
 {
+	inputMessage();
+}
 
+void MainClient::inputMessage()
+{
+	std::string strMessage;
+	std::cout << "input message : " << std::endl;
+	std::cin >> strMessage;
+
+	if (strMessage.size() == 0)
+	{
+		return;
+	}
+
+	if (strMessage.size() > MESSAGE_SIZE)
+	{
+		std::cout << "too long message." << std::endl;
+		return;
+	}
+
+	Packet sendPacket(PACKET_ENUM(E_PID_CTS::ID_CHAT_MESSAGE));
+	sendPacket.add((char*)strMessage.c_str(), strMessage.size());
+	m_pSocket->sendPacket(sendPacket);
 }
 
 void MainClient::release()
 {
-	SAFE_DELETE(m_pMainScene);
 	SAFE_DELETE(m_pSocket);
 }

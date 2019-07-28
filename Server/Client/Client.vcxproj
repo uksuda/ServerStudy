@@ -145,7 +145,6 @@
     <ClCompile Include="..\Log\Log.cpp" />
     <ClCompile Include="..\Packet\Packet.cpp" />
     <ClCompile Include="..\Packet\PacketDispatcher.cpp" />
-    <ClCompile Include="MainProcess\MainScene.cpp" />
     <ClCompile Include="MainProcess\MainClient.cpp" />
     <ClCompile Include="Socket\ClientSocket.cpp" />
     <ClCompile Include="Socket\DispatcherClient.cpp" />
@@ -156,7 +155,6 @@
     <ClInclude Include="..\Log\Log.h" />
     <ClInclude Include="..\Packet\Packet.h" />
     <ClInclude Include="..\Packet\PacketDispatcher.h" />
-    <ClInclude Include="MainProcess\MainScene.h" />
     <ClInclude Include="MainProcess\MainClient.h" />
     <ClInclude Include="Socket\ClientSocket.h" />
     <ClInclude Include="Socket\DispatcherClient.h" />
