@@ -67,14 +67,14 @@ void MainClient::runClient()
 
 	m_bRunning = true;
 
-	DWORD dwTime = 0;
+	ULONGLONG lTime = 0;
 	
 	while (m_bRunning)
 	{
-		DWORD dwInterval = GetTickCount() - dwTime;
+		ULONGLONG lInterval = GetTickCount64() - lTime;
 		
-		dwTime = GetTickCount();
-		float fDelta = static_cast<float>(dwInterval) * 0.001f;
+		lTime = GetTickCount64();
+		float fDelta = static_cast<float>(lInterval) * 0.001f;
 
 		update(fDelta);
 		render();
