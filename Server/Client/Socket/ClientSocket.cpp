@@ -5,6 +5,9 @@
 #include "DispatcherClient.h"
 #include <iostream>
 
+#define CONNECT_DELAY 5000
+#define CONNECT_RETRY 5
+#define CONNECT_LOG 128
 
 ClientSocket::ClientSocket(int iSeed)
 	: m_Socket(INVALID_SOCKET)
@@ -78,21 +81,39 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 
 	serverAddr.sin_port = htons(iServerPort);
 
-	if (connect(m_Socket, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
+	int iResult = 0;
+	int iConnectTry = 0;
+	char szConnect[CONNECT_LOG];
+	while (iConnectTry < CONNECT_RETRY)
 	{
-#ifdef WIN32
-		if (WSAGetLastError() != WSAEWOULDBLOCK)
-#else
-		if (GetLastError() != EWOULDBLOCK)
-#endif
+		memset(szConnect, 0, sizeof(szConnect));
+		iResult = connect(m_Socket, (SOCKADDR*)& serverAddr, sizeof(serverAddr));
+		if (iResult == SOCKET_ERROR)
 		{
-			CLog::LOG("connect", GetLastError());
-			closeSocket();
-			return false;
-		}		
+#ifdef WIN32
+			if (WSAGetLastError() != WSAEWOULDBLOCK)
+#else
+			if (GetLastError() != EWOULDBLOCK)
+#endif
+			{
+				CLog::LOG("connect", GetLastError());
+				closeSocket();
+				return false;
+			}
+
+			++iConnectTry;
+			snprintf(szConnect, sizeof(szConnect), "connect retry %d", iConnectTry);
+			CLog::LOG(szConnect);
+			Sleep(CONNECT_DELAY);
+		}
+		else if (iResult == 0)
+		{
+			CLog::LOG("connected server");
+			return true;
+		}
 	}
 
-	return true;
+	return false;
 }
 
 void ClientSocket::closeSocket()
