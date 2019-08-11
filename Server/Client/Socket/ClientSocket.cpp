@@ -84,10 +84,12 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 	int iResult = 0;
 	int iConnectTry = 0;
 	char szConnect[CONNECT_LOG];
+
+	iResult = connect(m_Socket, (SOCKADDR*)& serverAddr, sizeof(serverAddr));
+
 	while (iConnectTry < CONNECT_RETRY)
 	{
 		memset(szConnect, 0, sizeof(szConnect));
-		iResult = connect(m_Socket, (SOCKADDR*)& serverAddr, sizeof(serverAddr));
 		if (iResult == SOCKET_ERROR)
 		{
 #ifdef WIN32

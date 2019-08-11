@@ -38,6 +38,7 @@ void MainServer::runServer()
 	{
 		SOCKADDR_IN clientAddr;
 		SOCKET hClientSocket = m_pServerSocket->startAcception(clientAddr);
+
 		if (hClientSocket == INVALID_SOCKET)
 		{
 			// client socket error
@@ -56,6 +57,17 @@ void MainServer::runServer()
 		
 		SESSIONMGR->insertNewSession(pSession);
 		SYNCHRO->leaveCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
+
+		char szIP[INET_ADDRSTRLEN];
+		memset(szIP, 0, sizeof(szIP));
+
+		char szMessage[64];
+		memset(szMessage, 0, sizeof(szMessage));
+		//inet_ntoa(clientAddr.sin_addr)
+
+		inet_ntop(AF_INET, &(clientAddr.sin_addr), szIP, INET_ADDRSTRLEN);
+		snprintf(szMessage, sizeof(szMessage), "Client connedted : %d, %s", refSessionInfo.m_userSeq, szIP);
+		CLog::LOG(szMessage);
 		
 		HANDLE hComPort = CreateIoCompletionPort((HANDLE)refSessionInfo.m_ClientSocket, m_hComPort, (ULONG_PTR)pSession, 0);
 
