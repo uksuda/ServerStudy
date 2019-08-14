@@ -15,6 +15,7 @@
 // TODO 모바일 환경 작업 필요
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <errno.h>
 
 #define INVALID_SOCKET	-1
 #define SOCKET_ERROR	-1

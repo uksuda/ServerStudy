@@ -5,9 +5,6 @@
 #include "DispatcherClient.h"
 #include <iostream>
 
-#define CONNECT_DELAY 5000
-#define CONNECT_RETRY 5
-#define CONNECT_LOG 128
 
 ClientSocket::ClientSocket(int iSeed)
 	: m_Socket(INVALID_SOCKET)
@@ -47,17 +44,6 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 		return false;
 	}
 
-#ifdef WIN32
-	unsigned long dwBlocking = SOCKET_OPTION_TRUE;
-	if (ioctlsocket(m_Socket, FIONBIO, &dwBlocking) == SOCKET_ERROR)
-	{
-		CLog::LOG("ioctlsocket : FIONBIO");
-		return false;
-	}
-#else
-	//fcntl(m_Socket, F_SETFL, O_NONBLOCK);
-#endif
-
 	memset(&serverAddr, 0, sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
 	//InetPton(serverAddr.sin_family, (PCWSTR)szServerIP, &serverAddr.sin_addr);
@@ -81,41 +67,27 @@ bool ClientSocket::connectTo(const char* szServerIP, int iServerPort)
 
 	serverAddr.sin_port = htons(iServerPort);
 
-	int iResult = 0;
-	int iConnectTry = 0;
-	char szConnect[CONNECT_LOG];
-
-	iResult = connect(m_Socket, (SOCKADDR*)& serverAddr, sizeof(serverAddr));
-
-	while (iConnectTry < CONNECT_RETRY)
+	int iResult = connect(m_Socket, (SOCKADDR*)& serverAddr, sizeof(serverAddr));
+	if (iResult == SOCKET_ERROR)
 	{
-		memset(szConnect, 0, sizeof(szConnect));
-		if (iResult == SOCKET_ERROR)
-		{
-#ifdef WIN32
-			if (WSAGetLastError() != WSAEWOULDBLOCK)
-#else
-			if (GetLastError() != EWOULDBLOCK)
-#endif
-			{
-				CLog::LOG("connect", GetLastError());
-				closeSocket();
-				return false;
-			}
-
-			++iConnectTry;
-			snprintf(szConnect, sizeof(szConnect), "connect retry %d", iConnectTry);
-			CLog::LOG(szConnect);
-			Sleep(CONNECT_DELAY);
-		}
-		else if (iResult == 0)
-		{
-			CLog::LOG("connected server");
-			return true;
-		}
+		CLog::LOG("connect", WSAGetLastError());
+		return false;
 	}
 
-	return false;
+	CLog::LOG("connected.");
+
+#ifdef WIN32
+	unsigned long dwBlocking = SOCKET_OPTION_TRUE;
+	if (ioctlsocket(m_Socket, FIONBIO, &dwBlocking) == SOCKET_ERROR)
+	{
+		CLog::LOG("ioctlsocket : FIONBIO");
+		return false;
+	}
+#else
+	//fcntl(m_Socket, F_SETFL, O_NONBLOCK);
+#endif
+
+	return true;
 }
 
 void ClientSocket::closeSocket()
@@ -147,7 +119,11 @@ bool ClientSocket::sendFlush()
 	int iRet = send(m_Socket, m_SendBuffer, m_iSendBufferPosition, NULL);
 	if (iRet == SOCKET_ERROR)
 	{
+#ifdef WIN32
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+#else
 		if (GetLastError() == EWOULDBLOCK)
+#endif 
 		{
 			CLog::LOG("send buffer is busy");
 			return false;
@@ -156,15 +132,6 @@ bool ClientSocket::sendFlush()
 		CLog::LOG("Socket send", GetLastError());
 		return false;
 	}
-	/*else if (iRet < iLength)
-	{
-		if (pBuffer + (C_BUFFER_SIZE - 1) < pBuffer + iRet)
-		{
-			iRet = C_BUFFER_SIZE - 1;
-		}
-
-		sendFlush(pBuffer + iRet, iLength - iRet);
-	}*/
 
 	if (m_iSendBufferPosition - iRet <= 0)
 	{
@@ -207,7 +174,11 @@ bool ClientSocket::receivePacket()
 	int iRet = recv(m_Socket, m_ReceiveBuffer + m_iReceiveBufferPosition, PACKET_BUFFER_SIZE - m_iReceiveBufferPosition, NULL);
 	if (iRet == SOCKET_ERROR)
 	{
+#ifdef WIN32
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+#else
 		if (GetLastError() == EWOULDBLOCK)
+#endif 
 		{
 			CLog::LOG("recv buffer is empty");
 			return false;
@@ -249,41 +220,6 @@ bool ClientSocket::receivePacket()
 
 	return true;
 }
-
-/*
-void ClientSocket::clientStart()
-{
-	char szMessage[BUFFER_SIZE];
-	memset(szMessage, 0, sizeof(szMessage));
-
-	while (true)
-	{
-		printf("input message (exit 0): ");
-		fgets(szMessage, sizeof(szMessage), stdin);
-
-		int iRet = send(m_Socket, szMessage, sizeof(szMessage), NULL);
-		if (iRet == SOCKET_ERROR)
-		{
-			if (GetLastError() == EWOULDBLOCK)
-			{
-				CLog::LOG("send buffer is full");
-				continue;
-			}
-		}
-
-		iRet = recv(m_Socket, szMessage, sizeof(szMessage), NULL);
-		if (iRet == SOCKET_ERROR)
-		{
-			if (GetLastError() == EWOULDBLOCK)
-			{
-				continue;
-			}
-		}
-
-		szMessage[BUFFER_SIZE - 1] = NULL;
-		printf("received from server : %s\n\n", szMessage);
-	}
-}*/
 
 bool ClientSocket::initSocket()
 {
