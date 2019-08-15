@@ -4,6 +4,7 @@
 #include "WorkerThreadManager.h"
 #include "Synchro.h"
 #include "ServerSocket.h"
+#include "DispatcherServer.h"
 #include "Log.h"
 
 
@@ -20,6 +21,8 @@ MainServer::~MainServer()
 	SESSIONMGR->destroyInstance();
 	THREADMGR->destroyInstance();
 	SYNCHRO->destroyInstance();
+	DISPATCHER_SERVER->destroyInstance();
+
 	SAFE_DELETE(m_pServerSocket);
 	CloseHandle(m_hComPort);
 }
@@ -53,7 +56,7 @@ void MainServer::runServer()
 
 		refSessionInfo.m_ClientSocket = hClientSocket;
 		refSessionInfo.m_ClientAddr = clientAddr;
-		refSessionInfo.m_userSeq = SESSIONMGR->getCurrentSessionCount();
+		refSessionInfo.m_userSeq = SESSIONMGR->getCurrentSessionCount() + 1;
 		
 		SESSIONMGR->insertNewSession(pSession);
 		SYNCHRO->leaveCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
@@ -146,6 +149,8 @@ bool MainServer::initMainServer()
 		CLog::LOG("ServerSocket Fail");
 		return false;
 	}
+
+	DISPATCHER_SERVER->getInstance();
 
 	char szMsg[64];
 	sprintf_s(szMsg, sizeof(szMsg), "Server Started : %s Port : %d", SERVER_HOST, SERVER_PORT);

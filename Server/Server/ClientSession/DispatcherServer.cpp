@@ -31,7 +31,7 @@ void DispatcherServer::destroyInstance()
 	SAFE_DELETE(m_pInstance);
 }
 
-bool DispatcherServer::packetDispatch(Packet receivePacket)
+bool DispatcherServer::packetDispatchServer(Packet receivePacket)
 {
 	if (PacketDispatcher::packetDispatch(receivePacket) == false)
 	{

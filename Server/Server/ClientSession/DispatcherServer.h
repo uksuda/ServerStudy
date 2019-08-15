@@ -32,7 +32,8 @@ public:
 	static void destroyInstance();
 
 public:
-	virtual bool packetDispatch(Packet receivePacket);
+	//virtual bool packetDispatch(Packet receivePacket);
+	bool packetDispatchServer(Packet receivePacket);
 
 private:
 	void registDispatchFunc();
