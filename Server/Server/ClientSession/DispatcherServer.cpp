@@ -41,6 +41,7 @@ bool DispatcherServer::packetDispatchServer(Packet receivePacket)
 	unsigned int iPacketID = receivePacket.getPacketID();
 	E_PID_CTS ePacketID = static_cast<E_PID_CTS>(iPacketID);
 
+
 	DISPATCH_ITER iter = m_mapFunc.find(ePacketID);
 	if (iter == m_mapFunc.end())
 	{

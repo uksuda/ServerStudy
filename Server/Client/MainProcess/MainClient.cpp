@@ -48,7 +48,7 @@ bool MainClient::initialize()
 		return false;
 	}
 
-	unsigned int iTempID = 0;
+	unsigned int iTempID = 10;
 
 	Packet sendPacket(PACKET_ENUM(E_PID_CTS::ID_LOGIN_REQ));
 	sendPacket.add(iTempID);

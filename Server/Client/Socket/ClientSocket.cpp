@@ -157,6 +157,7 @@ bool ClientSocket::sendPacket(Packet& packet)
 	{
 		if (sendFlush() == false)
 		{
+			CLog::LOG("Fail to send");
 			return false;
 		}
 	}
@@ -180,7 +181,7 @@ bool ClientSocket::receivePacket()
 		if (GetLastError() == EWOULDBLOCK)
 #endif 
 		{
-			CLog::LOG("recv buffer is empty");
+			//CLog::LOG("recv buffer is empty");
 			return false;
 		}
 
@@ -195,6 +196,7 @@ bool ClientSocket::receivePacket()
 		return false;
 	}
 
+
 	Packet receivePacket(PACKET_ENUM(E_PID_STC::ID_INVALID));
 	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, m_iReceiveBufferPosition);
 
@@ -207,12 +209,12 @@ bool ClientSocket::receivePacket()
 	unsigned int iReceiveSize = receivePacket.getPacketSize();
 	memcpy(receivePacket.getPacketReceiveBuffer(), m_ReceiveBuffer + PACKET_HEADER_SIZE, receivePacket.getPacketReceiveSize());
 	
-	if (m_iReceiveBufferPosition == iReceiveSize)
+	if (m_iReceiveBufferPosition >= iReceiveSize)
 	{
 		resetReceiveBuffer();
 	}
 
-	m_iReceiveBufferPosition -= iReceiveSize;
+	m_iReceiveBufferPosition = (m_iReceiveBufferPosition - iReceiveSize > 0 ? m_iReceiveBufferPosition - iReceiveSize : 0);
 	memmove(m_ReceiveBuffer, m_ReceiveBuffer + iReceiveSize, m_iReceiveBufferPosition);
 
 	// dispatch packet

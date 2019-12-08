@@ -96,12 +96,14 @@
     <ClInclude Include="..\Packet\Packet.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Packet\PacketDispatcher.h" />
     <ClInclude Include="ClientSession\DispatcherServer.h">
       <Filter>Server\ClientSession</Filter>
     </ClInclude>
     <ClInclude Include="ClientSession\DispatcherFunc.h">
       <Filter>Server\ClientSession</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Packet\PacketDispatcher.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

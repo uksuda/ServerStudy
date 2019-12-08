@@ -117,6 +117,9 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iReceiveSize, m_stSessionInfo.m_iReceivePosition);
 
 	// dispatch packet
+	Packet sandPacket(PACKET_ENUM(E_PID_STC::ID_CHAT_MESSAGE_FROM));
+	memcpy(m_stSessionInfo.m_SendBuffer, m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
+	sendPacket(sandPacket);
 }
 
 void ClientSession::dispatchSend(DWORD dwBytesTrans)

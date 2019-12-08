@@ -375,7 +375,7 @@ void Packet::setPacketHeaderData()
 
 bool Packet::setReceivePacketHeaderData()
 {
-	if (m_Buffer == nullptr || strlen(m_Buffer) < PACKET_HEADER_SIZE)
+	if (m_Buffer == nullptr)
 	{
 		return false;
 	}
