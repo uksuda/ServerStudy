@@ -118,7 +118,7 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 
 	// dispatch packet
 	Packet sandPacket(PACKET_ENUM(E_PID_STC::ID_CHAT_MESSAGE_FROM));
-	memcpy(m_stSessionInfo.m_SendBuffer, m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
+	memcpy(sandPacket.getPacketReceiveBuffer(), receivePacket.getPacketReceiveBuffer(), receivePacket.getPacketReceiveSize());
 	sendPacket(sandPacket);
 }
 

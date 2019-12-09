@@ -33,7 +33,7 @@ DispatcherClient::~DispatcherClient()
 	m_mapFunc.clear();
 }
 
-bool DispatcherClient::packetDispatch(Packet receivePacket)
+bool DispatcherClient::packetDispatch(Packet& receivePacket)
 {
 	if (PacketDispatcher::packetDispatch(receivePacket) == false)
 	{

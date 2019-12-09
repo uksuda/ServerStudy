@@ -196,7 +196,6 @@ bool ClientSocket::receivePacket()
 		return false;
 	}
 
-
 	Packet receivePacket(PACKET_ENUM(E_PID_STC::ID_INVALID));
 	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, m_iReceiveBufferPosition);
 
@@ -214,7 +213,7 @@ bool ClientSocket::receivePacket()
 		resetReceiveBuffer();
 	}
 
-	m_iReceiveBufferPosition = (m_iReceiveBufferPosition - iReceiveSize > 0 ? m_iReceiveBufferPosition - iReceiveSize : 0);
+	m_iReceiveBufferPosition = (m_iReceiveBufferPosition > iReceiveSize ? m_iReceiveBufferPosition - iReceiveSize : 0);
 	memmove(m_ReceiveBuffer, m_ReceiveBuffer + iReceiveSize, m_iReceiveBufferPosition);
 
 	// dispatch packet

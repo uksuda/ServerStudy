@@ -16,7 +16,7 @@ protected:
 	virtual ~PacketDispatcher() = 0;
 
 public:
-	virtual bool packetDispatch(Packet receivePacket);
+	virtual bool packetDispatch(Packet& receivePacket);
 
 private:
 	E_DISPATCH m_eDispatcherType;

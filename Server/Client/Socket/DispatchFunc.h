@@ -10,8 +10,8 @@ private:
 	~DispatchFunc();
 
 public:
-	static void funcLoginOK(Packet receivePacket);
-	static void funcChatMessage(Packet receivePacket);
+	static void funcLoginOK(Packet& receivePacket);
+	static void funcChatMessage(Packet& receivePacket);
 };
 
 #endif

@@ -12,7 +12,7 @@ PacketDispatcher::~PacketDispatcher()
 
 }
 
-bool PacketDispatcher::packetDispatch(Packet receivePacket)
+bool PacketDispatcher::packetDispatch(Packet& receivePacket)
 {
 
 	if (m_eDispatcherType == E_DISPATCH::DISPATCH_CLIENT)

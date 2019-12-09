@@ -19,7 +19,7 @@ private:
 public:
 	virtual ~DispatcherClient();
 
-	using DISPATCH_FUNC = std::function<void(Packet receivePacket)>;
+	using DISPATCH_FUNC = std::function<void(Packet& receivePacket)>;
 	using DISPATCH_MAP = std::map<E_PID_STC, DISPATCH_FUNC>;
 	using DISPATCH_ITER = std::map<E_PID_STC, DISPATCH_FUNC>::iterator;
 
@@ -34,7 +34,7 @@ public:
 	static void destroyInstance();
 
 public:
-	virtual bool packetDispatch(Packet receivePacket);
+	virtual bool packetDispatch(Packet& receivePacket);
 
 private:
 	void registDispatchFunc();
