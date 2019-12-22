@@ -1,5 +1,8 @@
 #include "Log.h"
-#include <stdio.h>
+#include <iostream>
+#include <stdarg.h>
+
+#define LOG_TEXT_LENGTH 256
 
 CLog::CLog()
 {
@@ -11,17 +14,15 @@ CLog::~CLog()
 
 }
 
-void CLog::LOG(int iErrorNo)
+void CLog::LOG(const char* szMsg, ...)
 {
-	printf("Error Occured : %d\n", iErrorNo);
-}
+	char szLog[LOG_TEXT_LENGTH];
+	memset(szLog, 0, sizeof(szLog));
 
-void CLog::LOG(const char* szMsg)
-{
-	printf("%s\n", szMsg);
-}
+	va_list va;
+	va_start(va, szMsg);
+	vsnprintf(szLog, sizeof(szLog), szMsg, va);
+	va_end(va);
 
-void CLog::LOG(const char* szErrorName, int iErrorNo)
-{
-	printf("%s Error : %d\n", szErrorName, iErrorNo);
+	printf(szLog);
 }

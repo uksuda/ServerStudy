@@ -19,8 +19,8 @@ public:
 	virtual ~DispatcherServer();
 
 	using DISPATCH_FUNC = std::function<void(Packet receivePacket)>;
-	using DISPATCH_MAP = std::map<E_PID_CTS, DISPATCH_FUNC>;
-	using DISPATCH_ITER = std::map<E_PID_CTS, DISPATCH_FUNC>::iterator;
+	using DISPATCH_MAP = std::map<E_PACKET_CLIENT_TO_SERVER, DISPATCH_FUNC>;
+	using DISPATCH_ITER = std::map<E_PACKET_CLIENT_TO_SERVER, DISPATCH_FUNC>::iterator;
 
 private:
 	static DispatcherServer* m_pInstance;

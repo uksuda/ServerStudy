@@ -17,16 +17,16 @@ bool PacketDispatcher::packetDispatch(Packet& receivePacket)
 
 	if (m_eDispatcherType == E_DISPATCH::DISPATCH_CLIENT)
 	{
-		E_PID_STC ePacketID = static_cast<E_PID_STC>(receivePacket.getPacketID());
-		if (ePacketID == E_PID_STC::ID_INVALID)
+		E_PACKET_SERVER_TO_CLIENT ePacketID = static_cast<E_PACKET_SERVER_TO_CLIENT>(receivePacket.getPacketID());
+		if (ePacketID == INVALID_PACKET_ID)
 			return false;
 		else
 			return true;
 	}
 	else if (m_eDispatcherType == E_DISPATCH::DISPATCH_SERVER)
 	{
-		E_PID_CTS ePacketID = static_cast<E_PID_CTS>(receivePacket.getPacketID());
-		if (ePacketID == E_PID_CTS::ID_INVALID)
+		E_PACKET_CLIENT_TO_SERVER ePacketID = static_cast<E_PACKET_CLIENT_TO_SERVER>(receivePacket.getPacketID());
+		if (ePacketID == INVALID_PACKET_ID)
 			return false;
 		else
 			return true;

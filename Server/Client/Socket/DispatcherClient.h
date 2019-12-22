@@ -20,8 +20,8 @@ public:
 	virtual ~DispatcherClient();
 
 	using DISPATCH_FUNC = std::function<void(Packet& receivePacket)>;
-	using DISPATCH_MAP = std::map<E_PID_STC, DISPATCH_FUNC>;
-	using DISPATCH_ITER = std::map<E_PID_STC, DISPATCH_FUNC>::iterator;
+	using DISPATCH_MAP = std::map<E_PACKET_SERVER_TO_CLIENT, DISPATCH_FUNC>;
+	using DISPATCH_ITER = std::map<E_PACKET_SERVER_TO_CLIENT, DISPATCH_FUNC>::iterator;
 
 private:
 	static DispatcherClient* m_pInstance;

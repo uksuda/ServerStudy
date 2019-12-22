@@ -3,26 +3,12 @@
 
 #include "PacketID.h"
 
-#define BUFFER_SIZE 4088
+#define BUFFER_SIZE 504
 #define PACKET_HEADER_SIZE 8
 #define PACKET_BUFFER_SIZE PACKET_HEADER_SIZE + BUFFER_SIZE
 
-#define PACKET_ENUM(x) static_cast<unsigned int>(x)
-
-constexpr int ERROR_MSG_LENGTH = 256;
-
 class Packet
 {
-public:
-	enum class E_ERROR_TYPE
-	{
-		E_BUFFER_OUT_OF_SIZE = 0,
-		E_BUFFER_OUT_OF_DATA_SIZE,
-		E_BUfFER_OUT_OF_READ_SIZE,
-		E_BUFFER_OUT_OF_DATA_READ_SIZE,
-		E_BUFFER_INVALID_SIZE
-	};
-
 public:
 	Packet() = delete;
 	Packet(unsigned int iPacketID);
@@ -57,31 +43,34 @@ public:
 	bool getDataFromPacket(double* pData);
 	bool getDataFromPacket(bool* pData);
 
-	char* getPacketBuffer() { return m_Buffer; };
-	char* getPacketReceiveBuffer() { return m_Buffer + PACKET_HEADER_SIZE; }
-	unsigned int getPacketReceiveSize() { return m_iPacketSize - PACKET_HEADER_SIZE; }
+	//
+	unsigned int getPacketID() const
+	{
+		return m_iPacketID;
+	}
 
-	unsigned int getPacketSize() const { return m_iPacketSize; }
-	unsigned int getPacketID() const { return m_iPacketID; }
+	unsigned int getPacketSize() const
+	{
+		return m_iPacketSize;
+	}
 
-	void setPacketID(unsigned int iPacketID) { m_iPacketID = iPacketID; };
-	void setPacketSize(unsigned int iPacketSize) { m_iPacketSize = iPacketSize; }
-	
-	void setPacketHeaderData();
-	bool setReceivePacketHeaderData();
-	bool clearPacket();
-	bool isPacket();
+	//
+	static unsigned int getReceivedPacketID(char* pData, unsigned int iSize);
+	static unsigned int getReceivedPacketSize(char* pData, unsigned int iSize);
 
 private:
 	unsigned int m_iPacketID;
 	unsigned int m_iPacketSize;
 
 	unsigned int m_iReadPosition;
-	char m_Buffer[PACKET_BUFFER_SIZE];
-	char m_szError[ERROR_MSG_LENGTH];
+	char m_btBuffer[PACKET_BUFFER_SIZE];
 
 private:
-	void setErrorMessage(const char* szTypeName, E_ERROR_TYPE eErrorType);
+	bool writePacketID();
+	bool writePacketSize();
+
+	bool readPacketID(char* pData, unsigned int iSize);
+	bool readPacketSize(char* pData, unsigned int iSize);
 };
 
 #endif

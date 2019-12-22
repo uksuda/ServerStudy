@@ -1,10 +1,10 @@
 #ifndef __PACKET_ID_H__
 #define __PACKET_ID_H__
 
-enum class E_PID_STC // Server to Client
-{
-	ID_INVALID = 0,
+#define INVALID_PACKET_ID 0
 
+enum E_PACKET_SERVER_TO_CLIENT // Server to Client
+{
 	ID_LOGIN_OK = 1,
 
 	ID_CHAT_MESSAGE_FROM = 2,
@@ -13,16 +13,14 @@ enum class E_PID_STC // Server to Client
 	char * messageSize : message
 	*/
 
-	ID_END
+	ID_END_SERVER
 };
 
 
 
 
-enum class E_PID_CTS // Client to Server
+enum E_PACKET_CLIENT_TO_SERVER // Client to Server
 {
-	ID_INVALID = 0,
-
 	ID_LOGIN_REQ = 1,
 	/*
 	unsigned int : ID
@@ -33,7 +31,7 @@ enum class E_PID_CTS // Client to Server
 	char * messageSize : message 
 	*/
 
-	ID_END
+	ID_END_CLIENT
 };
 
 #endif

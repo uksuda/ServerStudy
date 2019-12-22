@@ -50,7 +50,7 @@ bool MainClient::initialize()
 
 	unsigned int iTempID = 10;
 
-	Packet sendPacket(PACKET_ENUM(E_PID_CTS::ID_LOGIN_REQ));
+	Packet sendPacket(E_PACKET_CLIENT_TO_SERVER::ID_LOGIN_REQ);
 	sendPacket.add(iTempID);
 
 	m_pSocket->sendPacket(sendPacket);
@@ -109,7 +109,7 @@ void MainClient::inputMessage()
 		return;
 	}
 
-	Packet sendPacket(PACKET_ENUM(E_PID_CTS::ID_CHAT_MESSAGE));
+	Packet sendPacket(E_PACKET_CLIENT_TO_SERVER::ID_CHAT_MESSAGE);
 	sendPacket.add((char*)strMessage.c_str(), strMessage.size());
 	m_pSocket->sendPacket(sendPacket);
 }
