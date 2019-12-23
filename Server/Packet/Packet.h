@@ -44,6 +44,16 @@ public:
 	bool getDataFromPacket(bool* pData);
 
 	//
+	bool isValid() const
+	{
+		return (INVALID_PACKET_ID != m_iPacketID);
+	}
+
+	char* getPacketBuffer()
+	{
+		return m_btBuffer;
+	}
+
 	unsigned int getPacketID() const
 	{
 		return m_iPacketID;

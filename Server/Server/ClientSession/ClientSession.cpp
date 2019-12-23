@@ -51,8 +51,7 @@ void ClientSession::recvSocket()
 
 void ClientSession::sendPacket(Packet& sendPacket)
 {
-	sendPacket.setPacketHeaderData();
-	if (sendPacket.isPacket() == false)
+	if (sendPacket.isValid() == false)
 	{
 		return;
 	}
@@ -100,26 +99,23 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 		return;
 	}
 
-	Packet receivePacket(PACKET_ENUM(E_PID_CTS::ID_INVALID));
-	memcpy(receivePacket.getPacketBuffer(), m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
+	unsigned int iPacketSize = Packet::getReceivedPacketSize(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
+	unsigned int iPacketID = Packet::getReceivedPacketID(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
 
-	receivePacket.setReceivePacketHeaderData();
-	if (receivePacket.getPacketSize() > m_stSessionInfo.m_iReceivePosition)
+	if (m_stSessionInfo.m_iReceivePosition < iPacketSize)
 	{
 		recvSocket();
 		return;
 	}
 
-	unsigned int iReceiveSize = receivePacket.getPacketSize();
-	memcpy(receivePacket.getPacketReceiveBuffer(), m_stSessionInfo.m_ReceiveBuffer + PACKET_HEADER_SIZE, receivePacket.getPacketReceiveSize());
+	Packet receivePacket(iPacketID);
+	memcpy(receivePacket.getPacketBuffer(), m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
 
-	m_stSessionInfo.m_iReceivePosition -= iReceiveSize;
-	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iReceiveSize, m_stSessionInfo.m_iReceivePosition);
+	
+	m_stSessionInfo.m_iReceivePosition -= iPacketSize;
+	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iPacketSize, m_stSessionInfo.m_iReceivePosition);
 
 	// dispatch packet
-	Packet sandPacket(PACKET_ENUM(E_PID_STC::ID_CHAT_MESSAGE_FROM));
-	memcpy(sandPacket.getPacketReceiveBuffer(), receivePacket.getPacketReceiveBuffer(), receivePacket.getPacketReceiveSize());
-	sendPacket(sandPacket);
 }
 
 void ClientSession::dispatchSend(DWORD dwBytesTrans)

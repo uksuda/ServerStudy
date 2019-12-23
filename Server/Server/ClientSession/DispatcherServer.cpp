@@ -39,8 +39,7 @@ bool DispatcherServer::packetDispatchServer(Packet receivePacket)
 	}
 
 	unsigned int iPacketID = receivePacket.getPacketID();
-	E_PID_CTS ePacketID = static_cast<E_PID_CTS>(iPacketID);
-
+	E_PACKET_CLIENT_TO_SERVER ePacketID = static_cast<E_PACKET_CLIENT_TO_SERVER>(iPacketID);
 
 	DISPATCH_ITER iter = m_mapFunc.find(ePacketID);
 	if (iter == m_mapFunc.end())
@@ -56,6 +55,6 @@ bool DispatcherServer::packetDispatchServer(Packet receivePacket)
 
 void DispatcherServer::registDispatchFunc()
 {
-	m_mapFunc.insert(DISPATCH_MAP::value_type(E_PID_CTS::ID_LOGIN_REQ, DispatchFunc::funcLoginReq));
-	m_mapFunc.insert(DISPATCH_MAP::value_type(E_PID_CTS::ID_CHAT_MESSAGE, DispatchFunc::funcChatMessage));
+	m_mapFunc.insert(DISPATCH_MAP::value_type(E_PACKET_CLIENT_TO_SERVER::ID_LOGIN_REQ, DispatchFunc::funcLoginReq));
+	m_mapFunc.insert(DISPATCH_MAP::value_type(E_PACKET_CLIENT_TO_SERVER::ID_CHAT_MESSAGE, DispatchFunc::funcChatMessage));
 }

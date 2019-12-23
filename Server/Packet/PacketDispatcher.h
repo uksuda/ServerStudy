@@ -1,6 +1,8 @@
 #ifndef _PACKET_DISPATCHER_H__
 #define _PACKET_DISPATCHER_H__
 
+#pragma warning(disable : 26812)
+
 class PacketDispatcher
 {
 public:

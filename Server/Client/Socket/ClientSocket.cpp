@@ -147,8 +147,7 @@ bool ClientSocket::sendFlush()
 
 bool ClientSocket::sendPacket(Packet& packet)
 {
-	packet.setPacketHeaderData();
-	if (packet.isPacket() == false)
+	if (packet.isValid() == false)
 	{
 		return false;
 	}
@@ -196,25 +195,24 @@ bool ClientSocket::receivePacket()
 		return false;
 	}
 
-	Packet receivePacket(PACKET_ENUM(E_PID_STC::ID_INVALID));
-	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, m_iReceiveBufferPosition);
+	unsigned int iPacketSize = Packet::getReceivedPacketSize(m_ReceiveBuffer, m_iReceiveBufferPosition);
+	unsigned int iPacketID = Packet::getReceivedPacketID(m_ReceiveBuffer, m_iReceiveBufferPosition);
 
-	receivePacket.setReceivePacketHeaderData();
-	if (m_iReceiveBufferPosition < receivePacket.getPacketSize())
+	if (m_iReceiveBufferPosition < iPacketSize)
 	{
 		return false;
 	}
 
-	unsigned int iReceiveSize = receivePacket.getPacketSize();
-	memcpy(receivePacket.getPacketReceiveBuffer(), m_ReceiveBuffer + PACKET_HEADER_SIZE, receivePacket.getPacketReceiveSize());
+	Packet receivePacket(iPacketID);
+	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, iPacketSize);
 	
-	if (m_iReceiveBufferPosition >= iReceiveSize)
+	if (m_iReceiveBufferPosition == iPacketSize)
 	{
 		resetReceiveBuffer();
 	}
 
-	m_iReceiveBufferPosition = (m_iReceiveBufferPosition > iReceiveSize ? m_iReceiveBufferPosition - iReceiveSize : 0);
-	memmove(m_ReceiveBuffer, m_ReceiveBuffer + iReceiveSize, m_iReceiveBufferPosition);
+	m_iReceiveBufferPosition = (m_iReceiveBufferPosition > iPacketSize ? m_iReceiveBufferPosition - iPacketSize : 0);
+	memmove(m_ReceiveBuffer, m_ReceiveBuffer + iPacketSize, m_iReceiveBufferPosition);
 
 	// dispatch packet
 	DISPATCHER_CLIENT->packetDispatch(receivePacket);
