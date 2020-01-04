@@ -336,31 +336,70 @@ bool Packet::getDataFromPacket(bool* pData)
 	return true;
 }
 
+bool Packet::getDataFromRecvBuffer(char* pData, unsigned int iSize)
+{
+	if (iSize < PACKET_HEADER_SIZE)
+	{
+		CLog::LOG("invalid packet size - small than header size %d", iSize);
+		return false;
+	}
+
+	unsigned int iPacketSize = getReceivedPacketSize(pData, iSize);
+	if (iPacketSize == 0 || iPacketSize < PACKET_HEADER_SIZE)
+	{
+		return false;
+	}
+
+	m_iPacketSize = iPacketSize;
+	m_iPacketID = getReceivedPacketID(pData, iSize);
+
+	memcpy(m_btBuffer, pData, m_iPacketSize);
+	return true;
+}
+
 unsigned int Packet::getReceivedPacketID(char* pData, unsigned int iSize)
 {
-	return 0;
+	unsigned int iPacketID = INVALID_PACKET_ID;
+	if (iSize < PACKET_HEADER_SIZE)
+	{
+		CLog::LOG("invalid packet id");
+		return iPacketID;
+	}
+
+	memcpy(&iPacketID, pData + sizeof(unsigned int), sizeof(unsigned int));
+	return iPacketID;
 }
 unsigned int Packet::getReceivedPacketSize(char* pData, unsigned int iSize)
 {
-	return 0;
+	unsigned int iPacketSize = 0;
+	if (iSize < sizeof(unsigned int))
+	{
+		CLog::LOG("invalid packet size %d", iSize);
+		return iPacketSize;
+	}
+
+	memcpy(&iPacketSize, pData, sizeof(unsigned int));
+	return iPacketSize;
 }
 
 bool Packet::writePacketID()
 {
+	if (m_iPacketID == INVALID_PACKET_ID)
+	{
+		return false;
+	}
+
+	memcpy(m_btBuffer + sizeof(unsigned int), &m_iPacketID, sizeof(unsigned int));
 	return true;
 }
 
 bool Packet::writePacketSize()
 {
-	return true;
-}
+	if (m_iPacketSize == 0)
+	{
+		return false;
+	}
 
-bool Packet::readPacketID(char* pData, unsigned int iSize)
-{
-	return true;
-}
-
-bool Packet::readPacketSize(char* pData, unsigned int iSize)
-{
+	memcpy(m_btBuffer, &m_iPacketSize, sizeof(unsigned int));
 	return true;
 }

@@ -44,6 +44,9 @@ public:
 	bool getDataFromPacket(bool* pData);
 
 	//
+	bool getDataFromRecvBuffer(char* pData, unsigned int iSize);
+
+	//
 	bool isValid() const
 	{
 		return (INVALID_PACKET_ID != m_iPacketID);
@@ -78,9 +81,6 @@ private:
 private:
 	bool writePacketID();
 	bool writePacketSize();
-
-	bool readPacketID(char* pData, unsigned int iSize);
-	bool readPacketSize(char* pData, unsigned int iSize);
 };
 
 #endif
