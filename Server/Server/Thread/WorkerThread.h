@@ -13,7 +13,7 @@ public:
 public:
 	HANDLE getThreadHandle() const { return m_ThreadHandle; }
 	bool isRunning() const { return m_isRunning; }
-	void setOff() { m_isRunning = false; }
+	void setOff();
 
 public:
 	void workBegin(HANDLE hComPort);

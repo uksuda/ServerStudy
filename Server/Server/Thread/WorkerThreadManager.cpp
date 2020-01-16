@@ -32,6 +32,15 @@ void WorkerThreadManager::setOff()
 		}
 	}
 }
+
+void WorkerThreadManager::postWorkerThread(HANDLE hComPort)
+{
+	int iSize = m_vecThread.size();
+	for (int i = 0; i < iSize; ++i)
+	{
+		PostQueuedCompletionStatus(hComPort, NULL, NULL, NULL);
+	}
+}
 	
 void WorkerThreadManager::workBegin(HANDLE hComPort)
 {

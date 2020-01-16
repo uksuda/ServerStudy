@@ -18,6 +18,17 @@ WorkerThread::~WorkerThread()
 	CloseHandle(m_ThreadHandle);
 }
 
+void WorkerThread::setOff()
+{
+	if (m_isRunning == false)
+	{
+		return;
+	}
+
+	m_isRunning = false;
+	WaitForSingleObject(m_ThreadHandle, INFINITE);
+}
+
 void WorkerThread::workBegin(HANDLE hComPort)
 {
 	if (m_isRunning)
@@ -46,6 +57,12 @@ void WorkerThread::workRunning()
 	while (m_isRunning)
 	{
 		BOOL bResult = GetQueuedCompletionStatus(m_hComport, &bytesTrans, (PULONG_PTR)&pClientSession, (LPOVERLAPPED*)&lpOverlapped, INFINITE);
+
+		if (bytesTrans == 0 && pClientSession == nullptr && lpOverlapped == nullptr)
+		{
+			CLog::LOG("Server End");
+			break;
+		}
 
 		if (pClientSession == nullptr)
 		{

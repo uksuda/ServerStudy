@@ -20,6 +20,7 @@ public:
 public:
 	bool isRunning();
 	void setOff();
+	void postWorkerThread(HANDLE hComPort);
 	void workBegin(HANDLE hComPort);
 	bool initWorkThreadManager(int iThreadCount = 1);
 
