@@ -24,5 +24,7 @@ void CLog::LOG(const char* szMsg, ...)
 	vsnprintf(szLog, sizeof(szLog), szMsg, va);
 	va_end(va);
 
+	snprintf(szLog, sizeof(szLog), "%s \n", szLog);
+
 	printf(szLog);
 }
