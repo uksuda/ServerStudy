@@ -17,9 +17,6 @@
     <Filter Include="Server\ClientSession">
       <UniqueIdentifier>{5e27d06d-59ee-4d7f-92b6-644837dcdc04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Server\DB">
-      <UniqueIdentifier>{3c596817-3915-45c8-8510-7a1685a7656a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -48,9 +45,6 @@
     </ClCompile>
     <ClCompile Include="Thread\Synchro.cpp">
       <Filter>Server\Thread</Filter>
-    </ClCompile>
-    <ClCompile Include="DB\DBConnector.cpp">
-      <Filter>Server\DB</Filter>
     </ClCompile>
     <ClCompile Include="..\Packet\Packet.cpp">
       <Filter>Source Files</Filter>
@@ -89,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="Thread\Synchro.h">
       <Filter>Server\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="DB\DBConnector.h">
-      <Filter>Server\DB</Filter>
     </ClInclude>
     <ClInclude Include="..\Packet\Packet.h">
       <Filter>Source Files</Filter>
