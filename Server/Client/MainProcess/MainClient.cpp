@@ -48,13 +48,6 @@ bool MainClient::initialize()
 		return false;
 	}
 
-	unsigned int iTempID = 10;
-
-	Packet sendPacket(E_PACKET_CLIENT_TO_SERVER::ID_LOGIN_REQ);
-	sendPacket.add(iTempID);
-
-	m_pSocket->sendPacket(sendPacket);
-
 	return true;
 }
 

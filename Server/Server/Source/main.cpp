@@ -14,7 +14,5 @@ int main()
 	
 	SAFE_DELETE(server);
 
-	// test remote
-
 	return 0;
 }
