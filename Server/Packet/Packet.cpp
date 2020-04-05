@@ -33,6 +33,10 @@ bool Packet::add(unsigned char nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(unsigned char));
 	m_iPacketSize += sizeof(unsigned char);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -46,6 +50,10 @@ bool Packet::add(char nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(char));
 	m_iPacketSize += sizeof(char);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -59,6 +67,10 @@ bool Packet::add(unsigned short nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(unsigned short));
 	m_iPacketSize += sizeof(unsigned short);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -72,6 +84,10 @@ bool Packet::add(short nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(short));
 	m_iPacketSize += sizeof(short);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -85,6 +101,10 @@ bool Packet::add(unsigned int nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(unsigned int));
 	m_iPacketSize += sizeof(unsigned int);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -98,6 +118,10 @@ bool Packet::add(int nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(int));
 	m_iPacketSize += sizeof(int);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -111,6 +135,10 @@ bool Packet::add(unsigned long nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(unsigned long));
 	m_iPacketSize += sizeof(unsigned long);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -124,6 +152,10 @@ bool Packet::add(long nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(long));
 	m_iPacketSize += sizeof(long);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -137,6 +169,10 @@ bool Packet::add(float nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(float));
 	m_iPacketSize += sizeof(float);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -150,6 +186,10 @@ bool Packet::add(double nData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &nData, sizeof(double));
 	m_iPacketSize += sizeof(double);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -163,6 +203,10 @@ bool Packet::add(bool bData)
 
 	memcpy(m_btBuffer + m_iPacketSize, &bData, sizeof(bool));
 	m_iPacketSize += sizeof(bool);
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -176,6 +220,10 @@ bool Packet::add(char* pData, int iDataLength)
 
 	memcpy(m_btBuffer + m_iPacketSize, pData, sizeof(char) * iDataLength);
 	m_iPacketSize += sizeof(char) * iDataLength;
+
+	writePacketSize();
+	writePacketID();
+
 	return true;
 }
 
@@ -371,6 +419,7 @@ unsigned int Packet::getReceivedPacketID(char* pData, unsigned int iSize)
 }
 unsigned int Packet::getReceivedPacketSize(char* pData, unsigned int iSize)
 {
+
 	unsigned int iPacketSize = 0;
 	if (iSize < sizeof(unsigned int))
 	{

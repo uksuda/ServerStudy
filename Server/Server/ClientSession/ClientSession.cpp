@@ -116,6 +116,9 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iPacketSize, m_stSessionInfo.m_iReceivePosition);
 
 	// dispatch packet
+	CLog::LOG("%d client send packet id %d size %d receive %s", m_stSessionInfo.m_userSeq, receivePacket.getPacketID(), receivePacket.getPacketSize(), receivePacket.getPacketBuffer());
+
+	this->sendPacket(receivePacket);
 }
 
 void ClientSession::dispatchSend(DWORD dwBytesTrans)
