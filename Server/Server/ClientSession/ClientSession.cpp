@@ -106,11 +106,11 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 	{
 		recvSocket();
 		return;
+
 	}
 
 	Packet receivePacket(iPacketID);
 	memcpy(receivePacket.getPacketBuffer(), m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
-
 	
 	m_stSessionInfo.m_iReceivePosition -= iPacketSize;
 	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iPacketSize, m_stSessionInfo.m_iReceivePosition);
