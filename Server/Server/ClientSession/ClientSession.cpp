@@ -111,6 +111,8 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 
 	Packet receivePacket(iPacketID);
 	memcpy(receivePacket.getPacketBuffer(), m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_iReceivePosition);
+
+	receivePacket.setPacketSize(iPacketSize);
 	
 	m_stSessionInfo.m_iReceivePosition -= iPacketSize;
 	memmove(m_stSessionInfo.m_ReceiveBuffer, m_stSessionInfo.m_ReceiveBuffer + iPacketSize, m_stSessionInfo.m_iReceivePosition);
@@ -118,7 +120,8 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 	// dispatch packet
 	CLog::LOG("%d client send packet id %d size %d receive %s", m_stSessionInfo.m_userSeq, receivePacket.getPacketID(), receivePacket.getPacketSize(), receivePacket.getPacketBuffer());
 
-	this->sendPacket(receivePacket);
+	//this->sendPacket(receivePacket);
+
 }
 
 void ClientSession::dispatchSend(DWORD dwBytesTrans)

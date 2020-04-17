@@ -68,6 +68,16 @@ public:
 	}
 
 	//
+	void setPacketID(unsigned int iID)
+	{
+		m_iPacketID = iID;
+	}
+
+	void setPacketSize(unsigned int iSize)
+	{
+		m_iPacketSize = iSize;
+	}
+
 	static unsigned int getReceivedPacketID(char* pData, unsigned int iSize);
 	static unsigned int getReceivedPacketSize(char* pData, unsigned int iSize);
 
