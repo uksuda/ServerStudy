@@ -3,8 +3,6 @@
 
 #include "ServerHeader.h"
 
-#define MESSAGE_SIZE 1024
-
 class ClientSocket;
 class MainClient
 {

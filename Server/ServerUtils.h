@@ -35,5 +35,6 @@
 
 #define CONVERT_STR(str) #str
 
+#define MESSAGE_SIZE 1024
 
 #endif

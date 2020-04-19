@@ -1,5 +1,6 @@
 #include "ClientSessionManager.h"
 #include "ClientSession.h"
+#include "Synchro.h"
 
 #include <algorithm>
 
@@ -31,6 +32,19 @@ void ClientSessionManager::removeSession(unsigned int iKey)
 
 	SAFE_DELETE(sessionData->second);
 	m_SessionMap.erase(iKey);
+}
+
+void ClientSessionManager::sendAllUser(Packet& sendPacket)
+{
+	//SYNCHRO->enterCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
+	std::for_each(m_SessionMap.begin(), m_SessionMap.end(), [&](std::pair<unsigned int, ClientSession*> sessionPair) {
+		ClientSession* pSession = sessionPair.second;
+		if (pSession != nullptr)
+		{
+			pSession->sendPacket(sendPacket);
+		}
+	});
+	//SYNCHRO->leaveCriticalSection(Synchro::SYNC_TARGET::SYNC_SESSION);
 }
 
 void ClientSessionManager::release()

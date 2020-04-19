@@ -26,6 +26,8 @@ public:
 	void insertNewSession(ClientSession* pClientSession);
 	void removeSession(unsigned int iKey);
 
+	void sendAllUser(Packet& sendPacket);
+
 private:
 	CLIENT_SESSION m_SessionMap;
 

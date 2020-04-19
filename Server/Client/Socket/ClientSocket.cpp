@@ -205,6 +205,7 @@ bool ClientSocket::receivePacket()
 
 	Packet receivePacket(iPacketID);
 	memcpy(receivePacket.getPacketBuffer(), m_ReceiveBuffer, iPacketSize);
+	receivePacket.setPacketSize(iPacketSize);
 	
 	if (m_iReceiveBufferPosition == iPacketSize)
 	{

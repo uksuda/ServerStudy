@@ -121,7 +121,7 @@ void ClientSession::dispatchReceive(DWORD dwBytesTrans)
 	CLog::LOG("%d client send packet id %d size %d receive %s", m_stSessionInfo.m_userSeq, receivePacket.getPacketID(), receivePacket.getPacketSize(), receivePacket.getPacketBuffer());
 
 	//this->sendPacket(receivePacket);
-
+	SESSIONMGR->sendAllUser(receivePacket);
 }
 
 void ClientSession::dispatchSend(DWORD dwBytesTrans)
