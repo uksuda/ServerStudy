@@ -2,9 +2,12 @@
 ----------------------------------------------
 2020-03-27 : visual studio 2019 change
 
+'server'
 server spec change
 simple chatting -> text mud game
 
 iocp
-mysql
 
+
+'game'
+simple game project

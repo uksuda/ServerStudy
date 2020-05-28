@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Defines">
+      <UniqueIdentifier>{543aaaf1-a15a-4e58-a25c-caa8965afc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainProcess">
+      <UniqueIdentifier>{b0709751-8624-4c02-8266-16fda6c32344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{92c0790a-5d6a-46dd-8ded-6ac50f5ad4df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Defines\BaseDefine.h">
+      <Filter>Defines</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
