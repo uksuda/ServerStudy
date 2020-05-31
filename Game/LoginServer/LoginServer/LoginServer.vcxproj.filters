@@ -14,15 +14,66 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{92c0790a-5d6a-46dd-8ded-6ac50f5ad4df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{9363df37-5334-420b-8eab-32f11239c9ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Socket\ServerSocket.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Log.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\ThreadBase.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\WorkThread.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\WorkThreadManager.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\ClientSession.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket\SessionManager.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defines\BaseDefine.h">
       <Filter>Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\ServerSocket.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Log.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\ThreadBase.h">
+      <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\WorkThread.h">
+      <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\WorkThreadManager.h">
+      <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\ClientSession.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket\SessionManager.h">
+      <Filter>Socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

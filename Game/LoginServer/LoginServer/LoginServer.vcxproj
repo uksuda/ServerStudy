@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Defines;$(ProjectDir)MainProcess;$(ProjectDir)Utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Defines;$(ProjectDir)MainProcess;$(ProjectDir)Utils;$(ProjectDir)Socket;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Defines;$(ProjectDir)MainProcess;$(ProjectDir)Utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Defines;$(ProjectDir)MainProcess;$(ProjectDir)Utils;$(ProjectDir)Socket;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,10 +144,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MainProcess\ThreadBase.cpp" />
+    <ClCompile Include="MainProcess\WorkThread.cpp" />
+    <ClCompile Include="MainProcess\WorkThreadManager.cpp" />
+    <ClCompile Include="Socket\ClientSession.cpp" />
+    <ClCompile Include="Socket\ServerSocket.cpp" />
+    <ClCompile Include="Socket\SessionManager.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Utils\Log.cpp" />
+    <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defines\BaseDefine.h" />
+    <ClInclude Include="MainProcess\ThreadBase.h" />
+    <ClInclude Include="MainProcess\WorkThread.h" />
+    <ClInclude Include="MainProcess\WorkThreadManager.h" />
+    <ClInclude Include="Socket\ClientSession.h" />
+    <ClInclude Include="Socket\ServerSocket.h" />
+    <ClInclude Include="Socket\SessionManager.h" />
+    <ClInclude Include="Utils\Log.h" />
+    <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
