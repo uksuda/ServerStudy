@@ -49,6 +49,20 @@
 
 #define CONVERT_STR(str) #str
 
+enum class E_IO_MODE
+{
+	E_MODE_NONE = 0,
+	E_MODE_WRITE,
+	E_MODE_READ
+};
+
+struct stIOContext : OVERLAPPED
+{
+	E_IO_MODE m_eMode;
+};
+
+
+
 //#define MESSAGE_SIZE 1024
 //
 //#define SOCKET_OPTION_TRUE 1
