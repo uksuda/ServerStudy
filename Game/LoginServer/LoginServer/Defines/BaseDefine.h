@@ -12,7 +12,9 @@
 #include <algorithm>
 #include <chrono>
 #include <ctime>
-
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 #pragma comment(lib, "ws2_32.lib")
 
