@@ -1,6 +1,10 @@
 #pragma once
 
-class WorkerThread
+#include "BaseDefine.h"
+#include "ThreadBase.h"
+
+class WorkerThread : public ThreadBase
 {
+public:
 
 };

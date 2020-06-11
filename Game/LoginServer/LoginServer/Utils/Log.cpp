@@ -3,7 +3,7 @@
 
 bool Log::createLogFile()
 {
-	CreateDirectory("log", nullptr);
+	CreateDirectory(L"log", nullptr);
 
 	std::string strLogFileName = Utils::getLogFileName();
 	FILE* pFile = fopen(strLogFileName.c_str(), "at");
