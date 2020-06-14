@@ -1,2 +1,0 @@
-#include "WorkThreadManager.h"
-

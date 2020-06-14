@@ -144,9 +144,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MainProcess\Acceptor.cpp" />
     <ClCompile Include="MainProcess\ThreadBase.cpp" />
-    <ClCompile Include="MainProcess\WorkThread.cpp" />
-    <ClCompile Include="MainProcess\WorkThreadManager.cpp" />
+    <ClCompile Include="MainProcess\WorkerThread.cpp" />
+    <ClCompile Include="MainProcess\WorkerThreadManager.cpp" />
     <ClCompile Include="Socket\ClientSession.cpp" />
     <ClCompile Include="Socket\ServerSocket.cpp" />
     <ClCompile Include="Socket\SessionManager.cpp" />
@@ -156,9 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defines\BaseDefine.h" />
+    <ClInclude Include="MainProcess\Acceptor.h" />
     <ClInclude Include="MainProcess\ThreadBase.h" />
-    <ClInclude Include="MainProcess\WorkThread.h" />
-    <ClInclude Include="MainProcess\WorkThreadManager.h" />
+    <ClInclude Include="MainProcess\WorkerThread.h" />
+    <ClInclude Include="MainProcess\WorkerThreadManager.h" />
     <ClInclude Include="Socket\ClientSession.h" />
     <ClInclude Include="Socket\ServerSocket.h" />
     <ClInclude Include="Socket\SessionManager.h" />

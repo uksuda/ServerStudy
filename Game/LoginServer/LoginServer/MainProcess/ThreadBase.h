@@ -11,7 +11,9 @@ protected:
 public:
 	HANDLE getThreadHandle() const { return m_ThreadHandle; }
 
-	static UINT WINAPI runThread(LPVOID pArg);
+	bool startThread();
+
+	static UINT WINAPI runningThread(LPVOID pArg);
 	virtual void run() abstract;
 	//virtual void run() = 0;
 

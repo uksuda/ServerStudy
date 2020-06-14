@@ -26,7 +26,7 @@
 
 #define DECLARE_SINGLETON(classname)							\
 		private:												\
-			classname() = delete;								\
+			classname() {}										\
 			classname(classname& rhs) = delete;					\
 			static classname* m_pInstance;						\
 		public:													\

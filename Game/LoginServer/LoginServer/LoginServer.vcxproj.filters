@@ -34,17 +34,20 @@
     <ClCompile Include="MainProcess\ThreadBase.cpp">
       <Filter>MainProcess</Filter>
     </ClCompile>
-    <ClCompile Include="MainProcess\WorkThread.cpp">
-      <Filter>MainProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="MainProcess\WorkThreadManager.cpp">
-      <Filter>MainProcess</Filter>
-    </ClCompile>
     <ClCompile Include="Socket\ClientSession.cpp">
       <Filter>Socket</Filter>
     </ClCompile>
     <ClCompile Include="Socket\SessionManager.cpp">
       <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\Acceptor.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\WorkerThread.cpp">
+      <Filter>MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess\WorkerThreadManager.cpp">
+      <Filter>MainProcess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,17 +66,20 @@
     <ClInclude Include="MainProcess\ThreadBase.h">
       <Filter>MainProcess</Filter>
     </ClInclude>
-    <ClInclude Include="MainProcess\WorkThread.h">
-      <Filter>MainProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="MainProcess\WorkThreadManager.h">
-      <Filter>MainProcess</Filter>
-    </ClInclude>
     <ClInclude Include="Socket\ClientSession.h">
       <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="Socket\SessionManager.h">
       <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\Acceptor.h">
+      <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\WorkerThread.h">
+      <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProcess\WorkerThreadManager.h">
+      <Filter>MainProcess</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
