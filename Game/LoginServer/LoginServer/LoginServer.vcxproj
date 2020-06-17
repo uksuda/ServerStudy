@@ -153,6 +153,7 @@
     <ClCompile Include="Socket\SessionManager.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Utils\Log.cpp" />
+    <ClCompile Include="Utils\Packet.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="Socket\ServerSocket.h" />
     <ClInclude Include="Socket\SessionManager.h" />
     <ClInclude Include="Utils\Log.h" />
+    <ClInclude Include="Utils\Packet.h" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

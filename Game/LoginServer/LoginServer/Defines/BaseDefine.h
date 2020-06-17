@@ -51,16 +51,25 @@
 
 #define CONVERT_STR(str) #str
 
+#define PACKET_HEADER_SIZE	4 /*2 + 2*/
+#define PACKET_BUFFER_SIZE	PACKET_HEADER_SIZE + 508
+
 enum class E_IO_MODE
 {
 	E_MODE_NONE = 0,
-	E_MODE_WRITE,
-	E_MODE_READ
+	E_MODE_SEND,
+	E_MODE_RECV
 };
 
 struct stIOContext : OVERLAPPED
 {
+	WSABUF m_wsaBuf;
 	E_IO_MODE m_eMode;
+};
+
+struct stSendIOContext : public stIOContext
+{
+	BYTE m_btBuffer[PACKET_BUFFER_SIZE];
 };
 
 

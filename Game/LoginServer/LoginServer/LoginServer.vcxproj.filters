@@ -49,6 +49,9 @@
     <ClCompile Include="MainProcess\WorkerThreadManager.cpp">
       <Filter>MainProcess</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Packet.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Defines\BaseDefine.h">
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="MainProcess\WorkerThreadManager.h">
       <Filter>MainProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Packet.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
