@@ -26,6 +26,13 @@ void WorkerThreadManager::stopWorkerThread(HANDLE hCompletionPort)
 			PostQueuedCompletionStatus(hCompletionPort, NULL, NULL, NULL);
 		}
 	});
+
+	std::for_each(m_vecThread.begin(), m_vecThread.end(), [&](WorkerThread* pWorker) {
+		if (pWorker)
+		{
+			pWorker->stopWorkerThread();
+		}
+	});
 }
 
 void WorkerThreadManager::release()

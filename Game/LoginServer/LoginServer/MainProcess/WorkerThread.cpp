@@ -25,6 +25,7 @@ bool WorkerThread::startWorkerThread(HANDLE hCompletionPort)
 		return false;
 	}
 
+	m_isRunning = true;
 	return true;
 }
 
