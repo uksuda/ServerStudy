@@ -8,3 +8,6 @@ Game/LoginServer/Debug/
 Game/LoginServer/x64/
 Game/LoginServer/LoginServer/Debug/
 Game/LoginServer/LoginServer/x64/
+/.vs
+/Server/Client/x64/Debug
+/Server/Server/x64/Debug
