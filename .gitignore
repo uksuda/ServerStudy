@@ -28,5 +28,7 @@ Server_dotnet/Network/network_local.bat
 ServerGrpc/.vs/
 ServerGrpc/ClientGrpc/obj/
 ServerGrpc/ClientGrpc/bin/
+ServerGrpc/ClientGrpc/Protos/
 ServerGrpc/ServerGrpc/obj/
 ServerGrpc/ServerGrpc/bin/
+ServerGrpc/ServerGrpc/Protos/
