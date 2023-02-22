@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--<Protobuf Include="..\Protos\*.proto" GrpcServices="Server" OutputDir="%(RelativeDir)..\ServerGrpc\Protos" />-->
+	<!--<Protobuf Include="..\Protos\*.proto" GrpcServices="Server" />-->
+    <Protobuf Include="..\Protos\*.proto" GrpcServices="Server" OutputDir="%(RelativeDir)..\ServerGrpc\Protos" CompileOutputs="false" />
+  </ItemGroup>
+	
+  <PropertyGroup>
+	<Protobuf_NoWarnMissingExpected>true</Protobuf_NoWarnMissingExpected>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.22.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.1-dev-00295" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logger\" />
+    <Folder Include="Protos\" />
+  </ItemGroup>
+
+</Project>

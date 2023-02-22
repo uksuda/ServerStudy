@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "network.unary";
+
+package network.unary;
+
+import "common.proto";
+import "types.proto";
+
+message Unary_SampleReq {
+    string s = 1;
+}
+
+message Unary_SampleRes {
+    network.types.StatusCode err = 1;
+    string s = 2;
+}

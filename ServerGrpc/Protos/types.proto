@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option csharp_namespace = "network.types";
+
+package network.types;
+
+enum StreamPacket {
+    StreamPacket_None = 0;
+
+    StreamPacket_TestReq = 1;
+    StreamPacket_TestRes = 2;
+
+    StreamPacket_ConnectReq = 3;
+    StreamPacket_ConnectRes = 4;
+}
+
+enum UnaryDataType {
+    UnaryDataType_None = 0;
+
+    UnaryDataType_SampleReq = 1;
+    UnaryDataType_SampleRes = 2;
+}
+
+enum StatusCode {
+    StatusCode_Success = 0;
+    StatusCode_Invalid = 1;
+}
+
+
+enum ConnectType {
+    ConnectType_None = 0;
+    ConnectType_Join = 1;
+    ConnectType_Login = 2;
+}

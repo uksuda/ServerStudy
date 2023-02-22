@@ -1,0 +1,31 @@
+version: "3"
+services:
+  game-db:
+    image: mysql:5.7
+    container_name: game-db-dev
+    hostname: game-db-dev
+    restart: always
+    labels:
+      - "name=game-db"
+    ports:
+      - "18000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root0!2
+      MYSQL_USER: dev-game
+      MYSQL_PASSWORD: game0!2
+    volumes:
+      - /var/volume/mysql:/var/lib/mysql
+
+  game-redis:
+    image: redis:alpine
+    container_name: game-redis-dev
+    hostname: game-redis-dev
+    restart: always
+    labels:
+      - "name=game-redis"
+    ports:
+      - "18001:6379"
+    volumes:
+      - /var/volume/redis:/data
+    command: >
+          --requirepass 1234game

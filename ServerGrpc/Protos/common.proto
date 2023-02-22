@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "network.common";
+
+package network.common;
+
+import "types.proto";
+
+message Empty {
+}
+
+message UserSession {
+    string id = 1;
+    string name = 2;
+    string password = 3;
+}
+

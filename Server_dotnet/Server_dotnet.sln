@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server_dotnet", "Server_dotnet\Server_dotnet.csproj", "{FF273927-B3EA-43A5-9E4A-01AC493DF18B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DummyClient", "DummyClient\DummyClient.csproj", "{4ECEC9FE-86EE-4FBA-B51E-9307CA22F876}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Network", "Network\Network.csproj", "{0017DDF4-E082-4FDD-84A3-0873622E6C1D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ServerCore", "ServerCore\ServerCore.shproj", "{153FFF1C-E13F-4248-80F5-EAE05822D588}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF273927-B3EA-43A5-9E4A-01AC493DF18B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF273927-B3EA-43A5-9E4A-01AC493DF18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF273927-B3EA-43A5-9E4A-01AC493DF18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF273927-B3EA-43A5-9E4A-01AC493DF18B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ECEC9FE-86EE-4FBA-B51E-9307CA22F876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ECEC9FE-86EE-4FBA-B51E-9307CA22F876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ECEC9FE-86EE-4FBA-B51E-9307CA22F876}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ECEC9FE-86EE-4FBA-B51E-9307CA22F876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0017DDF4-E082-4FDD-84A3-0873622E6C1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0017DDF4-E082-4FDD-84A3-0873622E6C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0017DDF4-E082-4FDD-84A3-0873622E6C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0017DDF4-E082-4FDD-84A3-0873622E6C1D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4F7948A-1E56-498B-91D4-2D570E300B42}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ServerCore\ServerCore.projitems*{153fff1c-e13f-4248-80f5-eae05822d588}*SharedItemsImports = 13
+		ServerCore\ServerCore.projitems*{ff273927-b3ea-43a5-9e4a-01ac493df18b}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

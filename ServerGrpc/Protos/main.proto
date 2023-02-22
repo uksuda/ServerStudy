@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "network.main";
+
+// import "common.proto";
+import "types.proto";
+import "unary.proto";
+import "stream.proto";
+
+package network.main;
+
+
+service Main {
+  rpc StreamOpen (stream StreamData) returns (stream StreamData);
+  rpc UnaryDataSend (UnaryData) returns (UnaryData);
+}
+
+message StreamData {
+  network.types.StreamPacket packet = 1;
+  oneof data{
+      network.stream.Stream_TestReq test_req = 2;
+      network.stream.Stream_TestRes test_res = 3;
+
+      network.stream.Stream_ConnectReq connect_req = 4;
+      network.stream.Stream_ConnectRes connect_res = 5;
+  }
+}
+
+message UnaryData {
+  network.types.UnaryDataType type = 1;
+  oneof data {
+      network.unary.Unary_SampleReq sample_req = 2;
+      network.unary.Unary_SampleRes sample_res = 3;
+  }
+}

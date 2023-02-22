@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "network.stream";
+
+package network.stream;
+
+import "common.proto";
+import "types.proto";
+
+message Stream_TestReq {
+    string test = 1;
+}
+
+message Stream_TestRes {
+    network.types.StatusCode err = 1;
+    string response = 2;
+}
+
+message Stream_ConnectReq {
+    network.types.ConnectType type = 1;
+    network.common.UserSession session = 2;
+}
+
+message Stream_ConnectRes {
+    network.types.StatusCode err = 1;
+}

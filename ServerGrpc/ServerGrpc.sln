@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerGrpc", "ServerGrpc\ServerGrpc.csproj", "{5D77A5B6-ED88-4A16-BFBD-4904F7F12722}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientGrpc", "ClientGrpc\ClientGrpc.csproj", "{E4DF9571-76A6-4A46-8155-44774F7AB755}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{B01E6353-82FA-49B2-8C05-94A6133F515D}"
+	ProjectSection(SolutionItems) = preProject
+		Protos\common.proto = Protos\common.proto
+		Protos\main.proto = Protos\main.proto
+		Protos\stream.proto = Protos\stream.proto
+		Protos\types.proto = Protos\types.proto
+		Protos\unary.proto = Protos\unary.proto
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D77A5B6-ED88-4A16-BFBD-4904F7F12722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D77A5B6-ED88-4A16-BFBD-4904F7F12722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D77A5B6-ED88-4A16-BFBD-4904F7F12722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D77A5B6-ED88-4A16-BFBD-4904F7F12722}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4DF9571-76A6-4A46-8155-44774F7AB755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4DF9571-76A6-4A46-8155-44774F7AB755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4DF9571-76A6-4A46-8155-44774F7AB755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4DF9571-76A6-4A46-8155-44774F7AB755}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22FA18DA-22E2-451E-97B3-415DFFE0863C}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>153fff1c-e13f-4248-80f5-eae05822d588</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ServerCore</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Connector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Listener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PacketHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RecvBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SendBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Session.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SessionManager.cs" />
+  </ItemGroup>
+</Project>

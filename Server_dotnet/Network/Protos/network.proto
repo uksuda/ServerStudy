@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Network";
+
+message Test{
+    int32 id = 1;
+}
+
+message Packet{
+    int32 id = 1;
+    oneof message{
+        First first = 2;
+        Second second = 3;
+    };
+}
+
+message First{
+    int32 id = 1;
+    string dd = 2;
+}
+
+message Second{
+    bool id = 1;
+}
