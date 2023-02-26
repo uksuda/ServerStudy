@@ -6,29 +6,28 @@ package network.types;
 
 enum StreamPacket {
     StreamPacket_None = 0;
+    StreamPacket_ConnectRes = 10;
 
-    StreamPacket_TestReq = 1;
-    StreamPacket_TestRes = 2;
+    StreamPacket_Disconnected = 15;
 
-    StreamPacket_ConnectReq = 3;
-    StreamPacket_ConnectRes = 4;
+    StreamPacket_UserConnect = 20;
+
+    StreamPacket_MessageSend = 30;
+    StreamPacket_MessageRecv = 31;
 }
 
 enum UnaryDataType {
     UnaryDataType_None = 0;
 
-    UnaryDataType_SampleReq = 1;
-    UnaryDataType_SampleRes = 2;
+    UnaryDataType_JoinReq = 10;
+    UnaryDataType_JoinRes = 11;
 }
 
 enum StatusCode {
     StatusCode_Success = 0;
-    StatusCode_Invalid = 1;
-}
 
+    StatusCode_NotExist = 100;
+    StatusCode_Duplicated = 200;
 
-enum ConnectType {
-    ConnectType_None = 0;
-    ConnectType_Join = 1;
-    ConnectType_Login = 2;
+    StatusCode_Invalid = 20000;
 }

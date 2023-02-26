@@ -2,12 +2,9 @@
 using network.main;
 using network.stream;
 using network.unary;
-using System.Reflection;
-using System.Threading.Channels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Markup;
 
 namespace ClientGrpc
 {
@@ -37,8 +34,12 @@ namespace ClientGrpc
             ip_text_box.Clear();
             ip_text_box.Text = _serverAddr;
 
+            //id_text_box.Clear();
+            //password_text_box.Clear();
+            //nickname_text_box.Clear();
+
             message_text_box.Clear();
-            password_text_box.Clear();
+
             message_rich_text_box.Document.Blocks.Clear();
             
             message_rich_text_box.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -57,46 +58,54 @@ namespace ClientGrpc
             }
 
             _client.SetStreamCallBack(DispatchStream);
-            _client.InitChannel(_serverAddr);
         }
 
-        private bool ConnectClient()
+        private void init_channel_button_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(ip_text_box.Text) == true)
+            if (_client == null)
             {
-                MessageBox.Show("server ip txt box is empty");
-                return false;
+                InitClient();
             }
 
-            _serverAddr = ip_text_box.Text;
             if (string.IsNullOrEmpty(_serverAddr) == true)
             {
-                MessageBox.Show("server address is empty");
-                return false;
-            }
-
-            // TODO: send connect req
-            return true;
-        }
-
-        private void connect_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (ConnectClient() == false)
-            {
-                MessageBox.Show("fail to connect server");
+                MessageBox.Show("server ip is empty");
                 return;
             }
 
-            MessageBox.Show("Success connect");
+            var id = id_text_box.Text;
+            var password = password_text_box.Text;
+
+            _client.InitChannel(_serverAddr, id, password);
+            MessageBox.Show($"channel created");
         }
 
         private void stream_open_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(id_text_box.Text) == true ||
+                string.IsNullOrEmpty(password_text_box.Text) == true ||
+                string.IsNullOrEmpty(nickname_text_box.Text) == true)
+            {
+                MessageBox.Show($"you need id, password, nickname");
+                return;
+            }
+
+            var id = id_text_box.Text;
+            var password = password_text_box.Text;
+            var nickname = nickname_text_box.Text;
+
+            if (_client.IsReadyChannel() == false)
+            {
+                _client.InitChannel(_serverAddr, id, password);
+            }
+
             if (_client.StreamOpen() == false)
             {
                 MessageBox.Show($"fail to stream open");
                 return;
             }
+
+            MessageBox.Show($"stream open success");
         }
 
         private void ip_text_box_TextChanged(object sender, TextChangedEventArgs e)
@@ -111,36 +120,47 @@ namespace ClientGrpc
                 MessageBox.Show("message is empty");
                 return;
             }
-
-            var data = new StreamData
-            {
-                Packet = network.types.StreamPacket.TestReq,
-                TestReq = new network.stream.Stream_TestReq
-                {
-                    Test = message_text_box.Text,
-                },
-            };
-
-            await _client.SendMsg(data);
         }
 
-        private async void Unary_data_send_Click(object sender, RoutedEventArgs e)
+        private async void join_req_button_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(ip_text_box.Text) == true)
+            if (_client == null)
             {
-                MessageBox.Show("server address is empty");
+                InitClient();
+            }
+
+            if (string.IsNullOrEmpty(id_text_box.Text) == true ||
+                string.IsNullOrEmpty(password_text_box.Text) == true ||
+                string.IsNullOrEmpty(nickname_text_box.Text) == true)
+            {
+                MessageBox.Show($"you need id, password, nickname");
                 return;
             }
 
-            var req = new UnaryData
+            var id = id_text_box.Text;
+            var password = password_text_box.Text;
+            var nickname = nickname_text_box.Text;
+
+            if (_client.IsReadyChannel() == false)
             {
-                Type = network.types.UnaryDataType.SampleReq,
-                SampleReq = new Unary_SampleReq { S = "unary sample req", },
+                _client.InitChannel(_serverAddr, id, password);
+            }
+
+            var req = new Unary_JoinReq
+            {
+                Id = id,
+                Password = password,
+                Nickname = nickname,
             };
 
+            var unaryData = new UnaryData
+            {
+                Type = network.types.UnaryDataType.JoinReq,
+                JoinReq = req,
+            };
 
-            var res = await _client.UnaryDataSend(req);
-            DispatchUnary(res);
+            var result = await _client.UnaryDataSend(unaryData);
+            DispatchUnary(result);
         }
 
         private void RichTextBoxString(string str)
@@ -156,29 +176,24 @@ namespace ClientGrpc
         {
             var recvString = $"stream recv: {data.Packet}";
             RichTextBoxString(recvString);
-
-            //MessageBox.Show($"stream recv: {data.Packet}");
-
             switch (data.DataCase)
             {
-                case StreamData.DataOneofCase.TestRes:                    
-                    return DispatchStream_TestRes(data.TestRes);
                 case StreamData.DataOneofCase.ConnectRes:
                     return DispatchStream_ConnectRes(data.ConnectRes);
+                case StreamData.DataOneofCase.Disconnected:
+                    return true;
+                case StreamData.DataOneofCase.UserConnect:
+                    return true;
+                case StreamData.DataOneofCase.MessageRecv:
+                    return true;
                 default:
                     return false;
             }
         }
 
-        private bool DispatchStream_TestRes(Stream_TestRes msg)
+        private bool DispatchStream_ConnectRes(Stream_ConnectRes res)
         {
-            RichTextBoxString($"statuc code: {msg.Err}");
-            RichTextBoxString(msg.Response);
-            return true;
-        }
-
-        private bool DispatchStream_ConnectRes(Stream_ConnectRes msg)
-        {
+            MessageBox.Show($"stream recv: {network.types.StreamPacket.ConnectRes} status code: {res.Err}");
             return true;
         }
         #endregion
@@ -191,15 +206,16 @@ namespace ClientGrpc
 
             switch (data.DataCase)
             {
-                case UnaryData.DataOneofCase.SampleRes:
-                    return DispatchUnary_SampleRes(data.SampleRes);
+                case UnaryData.DataOneofCase.JoinRes:
+                    return DispatchUnary_JoinRes(data.JoinRes);
                 default:
                     return false;
             }
         }
 
-        private bool DispatchUnary_SampleRes(Unary_SampleRes data)
+        private bool DispatchUnary_JoinRes(Unary_JoinRes res)
         {
+            MessageBox.Show($"unary recv: {network.types.UnaryDataType.JoinRes} status code: {res.Err}");
             return true;
         }
         #endregion

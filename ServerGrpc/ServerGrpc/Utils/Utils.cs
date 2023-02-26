@@ -1,8 +1,8 @@
 ﻿namespace ServerGrpc.Utils
 {
-    public class CommonManager
+    public static class CommonManager
     {
-        public string GetRandomKey()
+        public static string GetRandomKey()
         {
             return Guid.NewGuid().ToString();
         }

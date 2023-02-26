@@ -9,9 +9,9 @@ import "types.proto";
 message Empty {
 }
 
-message UserSession {
-    string id = 1;
-    string name = 2;
-    string password = 3;
+message UserInfo {
+    int32 user_index = 1;
+    int32 profile_id = 2;
+    string nickname = 3;
 }
 

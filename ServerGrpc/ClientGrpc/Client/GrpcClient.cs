@@ -2,6 +2,7 @@
 using Grpc.Net.Client;
 using network.main;
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,8 @@ namespace ClientGrpc.Client
         private IAsyncStreamReader<StreamData> _streamReader;
         private IClientStreamWriter<StreamData> _streamWriter;
 
+        private Grpc.Core.Metadata _metaData;
+
         private readonly CancellationTokenSource _tokenSource;
 
         public GrpcClient()
@@ -30,6 +33,11 @@ namespace ClientGrpc.Client
             _callBack = callBack;
         }
 
+        public bool IsReadyChannel()
+        {
+            return _channel != null;
+        }
+
         public ConnectivityState GetChannelState()
         {
             if (_channel == null)
@@ -40,10 +48,30 @@ namespace ClientGrpc.Client
             return _channel.State;
         }
 
-        public bool InitChannel(string serverAddress)
+        public bool InitChannel(string serverAddress, string id, string password)
         {
+            //var callCredentials = CallCredentials.FromInterceptor(((context, metadata) =>
+            //{
+            //    metadata.Add("id", id);
+            //    metadata.Add("password", password);
+            //    return Task.CompletedTask;
+            //}));
+
+            //var channelCredentials = ChannelCredentials.Create(new SslCredentials(), callCredentials);
+            //var channelOptions = new GrpcChannelOptions
+            //{
+            //    //UnsafeUseInsecureChannelCallCredentials = true,
+            //    Credentials = channelCredentials
+            //};
+
+            //_channel = GrpcChannel.ForAddress(serverAddress, channelOptions);
+
             _channel = GrpcChannel.ForAddress(serverAddress);
             _mainClient = new Main.MainClient(_channel);
+
+            _metaData = new Metadata();
+            _metaData.Add("id", id);
+            _metaData.Add("password", password);
             return true;
         }
 
@@ -51,7 +79,7 @@ namespace ClientGrpc.Client
         {
             try
             {
-                var res = await _mainClient.UnaryDataSendAsync(request);
+                var res = await _mainClient.UnaryDataSendAsync(request, _metaData);
                 return res;
             }
             catch (Exception e)
@@ -89,11 +117,15 @@ namespace ClientGrpc.Client
             }
         }
 
-        public bool StreamOpen(Grpc.Core.Metadata metaData = null)
+        public bool StreamOpen()
         {
-            Grpc.Core.Metadata meta = (metaData == null) ? Grpc.Core.Metadata.Empty : metaData;
+            if (_metaData == null)
+            {
+                MessageBox.Show("stream must need metadata");
+                return false;
+            }
 
-            var call = _mainClient.StreamOpen(meta, null, _tokenSource.Token);
+            var call = _mainClient.StreamOpen(_metaData, null, _tokenSource.Token);
             _streamReader = call.ResponseStream;
             _streamWriter = call.RequestStream;
 

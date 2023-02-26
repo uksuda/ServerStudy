@@ -7,11 +7,12 @@ package network.unary;
 import "common.proto";
 import "types.proto";
 
-message Unary_SampleReq {
-    string s = 1;
+message Unary_JoinReq {
+    string id = 1;
+    string password = 2;
+    string nickname = 3;
 }
 
-message Unary_SampleRes {
+message Unary_JoinRes {
     network.types.StatusCode err = 1;
-    string s = 2;
 }

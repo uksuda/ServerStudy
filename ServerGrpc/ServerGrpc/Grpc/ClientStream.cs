@@ -12,7 +12,7 @@ namespace ServerGrpc.Grpc
 
         private readonly CancellationTokenSource _tokenSource;
 
-        private Func<StreamData, bool> _callback;
+        private Action<StreamData> _callback;
 
         public ClientStream(IAsyncStreamReader<StreamData> request, IServerStreamWriter<StreamData> response, ServerCallContext context)
         {
@@ -38,7 +38,7 @@ namespace ServerGrpc.Grpc
             });
         }
 
-        public void SetMSgCallBack(Func<StreamData, bool> callBack)
+        public void SetMSgCallBack(Action<StreamData> callBack)
         {
             _callback = callBack;
         }
@@ -63,6 +63,14 @@ namespace ServerGrpc.Grpc
             if (_tokenSource.IsCancellationRequested == false)
             {
                 await _writer.WriteAsync(data);
+            }
+        }
+
+        public void Disconnect()
+        {
+            if (_tokenSource.IsCancellationRequested == false)
+            {
+                _tokenSource.Cancel();
             }
         }
     }

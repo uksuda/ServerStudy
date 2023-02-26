@@ -18,18 +18,20 @@ service Main {
 message StreamData {
   network.types.StreamPacket packet = 1;
   oneof data{
-      network.stream.Stream_TestReq test_req = 2;
-      network.stream.Stream_TestRes test_res = 3;
+      network.stream.Stream_ConnectRes connect_res = 10;
+      network.stream.Stream_Disconnected disconnected = 15;
 
-      network.stream.Stream_ConnectReq connect_req = 4;
-      network.stream.Stream_ConnectRes connect_res = 5;
+      network.stream.Stream_UserConnect user_connect = 20;
+
+      network.stream.Stream_MessageSend message_send = 30;
+      network.stream.Stream_MessageRecv message_recv = 31;
   }
 }
 
 message UnaryData {
   network.types.UnaryDataType type = 1;
   oneof data {
-      network.unary.Unary_SampleReq sample_req = 2;
-      network.unary.Unary_SampleRes sample_res = 3;
+      network.unary.Unary_JoinReq join_req = 10;
+      network.unary.Unary_JoinRes join_res = 11;
   }
 }

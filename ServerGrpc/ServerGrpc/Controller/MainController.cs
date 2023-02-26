@@ -33,10 +33,11 @@ namespace ServerGrpc.Controller
         public override async Task StreamOpen(IAsyncStreamReader<StreamData> requestStream, IServerStreamWriter<StreamData> responseStream, ServerCallContext context)
         {
             // https://learn.microsoft.com/ko-kr/aspnet/core/grpc/services?view=aspnetcore-7.0
-            
+
+            var client = new ClientStream(requestStream, responseStream, context);
+
             try
             {
-                var client = new ClientStream(requestStream, responseStream, context);
                 _logger.LogDebug("client connectted");
 
                 await client.ReadAsync((data) =>
@@ -56,6 +57,7 @@ namespace ServerGrpc.Controller
             }
             finally
             {
+                client.Disconnect();
                 _logger.LogDebug($"disconnected");
             }
         }

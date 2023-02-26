@@ -15,23 +15,5 @@ namespace ServerGrpc.Grpc
         {
             _clientMap.TryAdd(_clientMap.Count, client);
         }
-
-        public void Start()
-        {
-            while (_tokenSource.IsCancellationRequested == false)
-            {
-                Thread.Sleep(5000);
-                foreach (var client in _clientMap.Values)
-                {
-                    _ = client.ReadAsync((data) =>
-                    {
-                        //_logger.LogDebug($"recv data packet: {data.Packet}");
-                        Console.WriteLine($"recv data packet: {data.Packet}");
-                        return true;
-                    });
-                }
-                break;
-            }
-        }
     }
 }
