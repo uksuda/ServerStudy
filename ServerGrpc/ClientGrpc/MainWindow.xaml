@@ -5,24 +5,90 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientGrpc"
         mc:Ignorable="d"
-        Title="Client" Height="450" Width="800">
-    <Grid x:Name="client_window" Background="#FFACF592" Height="NaN" Margin="0,0,0,-57">
-        <TextBox x:Name="ip_text_box" HorizontalAlignment="Left" Margin="583,85,0,0" VerticalAlignment="Top" Width="193" Height="34" RenderTransformOrigin="-0.003,0.488" FontSize="14" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap" BorderThickness="5,5,5,5" TextChanged="ip_text_box_TextChanged"/>
-        <Button x:Name="init_cnannel_button" Content="Init_Channel" HorizontalAlignment="Left" Margin="583,139,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.338,-0.311" Width="89" Height="31" Click="init_channel_button_Click"/>
-        <Label x:Name="ip_label" HorizontalAlignment="Left" RenderTransformOrigin="3.724,-4.253" Width="120" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Consolas" FontSize="14" Height="35" Content="Server Address" Cursor="Arrow" FontWeight="Bold" Margin="628,34,0,0" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
-        <RichTextBox x:Name="message_rich_text_box" FontFamily="Consolas" FontSize="14" Margin="10,23,229,24">
+        Title="Client" Height="550" Width="900">
+    <Grid x:Name="client_window" Background="#FFACF592" Height="NaN" Margin="5,5,5,5">
+        <TextBox x:Name="ip_text_box" HorizontalAlignment="Left" Margin="678,22,0,0" VerticalAlignment="Top" Width="194" Height="34" RenderTransformOrigin="-0.003,0.488" FontSize="14" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap" BorderThickness="5,5,5,5" TextChanged="ip_text_box_TextChanged"/>
+        <Label x:Name="ip_label" HorizontalAlignment="Left" RenderTransformOrigin="3.724,-4.253" Width="120" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Consolas" FontSize="14" Height="36" Content="Server Address" Cursor="Arrow" FontWeight="Bold" Margin="553,23,0,0" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+        <RichTextBox x:Name="message_rich_text_box" FontFamily="Consolas" FontSize="14" Margin="10,23,382,24">
             <FlowDocument>
                 <Paragraph>
                     <Run Text=""/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBox x:Name="message_text_box" HorizontalAlignment="Left" Margin="583,379,0,0" TextWrapping="Wrap" Text="message" VerticalAlignment="Top" Width="193" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14"/>
-        <Button x:Name="message_btn" Content="send" HorizontalAlignment="Left" Margin="620,431,0,0" VerticalAlignment="Top" IsDefault="True" Width="140" Height="35" FontFamily="Consolas" FontSize="16" FontWeight="Bold" Click="message_btn_Click"/>
-        <Button x:Name="join_req_button" Content="Join" HorizontalAlignment="Left" Margin="668,186,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.338,-0.311" Width="108" Height="31" Click="join_req_button_Click"/>
-        <TextBox x:Name="id_text_box" HorizontalAlignment="Left" Margin="678,230,0,0" TextWrapping="Wrap" Text="id" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14"/>
-        <TextBox x:Name="password_text_box" HorizontalAlignment="Left" Margin="678,270,0,0" TextWrapping="Wrap" Text="password" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14"/>
-        <Button x:Name="stream_open_btn" Content="stream" HorizontalAlignment="Left" Margin="716,139,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.338,-0.311" Width="60" Height="31" Click="stream_open_Click"/>
-        <TextBox x:Name="nickname_text_box" HorizontalAlignment="Left" Margin="571,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14" AutomationProperties.HelpText="nickname"/>
+        <TextBox x:Name="message_text_box" HorizontalAlignment="Left" Margin="528,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Height="36" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14"/>
+        <TextBlock Text="message" IsHitTestVisible="False" VerticalAlignment="Top" Margin="538,433,0,0" HorizontalAlignment="Left" FontSize="14">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=message_text_box}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Button x:Name="message_btn" Content="send" HorizontalAlignment="Left" Margin="528,464,0,0" VerticalAlignment="Top" IsDefault="True" Width="140" Height="36" FontFamily="Consolas" FontSize="16" FontWeight="Bold" Click="message_btn_Click"/>
+        <Button x:Name="join_req_button" Content="Join" HorizontalAlignment="Left" Margin="553,70,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.338,-0.311" Width="108" Height="32" Click="join_req_button_Click"/>
+        <TextBox x:Name="id_text_box" HorizontalAlignment="Left" Margin="774,107,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Height="36" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14"/>
+        <TextBlock Text="id" IsHitTestVisible="False" VerticalAlignment="Top" Margin="784,117,0,0" HorizontalAlignment="Left" FontSize="14">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=id_text_box}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox x:Name="password_text_box" HorizontalAlignment="Left" Margin="774,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14"/>
+        <TextBlock Text="password" IsHitTestVisible="False" VerticalAlignment="Top" Margin="784,158,0,0" HorizontalAlignment="Left" FontSize="14">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=password_text_box}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Button x:Name="stream_open_btn" Content="stream" HorizontalAlignment="Left" Margin="812,71,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.338,-0.311" Width="60" Height="31" Click="stream_open_Click"/>
+        <TextBox x:Name="nickname_text_box" HorizontalAlignment="Left" Margin="775,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14" AutomationProperties.HelpText="nickname" TextChanged="nickname_text_box_TextChanged"/>
+        <TextBlock Text="nickname" IsHitTestVisible="False" VerticalAlignment="Top" Margin="785,198,0,0" HorizontalAlignment="Left" FontSize="14">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=nickname_text_box}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox x:Name="command_text_box" HorizontalAlignment="Left" Margin="528,316,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Height="36" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14" />
+        <TextBlock Text="command" IsHitTestVisible="False" VerticalAlignment="Top" Margin="538,326,0,0" HorizontalAlignment="Left" FontSize="14">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=command_text_box}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Button x:Name="command_send_btn" Content="command" HorizontalAlignment="Left" Margin="528,357,0,0" VerticalAlignment="Top" IsDefault="True" Width="140" Height="36" FontFamily="Consolas" FontSize="16" FontWeight="Bold" Click="command_send_btn_Click" />
     </Grid>
 </Window>

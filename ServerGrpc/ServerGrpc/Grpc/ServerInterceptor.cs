@@ -15,14 +15,25 @@ namespace ServerGrpc.Grpc
 
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context, UnaryServerMethod<TRequest, TResponse> continuation)
         {
-            var id = context.GetHttpContext().Request.Headers["id"];
-            var password = context.GetHttpContext().Request.Headers["password"];
-
-
-            _logger.LogInformation($"call Type: {MethodType.Unary}. Method: {context.Method}. id: {id}, password: {password}");
             try
             {
-                return await continuation(request, context);
+                var session = context.GetClientSession();
+                if (session == null)
+                {
+                    var xtid = Guid.NewGuid().ToString();
+                    var id = context.GetHttpContext().Request.Headers["id"];
+                    var password = context.GetHttpContext().Request.Headers["password"];
+
+                    session = new ClientSession(xtid, id, password);
+                    context.SetClientSession(session);
+                }
+
+                _logger.LogDebug($"call Type: {MethodType.Unary}. Method: {context.Method}. {session.XTID} id: {session.ID}, password: {session.PASS}");
+                _logger.LogDebug($"request: {request}");
+
+                var res = await continuation(request, context);
+                _logger.LogDebug($"response: {res}");
+                return res;
             }
             catch (Exception ex)
             {
@@ -46,6 +57,28 @@ namespace ServerGrpc.Grpc
         public override Task DuplexStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, DuplexStreamingServerMethod<TRequest, TResponse> continuation)
         {
             LogCall<TRequest, TResponse>(MethodType.DuplexStreaming, context);
+
+            try
+            {
+                var session = context.GetClientSession();
+                if (session == null)
+                {
+                    var xtid = Guid.NewGuid().ToString();
+                    var id = context.GetHttpContext().Request.Headers["id"];
+                    var password = context.GetHttpContext().Request.Headers["password"];
+
+                    session = new ClientSession(xtid, id, password);
+                    context.SetClientSession(session);
+                }
+
+                _logger.LogDebug($"call Type: {MethodType.DuplexStreaming}. Method: {context.Method}. {session.XTID} id: {session.ID}, password: {session.PASS}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error thrown by {context.Method}.");
+                throw;
+            }
+
             return base.DuplexStreamingServerHandler(requestStream, responseStream, context, continuation);
         }
 

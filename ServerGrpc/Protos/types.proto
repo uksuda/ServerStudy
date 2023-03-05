@@ -6,14 +6,15 @@ package network.types;
 
 enum StreamPacket {
     StreamPacket_None = 0;
-    StreamPacket_ConnectRes = 10;
+    StreamPacket_ConnectRes = 10;       // s2c
 
-    StreamPacket_Disconnected = 15;
+    StreamPacket_Disconnected = 15;     // s2c, c2s,
 
-    StreamPacket_UserConnect = 20;
+    StreamPacket_UserConnect = 20;      // s2c
+    StreamPacket_UserDisconnect = 21;   // s2c
 
-    StreamPacket_MessageSend = 30;
-    StreamPacket_MessageRecv = 31;
+    StreamPacket_MessageSend = 30;      // c2s
+    StreamPacket_MessageRecv = 31;      // s2c
 }
 
 enum UnaryDataType {
@@ -21,6 +22,9 @@ enum UnaryDataType {
 
     UnaryDataType_JoinReq = 10;
     UnaryDataType_JoinRes = 11;
+
+    UnaryDataType_CommandReq = 20;
+    UnaryDataType_CommandRes = 21;
 }
 
 enum StatusCode {

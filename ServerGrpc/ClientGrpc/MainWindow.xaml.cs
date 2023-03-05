@@ -2,6 +2,9 @@
 using network.main;
 using network.stream;
 using network.unary;
+using System;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -34,10 +37,10 @@ namespace ClientGrpc
             ip_text_box.Clear();
             ip_text_box.Text = _serverAddr;
 
-            //id_text_box.Clear();
-            //password_text_box.Clear();
-            //nickname_text_box.Clear();
-
+            id_text_box.Clear();
+            password_text_box.Clear();
+            nickname_text_box.Clear();
+            command_text_box.Clear();
             message_text_box.Clear();
 
             message_rich_text_box.Document.Blocks.Clear();
@@ -58,26 +61,6 @@ namespace ClientGrpc
             }
 
             _client.SetStreamCallBack(DispatchStream);
-        }
-
-        private void init_channel_button_Click(object sender, RoutedEventArgs e)
-        {
-            if (_client == null)
-            {
-                InitClient();
-            }
-
-            if (string.IsNullOrEmpty(_serverAddr) == true)
-            {
-                MessageBox.Show("server ip is empty");
-                return;
-            }
-
-            var id = id_text_box.Text;
-            var password = password_text_box.Text;
-
-            _client.InitChannel(_serverAddr, id, password);
-            MessageBox.Show($"channel created");
         }
 
         private void stream_open_Click(object sender, RoutedEventArgs e)
@@ -115,11 +98,65 @@ namespace ClientGrpc
 
         private async void message_btn_Click(object sender, RoutedEventArgs e)
         {
+            if (_client.IsReadyChannel() == false)
+            {
+                MessageBox.Show("you need to stream or join first");
+                return;
+            }
+
             if (string.IsNullOrEmpty(message_text_box.Text) == true)
             {
                 MessageBox.Show("message is empty");
                 return;
             }
+
+            var msg = new Stream_MessageSend
+            {
+                Message = message_text_box.Text,
+            };
+            var data = new StreamData()
+            {
+                Packet = network.types.StreamPacket.MessageSend,
+                MessageSend = msg,
+            };
+
+            try
+            {
+                await _client.SendMsg(data);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"message_btn_click error: {ex.Message}, {ex.InnerException}");
+            }   
+        }
+
+        private async void command_send_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_client.IsReadyChannel() == false)
+            {
+                MessageBox.Show("you need to stream or join first");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(command_text_box.Text) == true)
+            {
+                MessageBox.Show("command text is empty");
+                return;
+            }
+
+            var msg = new Unary_CommandReq
+            {
+                Command = command_text_box.Text,
+            };
+
+            var unaryData = new UnaryData
+            {
+                Type = network.types.UnaryDataType.CommandReq,
+                CommandReq = msg,
+            };
+
+            var result = await _client.UnaryDataSend(unaryData);
+            DispatchUnary(result);
         }
 
         private async void join_req_button_Click(object sender, RoutedEventArgs e)
@@ -181,11 +218,13 @@ namespace ClientGrpc
                 case StreamData.DataOneofCase.ConnectRes:
                     return DispatchStream_ConnectRes(data.ConnectRes);
                 case StreamData.DataOneofCase.Disconnected:
-                    return true;
+                    return DispatchStream_Disconnected(data.Disconnected);
                 case StreamData.DataOneofCase.UserConnect:
-                    return true;
+                    return DispatchStream_UserConnect(data.UserConnect);
+                case StreamData.DataOneofCase.UserDisconnect:
+                    return DispatchStream_UserDisconnect(data.UserDisconnect);
                 case StreamData.DataOneofCase.MessageRecv:
-                    return true;
+                    return DispatchStream_MessageRecv(data.MessageRecv);
                 default:
                     return false;
             }
@@ -193,7 +232,42 @@ namespace ClientGrpc
 
         private bool DispatchStream_ConnectRes(Stream_ConnectRes res)
         {
-            MessageBox.Show($"stream recv: {network.types.StreamPacket.ConnectRes} status code: {res.Err}");
+            var resultStr = $"stream recv: {network.types.StreamPacket.ConnectRes} status code: {res.Err}";
+            RichTextBoxString(resultStr);
+            return true;
+        }
+
+        private bool DispatchStream_Disconnected(Stream_Disconnected res)
+        {
+            RichTextBoxString($"stream recv: {network.types.StreamPacket.Disconnected} status code: {res.Err}");
+            return true;
+        }
+
+        private bool DispatchStream_UserConnect(Stream_UserConnect res)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"stream recv: {network.types.StreamPacket.UserConnect}");
+            builder.AppendLine($"user: {res.ConnectUser.UserIndex}. {res.ConnectUser.Nickname}");
+            RichTextBoxString(builder.ToString());
+            return true;
+        }
+
+        private bool DispatchStream_UserDisconnect(Stream_UserDisconnect res)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"stream recv: {network.types.StreamPacket.UserDisconnect}");
+            builder.AppendLine($"user: {res.DisconnectUser.UserIndex}. {res.DisconnectUser.Nickname}");
+            RichTextBoxString(builder.ToString());
+            return true;
+        }
+
+        private bool DispatchStream_MessageRecv(Stream_MessageRecv res)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"stream recv: {network.types.StreamPacket.MessageRecv}");
+            builder.AppendLine($"user: {res.SendUser.UserIndex}. {res.SendUser.Nickname}");
+            builder.AppendLine($"message: {res.Message}");
+            RichTextBoxString(builder.ToString());
             return true;
         }
         #endregion
@@ -208,6 +282,8 @@ namespace ClientGrpc
             {
                 case UnaryData.DataOneofCase.JoinRes:
                     return DispatchUnary_JoinRes(data.JoinRes);
+                case UnaryData.DataOneofCase.CommandRes:
+                    return DispatchUnary_CommandRes(data.CommandRes);
                 default:
                     return false;
             }
@@ -215,7 +291,15 @@ namespace ClientGrpc
 
         private bool DispatchUnary_JoinRes(Unary_JoinRes res)
         {
-            MessageBox.Show($"unary recv: {network.types.UnaryDataType.JoinRes} status code: {res.Err}");
+            var resultStr = $"unary recv: {network.types.UnaryDataType.JoinRes} status code: {res.Err}";
+            RichTextBoxString(resultStr);
+            return true;
+        }
+
+        private bool DispatchUnary_CommandRes(Unary_CommandRes res)
+        {
+            var resultStr = $"unary recv: {network.types.UnaryDataType.CommandRes} status code: {res.Err}\r\n";
+            RichTextBoxString(resultStr + res.Result);
             return true;
         }
         #endregion

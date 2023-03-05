@@ -23,7 +23,7 @@ namespace ServerGrpc.Grpc
             _tokenSource = new CancellationTokenSource();
         }
 
-        public async ValueTask ReadAsync(Func<StreamData, bool> msgCallBack)
+        public async ValueTask ReadAsync(Func<StreamData, Task<bool>> msgCallBack)
         {
             await Task.Run(async () =>
             {
@@ -32,7 +32,7 @@ namespace ServerGrpc.Grpc
                     var data = _reader.Current;
                     if (msgCallBack != null)
                     {
-                        msgCallBack.Invoke(data);
+                        await msgCallBack.Invoke(data);
                     }
                 }
             });

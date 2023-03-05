@@ -19,12 +19,15 @@ message Stream_UserConnect {
     network.common.UserInfo connect_user = 1;
 }
 
+message Stream_UserDisconnect {
+    network.common.UserInfo disconnect_user = 1;
+}
+
 message Stream_MessageSend {
     string message = 1;
 }
 
 message Stream_MessageRecv {
-    int32 user_index = 1;
-    string nickname = 2;
-    string message = 3;
+    network.common.UserInfo send_user = 1;
+    string message = 2;
 }

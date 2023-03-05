@@ -11,7 +11,6 @@ message Empty {
 
 message UserInfo {
     int32 user_index = 1;
-    int32 profile_id = 2;
-    string nickname = 3;
+    string nickname = 2;
 }
 

@@ -16,3 +16,12 @@ message Unary_JoinReq {
 message Unary_JoinRes {
     network.types.StatusCode err = 1;
 }
+
+message Unary_CommandReq {
+    string command = 1;
+}
+
+message Unary_CommandRes {
+    network.types.StatusCode err = 1;
+    string result = 2;
+}

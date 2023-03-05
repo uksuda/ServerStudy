@@ -22,6 +22,7 @@ message StreamData {
       network.stream.Stream_Disconnected disconnected = 15;
 
       network.stream.Stream_UserConnect user_connect = 20;
+      network.stream.Stream_UserDisconnect user_disconnect = 21;
 
       network.stream.Stream_MessageSend message_send = 30;
       network.stream.Stream_MessageRecv message_recv = 31;
@@ -33,5 +34,8 @@ message UnaryData {
   oneof data {
       network.unary.Unary_JoinReq join_req = 10;
       network.unary.Unary_JoinRes join_res = 11;
+
+      network.unary.Unary_CommandReq command_req = 20;
+      network.unary.Unary_CommandRes command_res = 21;
   }
 }

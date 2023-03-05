@@ -2,7 +2,6 @@
 using Grpc.Net.Client;
 using network.main;
 using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,7 +34,7 @@ namespace ClientGrpc.Client
 
         public bool IsReadyChannel()
         {
-            return _channel != null;
+            return (_channel != null && _metaData != null);
         }
 
         public ConnectivityState GetChannelState()

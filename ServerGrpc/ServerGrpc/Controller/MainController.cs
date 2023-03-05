@@ -10,10 +10,16 @@ namespace ServerGrpc.Controller
         private readonly ILogger<MainController> _logger;
         private readonly MainService _service;
 
-        public MainController(ILogger<MainController> logger, MainService service)
+        private readonly ClientManager _clientManager;
+
+        public MainController(
+            ILogger<MainController> logger, 
+            MainService service,
+            ClientManager clientManager)
         {
             _service = service;
             _logger = logger;
+            _clientManager = clientManager;
         }
 
         public override async Task<UnaryData> UnaryDataSend(UnaryData request, ServerCallContext context)
@@ -42,8 +48,8 @@ namespace ServerGrpc.Controller
 
                 await client.ReadAsync((data) =>
                 {
-                    _logger.LogDebug($"recv data packet: {data.Packet}");
-                    return true;
+                    //_logger.LogDebug($"recv data packet: {data.Packet}");
+                    return _service.StreamDispatch(data, client, _clientManager);
                 });
             }
             catch (RpcException e)
