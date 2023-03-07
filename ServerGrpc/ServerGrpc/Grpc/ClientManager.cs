@@ -6,6 +6,8 @@ namespace ServerGrpc.Grpc
     {
         private readonly CancellationTokenSource _tokenSource;
         private readonly ConcurrentDictionary<int, ClientStream> _clientMap = new ConcurrentDictionary<int, ClientStream>();
+
+        private readonly ConcurrentDictionary<string, ClientStream> _clientIdMap = new ConcurrentDictionary<string, ClientStream>();
         public ClientManager() 
         {
             _tokenSource = new CancellationTokenSource();
@@ -13,7 +15,7 @@ namespace ServerGrpc.Grpc
 
         public void AddClient(ClientStream client)
         {
-            _clientMap.TryAdd(_clientMap.Count, client);
+            _clientMap.TryAdd(_clientIdMap.Count, client);
         }
     }
 }

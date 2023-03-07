@@ -1,18 +1,26 @@
 ﻿using Grpc.Core;
 using network.main;
+using ServerGrpc.Common;
 
 namespace ServerGrpc.Grpc
 {
     public class ClientStream
     {
+        public string XTID => _session.XTID;
+        public string ID => _session.ID;
+        public string PASS => _session.PASS;
+
+
         private readonly IAsyncStreamReader<StreamData> _reader;
         private readonly IServerStreamWriter<StreamData> _writer;
 
         private readonly ServerCallContext _context;
+        private readonly ClientSession _session;
 
         private readonly CancellationTokenSource _tokenSource;
 
         private Action<StreamData> _callback;
+        private int _clientIndex;
 
         public ClientStream(IAsyncStreamReader<StreamData> request, IServerStreamWriter<StreamData> response, ServerCallContext context)
         {
@@ -20,7 +28,14 @@ namespace ServerGrpc.Grpc
             _writer = response;
             _context = context;
 
+            _session = _context.GetClientSession();
+            
             _tokenSource = new CancellationTokenSource();
+        }
+
+        public void SetClientIndex(int index)
+        {
+            _clientIndex = index;
         }
 
         public async ValueTask ReadAsync(Func<StreamData, Task<bool>> msgCallBack)
