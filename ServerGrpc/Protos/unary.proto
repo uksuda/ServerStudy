@@ -7,6 +7,7 @@ package network.unary;
 import "common.proto";
 import "types.proto";
 
+// Join
 message Unary_JoinReq {
     string id = 1;
     string password = 2;
@@ -14,14 +15,30 @@ message Unary_JoinReq {
 }
 
 message Unary_JoinRes {
-    network.types.StatusCode err = 1;
+    network.types.StatusCode result = 1;
+    string token  = 2;
 }
 
+
+// Login
+message Unary_LoginReq {
+    string id = 1;
+    string password = 2;
+}
+
+message Unary_LoginRes {
+    network.types.StatusCode result = 1;
+    string token = 2;
+}
+
+
+
+// Command
 message Unary_CommandReq {
     string command = 1;
 }
 
 message Unary_CommandRes {
-    network.types.StatusCode err = 1;
-    string result = 2;
+    network.types.StatusCode result = 1;
+    string cmd_res = 2;
 }

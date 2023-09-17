@@ -7,12 +7,15 @@ package network.stream;
 import "common.proto";
 import "types.proto";
 
+message Stream_ConnectReq {
+}
+
 message Stream_ConnectRes {
-    network.types.StatusCode err = 1;
+    network.types.StatusCode result = 1;
 }
 
 message Stream_Disconnected {
-    network.types.StatusCode err = 1;
+    network.types.StatusCode result = 1;
 }
 
 message Stream_UserConnect {

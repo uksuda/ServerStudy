@@ -13,4 +13,3 @@ message UserInfo {
     int32 user_index = 1;
     string nickname = 2;
 }
-

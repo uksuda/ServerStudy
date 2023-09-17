@@ -5,33 +5,37 @@ option csharp_namespace = "network.types";
 package network.types;
 
 enum StreamPacket {
-    StreamPacket_None = 0;
-    StreamPacket_ConnectRes = 10;       // s2c
+    STREAM_PACKET_NONE = 0;
+    STREAM_PACKET_CONNECT_REQ = 10;       // c2s
+    STREAM_PACKET_CONNECT_RES = 11;       // s2c
 
-    StreamPacket_Disconnected = 15;     // s2c, c2s,
+    STREAM_PACKET_DISCONNECTED = 20;     // s2c, c2s,
 
-    StreamPacket_UserConnect = 20;      // s2c
-    StreamPacket_UserDisconnect = 21;   // s2c
+    STREAM_PACKET_USER_CONNECT = 30;      // s2c
+    STREAM_PACKET_USER_DISCONNECT = 31;   // s2c
 
-    StreamPacket_MessageSend = 30;      // c2s
-    StreamPacket_MessageRecv = 31;      // s2c
+    STREAM_PACKET_MESSAGE_SEND = 100;      // c2s
+    STREAM_PACKET_MESSAGE_RECV = 101;      // s2c
 }
 
 enum UnaryDataType {
-    UnaryDataType_None = 0;
+    UNARY_DATA_TYPE_NONE = 0;
 
-    UnaryDataType_JoinReq = 10;
-    UnaryDataType_JoinRes = 11;
+    UNARY_DATA_TYPE_JOIN_REQ = 10;
+    UNARY_DATA_TYPE_JOIN_RES = 11;
 
-    UnaryDataType_CommandReq = 20;
-    UnaryDataType_CommandRes = 21;
+    UNARY_DATA_TYPE_LOGIN_REQ = 20;
+    UNARY_DATA_TYPE_LOGIN_RES = 21;
+
+    UNARY_DATA_TYPE_COMMAND_REQ = 100;
+    UNARY_DATA_TYPE_COMMAND_RES = 101;
 }
 
 enum StatusCode {
-    StatusCode_Success = 0;
+    STATUS_CODE_SUCCESS = 0;
 
-    StatusCode_NotExist = 100;
-    StatusCode_Duplicated = 200;
+    STATUS_CODE_NOT_EXIST = 100;
+    STATUS_CODE_DUPLICATED = 200;
 
-    StatusCode_Invalid = 20000;
+    STATUS_CODE_INVALID = 9999;
 }

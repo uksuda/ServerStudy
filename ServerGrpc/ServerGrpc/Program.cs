@@ -15,38 +15,17 @@ namespace ServerGrpc
 
             Log.Information("Start ");
 
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = CreateHostBuilder(args);
+            var app = builder.Build();
+
+            //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+
+            //app.Run();
 
             // Additional configuration is required to successfully run gRPC on macOS.
             // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
-
-            builder.Host.ConfigureLogging(logging =>
-            {
-                logging.ClearProviders()
-                    .AddSerilog(Log.Logger);
-            });
-
-            // Add services to the container.
-            builder.Services.AddGrpc(options =>
-            {
-                options.Interceptors.Add<ServerInterceptor>();
-            });
-
-            builder.Services.AddSingleton<MainService>();
-
-            var app = builder.Build();
-
-            //app.UseSerilogRequestLogging();
-            app.UseRouting();
-            app.UseEndpoints(endPoints =>
-            {
-                endPoints.MapGrpcService<MainController>();
-            });
-
-            // Configure the HTTP request pipeline.
-            app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-
-            Log.Information($"Env: {app.Environment.ApplicationName}, {app.Environment.EnvironmentName}");
+            
+            //Log.Information($"Env: {app.Environment.ApplicationName}, {app.Environment.EnvironmentName}");
             Log.Information("app started");
 
             try
@@ -57,6 +36,15 @@ namespace ServerGrpc
             {
                 Log.Error($"{e}");
             }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder.UseStartup<StartUp>();
+                });
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using network.main;
+using network.types;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,10 +14,10 @@ namespace ClientGrpc.Client
         private GrpcChannel _channel;
         private Main.MainClient _mainClient;
 
-        private Func<StreamData, bool> _callBack;
+        private Func<StreamMsg, bool> _callBack;
 
-        private IAsyncStreamReader<StreamData> _streamReader;
-        private IClientStreamWriter<StreamData> _streamWriter;
+        private IAsyncStreamReader<StreamMsg> _streamReader;
+        private IClientStreamWriter<StreamMsg> _streamWriter;
 
         private Grpc.Core.Metadata _metaData;
 
@@ -27,7 +28,7 @@ namespace ClientGrpc.Client
             _tokenSource = new CancellationTokenSource();
         }
 
-        public void SetStreamCallBack(Func<StreamData, bool> callBack)
+        public void SetStreamCallBack(Func<StreamMsg, bool> callBack)
         {
             _callBack = callBack;
         }
@@ -89,10 +90,11 @@ namespace ClientGrpc.Client
             return null;
         }
 
-        public async ValueTask SendMsg(StreamData data)
+        public async ValueTask SendMsg(StreamMsg data)
         {
             try
             {
+
                 if (_tokenSource.IsCancellationRequested == false)
                 {
                     await _streamWriter.WriteAsync(data);
@@ -100,6 +102,7 @@ namespace ClientGrpc.Client
             }
             catch (OperationCanceledException e)
             {
+                
                 MessageBox.Show($"canceled exception - {e}");
             }
             catch (InvalidOperationException e)

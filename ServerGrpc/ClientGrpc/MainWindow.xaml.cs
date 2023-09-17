@@ -114,7 +114,7 @@ namespace ClientGrpc
             {
                 Message = message_text_box.Text,
             };
-            var data = new StreamData()
+            var data = new StreamMsg()
             {
                 Packet = network.types.StreamPacket.MessageSend,
                 MessageSend = msg,
@@ -209,21 +209,21 @@ namespace ClientGrpc
         }
 
         #region Dispatch Stream
-        private bool DispatchStream(StreamData data)
+        private bool DispatchStream(StreamMsg data)
         {
             var recvString = $"stream recv: {data.Packet}";
             RichTextBoxString(recvString);
             switch (data.DataCase)
             {
-                case StreamData.DataOneofCase.ConnectRes:
+                case StreamMsg.DataOneofCase.ConnectRes:
                     return DispatchStream_ConnectRes(data.ConnectRes);
-                case StreamData.DataOneofCase.Disconnected:
+                case StreamMsg.DataOneofCase.Disconnected:
                     return DispatchStream_Disconnected(data.Disconnected);
-                case StreamData.DataOneofCase.UserConnect:
+                case StreamMsg.DataOneofCase.UserConnect:
                     return DispatchStream_UserConnect(data.UserConnect);
-                case StreamData.DataOneofCase.UserDisconnect:
+                case StreamMsg.DataOneofCase.UserDisconnect:
                     return DispatchStream_UserDisconnect(data.UserDisconnect);
-                case StreamData.DataOneofCase.MessageRecv:
+                case StreamMsg.DataOneofCase.MessageRecv:
                     return DispatchStream_MessageRecv(data.MessageRecv);
                 default:
                     return false;
@@ -232,14 +232,14 @@ namespace ClientGrpc
 
         private bool DispatchStream_ConnectRes(Stream_ConnectRes res)
         {
-            var resultStr = $"stream recv: {network.types.StreamPacket.ConnectRes} status code: {res.Err}";
+            var resultStr = $"stream recv: {network.types.StreamPacket.ConnectRes} status code: {res.Result}";
             RichTextBoxString(resultStr);
             return true;
         }
 
         private bool DispatchStream_Disconnected(Stream_Disconnected res)
         {
-            RichTextBoxString($"stream recv: {network.types.StreamPacket.Disconnected} status code: {res.Err}");
+            RichTextBoxString($"stream recv: {network.types.StreamPacket.Disconnected} status code: {res.Result}");
             return true;
         }
 
@@ -291,17 +291,22 @@ namespace ClientGrpc
 
         private bool DispatchUnary_JoinRes(Unary_JoinRes res)
         {
-            var resultStr = $"unary recv: {network.types.UnaryDataType.JoinRes} status code: {res.Err}";
+            var resultStr = $"unary recv: {network.types.UnaryDataType.JoinRes} status code: {res.Result}";
             RichTextBoxString(resultStr);
             return true;
         }
 
         private bool DispatchUnary_CommandRes(Unary_CommandRes res)
         {
-            var resultStr = $"unary recv: {network.types.UnaryDataType.CommandRes} status code: {res.Err}\r\n";
+            var resultStr = $"unary recv: {network.types.UnaryDataType.CommandRes} status code: {res.Result}\r\n";
             RichTextBoxString(resultStr + res.Result);
             return true;
         }
         #endregion
+
+        private void nickname_text_box_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

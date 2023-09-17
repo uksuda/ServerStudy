@@ -10,19 +10,19 @@ namespace ServerGrpc.Grpc
         public string ID => _session.ID;
         public string PASS => _session.PASS;
 
-
-        private readonly IAsyncStreamReader<StreamData> _reader;
-        private readonly IServerStreamWriter<StreamData> _writer;
+        
+        private readonly IAsyncStreamReader<StreamMsg> _reader;
+        private readonly IServerStreamWriter<StreamMsg> _writer;
 
         private readonly ServerCallContext _context;
         private readonly ClientSession _session;
 
         private readonly CancellationTokenSource _tokenSource;
 
-        private Action<StreamData> _callback;
+        private Action<StreamMsg> _callback;
         private int _clientIndex;
 
-        public ClientStream(IAsyncStreamReader<StreamData> request, IServerStreamWriter<StreamData> response, ServerCallContext context)
+        public ClientStream(IAsyncStreamReader<StreamMsg> request, IServerStreamWriter<StreamMsg> response, ServerCallContext context)
         {
             _reader = request;
             _writer = response;
@@ -38,7 +38,7 @@ namespace ServerGrpc.Grpc
             _clientIndex = index;
         }
 
-        public async ValueTask ReadAsync(Func<StreamData, Task<bool>> msgCallBack)
+        public async ValueTask ReadAsync(Func<StreamMsg, Task<bool>> msgCallBack)
         {
             await Task.Run(async () =>
             {
@@ -53,7 +53,7 @@ namespace ServerGrpc.Grpc
             });
         }
 
-        public void SetMSgCallBack(Action<StreamData> callBack)
+        public void SetMSgCallBack(Action<StreamMsg> callBack)
         {
             _callback = callBack;
         }
@@ -73,7 +73,7 @@ namespace ServerGrpc.Grpc
             });
         }
 
-        public async ValueTask SendMsg(StreamData data)
+        public async ValueTask SendMsg(StreamMsg data)
         {
             if (_tokenSource.IsCancellationRequested == false)
             {

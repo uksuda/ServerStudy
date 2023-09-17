@@ -36,7 +36,7 @@ namespace ServerGrpc.Controller
             }
         }
 
-        public override async Task StreamOpen(IAsyncStreamReader<StreamData> requestStream, IServerStreamWriter<StreamData> responseStream, ServerCallContext context)
+        public override async Task StreamOpen(IAsyncStreamReader<StreamMsg> requestStream, IServerStreamWriter<StreamMsg> responseStream, ServerCallContext context)
         {
             // https://learn.microsoft.com/ko-kr/aspnet/core/grpc/services?view=aspnetcore-7.0
 
