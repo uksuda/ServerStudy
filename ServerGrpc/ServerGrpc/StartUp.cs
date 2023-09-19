@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using ServerGrpc.Controller;
 using ServerGrpc.Grpc;
+using ServerGrpc.Infra;
 using ServerGrpc.Services;
+using System.Text;
 
 namespace ServerGrpc
 {
@@ -18,7 +22,53 @@ namespace ServerGrpc
         {
             services.AddAuthorization(option =>
             {
-                //option.AddPolicy()
+                option.AddPolicy(ServerPolicy.Admin, ServerPolicy.CreatePolicyAdmin());
+                option.AddPolicy(ServerPolicy.User, ServerPolicy.CreatePolicyAdmin());
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidAudience = "Audience", // TODO
+                        ValidIssuer = "Issuer", // TODO
+                        ValidateLifetime = false,
+                        ClockSkew = TimeSpan.Zero,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Secret"/*TODO*/)),
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = (ctx) =>
+                        {
+                            // TODO
+                            return Task.CompletedTask;
+                        },
+                        OnMessageReceived = (ctx) =>
+                        {
+                            // TODO
+                            return Task.CompletedTask;
+                        }                        
+                    };
+                });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", (builder) =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+                    .WithExposedHeaders(
+                        "Grpc-Status",
+                        "Grpc-Message",
+                        "Grpc-Encoding",
+                        "Grpc-Accept-Encoding");
+                });
             });
 
             services.AddLogging(logging =>
@@ -29,9 +79,16 @@ namespace ServerGrpc
 
             services.AddGrpc(options =>
             {
+                options.MaxSendMessageSize = 1024 * 1024 * 4;
+                options.MaxReceiveMessageSize = 1024 * 1024 * 4;
                 options.Interceptors.Add<ServerInterceptor>();
-            });
 
+                //if (development)
+                //{
+                //    options.EnableDetailedErrors = true;
+                //}
+            });
+            
             services.AddSingleton<MainService>();
         }
 
@@ -42,11 +99,14 @@ namespace ServerGrpc
 
             }
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            //app.UseGrpcWeb();
             app.UseEndpoints(endPoints =>
             {
                 endPoints.MapGrpcService<MainController>();

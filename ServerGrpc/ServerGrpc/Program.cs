@@ -15,7 +15,20 @@ namespace ServerGrpc
 
             Log.Information("Start ");
 
-            var builder = CreateHostBuilder(args);
+            var builder = CreateHostBuilder(args)
+                .ConfigureAppConfiguration((ctx, config) =>
+                {
+                    if (ctx.HostingEnvironment.IsDevelopment() == true)
+                    {
+                        config.AddJsonFile("appsettings.Development.json");
+                    }
+                    else
+                    {
+                        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                        config.AddJsonFile($"appsettings.{env}.json");
+                    }
+                });
+
             var app = builder.Build();
 
             //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
