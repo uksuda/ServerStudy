@@ -61,7 +61,7 @@
             </TextBlock.Style>
         </TextBlock>
         <Button x:Name="stream_open_btn" Content="stream" HorizontalAlignment="Left" Margin="812,71,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.338,-0.311" Width="60" Height="31" Click="stream_open_Click"/>
-        <TextBox x:Name="nickname_text_box" HorizontalAlignment="Left" Margin="775,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14" AutomationProperties.HelpText="nickname" TextChanged="nickname_text_box_TextChanged"/>
+        <TextBox x:Name="nickname_text_box" HorizontalAlignment="Left" Margin="775,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="98" Height="35" BorderThickness="5,5,5,5" FontFamily="Consolas" FontSize="14" AutomationProperties.HelpText="nickname"/>
         <TextBlock Text="nickname" IsHitTestVisible="False" VerticalAlignment="Top" Margin="785,198,0,0" HorizontalAlignment="Left" FontSize="14">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">

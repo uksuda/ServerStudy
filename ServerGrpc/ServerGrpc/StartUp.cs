@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using ServerGrpc.Controller;
@@ -40,7 +39,7 @@ namespace ServerGrpc
                         ValidIssuer = "Issuer", // TODO
                         ValidateLifetime = false,
                         ClockSkew = TimeSpan.Zero,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Secret"/*TODO*/)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtTokenBuilder.Secret)),
                     };
 
                     options.Events = new JwtBearerEvents
@@ -89,6 +88,7 @@ namespace ServerGrpc
                 //}
             });
             
+            //
             services.AddSingleton<MainService>();
         }
 

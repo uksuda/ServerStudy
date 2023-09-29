@@ -16,6 +16,10 @@ namespace ServerGrpc.Services
             _logger = logger;
         }
 
+        #region Join & Login
+
+        #endregion
+
         #region Unary Data
         public async Task<UnaryData> UnaryDataSend(UnaryData request, ClientSession session)
         {
@@ -27,9 +31,6 @@ namespace ServerGrpc.Services
             UnaryData response = null;
             switch (request.Type)
             {
-                case network.types.UnaryDataType.JoinReq:
-                    response = await UnaryDispatch_JoinReq(request.JoinReq, session);
-                    break;
                 case network.types.UnaryDataType.CommandReq:
                     response = await UnaryDispatch_CommandReq(request.CommandReq, session);
                     break;
@@ -38,11 +39,6 @@ namespace ServerGrpc.Services
             }
 
             return response;
-        }
-
-        private async Task<UnaryData> UnaryDispatch_JoinReq(Unary_JoinReq request, ClientSession session)
-        {
-            return default;
         }
 
         private async Task<UnaryData> UnaryDispatch_CommandReq(Unary_CommandReq requesyt, ClientSession session)

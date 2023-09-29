@@ -1,7 +1,6 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using network.main;
-using network.types;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,6 +74,34 @@ namespace ClientGrpc.Client
             return true;
         }
 
+        public async Task<JoinRes> Join(JoinReq req)
+        {
+            try
+            {
+                var res = await _mainClient.JoinAsync(req);
+                return res;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"exception - {e}");
+            }
+            return null;
+        }
+
+        public async Task<LoginRes> Login(LoginReq req)
+        {
+            try
+            {
+                var res = await _mainClient.LoginAsync(req);
+                return res;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"exception - {e}");
+            }
+            return null;
+        }
+
         public async Task<UnaryData> UnaryDataSend(UnaryData request)
         {
             try
@@ -86,7 +113,6 @@ namespace ClientGrpc.Client
             {
                 MessageBox.Show($"exception - {e}");
             }
-
             return null;
         }
 

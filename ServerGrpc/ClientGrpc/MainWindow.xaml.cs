@@ -183,21 +183,20 @@ namespace ClientGrpc
                 _client.InitChannel(_serverAddr, id, password);
             }
 
-            var req = new Unary_JoinReq
+            var req = new JoinReq
             {
                 Id = id,
                 Password = password,
                 Nickname = nickname,
             };
 
-            var unaryData = new UnaryData
-            {
-                Type = network.types.UnaryDataType.JoinReq,
-                JoinReq = req,
-            };
+            var result = await _client.Join(req);
+            var sb = new StringBuilder();
+            sb.AppendLine($"Join result: {result.Result}");
+            sb.AppendLine($"Token: {result.Token}");
 
-            var result = await _client.UnaryDataSend(unaryData);
-            DispatchUnary(result);
+            RichTextBoxString(sb.ToString());
+            //RichTextBoxString();
         }
 
         private void RichTextBoxString(string str)
@@ -280,20 +279,11 @@ namespace ClientGrpc
 
             switch (data.DataCase)
             {
-                case UnaryData.DataOneofCase.JoinRes:
-                    return DispatchUnary_JoinRes(data.JoinRes);
                 case UnaryData.DataOneofCase.CommandRes:
                     return DispatchUnary_CommandRes(data.CommandRes);
                 default:
                     return false;
             }
-        }
-
-        private bool DispatchUnary_JoinRes(Unary_JoinRes res)
-        {
-            var resultStr = $"unary recv: {network.types.UnaryDataType.JoinRes} status code: {res.Result}";
-            RichTextBoxString(resultStr);
-            return true;
         }
 
         private bool DispatchUnary_CommandRes(Unary_CommandRes res)
@@ -303,10 +293,5 @@ namespace ClientGrpc
             return true;
         }
         #endregion
-
-        private void nickname_text_box_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }
