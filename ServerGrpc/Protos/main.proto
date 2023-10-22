@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "network.main";
+option csharp_namespace = "Network.Main";
 
 // import "common.proto";
 import "types.proto";

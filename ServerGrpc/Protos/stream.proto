@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "network.stream";
+option csharp_namespace = "Network.Stream";
 
 package network.stream;
 

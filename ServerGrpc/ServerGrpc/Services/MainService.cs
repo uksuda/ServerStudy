@@ -1,6 +1,6 @@
 using Grpc.Core;
-using network.main;
-using network.unary;
+using Network.Main;
+using Network.Unary;
 using ServerGrpc.Common;
 using ServerGrpc.Grpc;
 using System.ComponentModel;
@@ -31,7 +31,7 @@ namespace ServerGrpc.Services
             UnaryData response = null;
             switch (request.Type)
             {
-                case network.types.UnaryDataType.CommandReq:
+                case Network.Types.UnaryDataType.CommandReq:
                     response = await UnaryDispatch_CommandReq(request.CommandReq, session);
                     break;
                 default:
@@ -52,9 +52,9 @@ namespace ServerGrpc.Services
         {
             switch (data.Packet)
             {
-                case network.types.StreamPacket.Disconnected:
+                case Network.Types.StreamPacket.Disconnected:
                     break;
-                case network.types.StreamPacket.MessageSend:
+                case Network.Types.StreamPacket.MessageSend:
                     break;
                 default:
                     throw new InvalidEnumArgumentException($"invalid stream data {data.Packet}");

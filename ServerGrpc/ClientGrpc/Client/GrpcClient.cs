@@ -1,10 +1,11 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
-using network.main;
+using Network.Main;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace ClientGrpc.Client
 {

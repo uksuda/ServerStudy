@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "network.types";
+option csharp_namespace = "Network.Types";
 
 package network.types;
 

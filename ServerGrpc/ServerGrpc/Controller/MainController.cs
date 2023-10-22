@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using network.main;
+using Network.Main;
 using ServerGrpc.Grpc;
 using ServerGrpc.Services;
 
