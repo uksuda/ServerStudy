@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
 using ServerGrpc.Controller;
 using ServerGrpc.Grpc;
 using ServerGrpc.Infra;
@@ -19,6 +18,7 @@ namespace ServerGrpc
 
         public void ConfigureServices(IServiceCollection services)
         {
+            bool isDevelop = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Development");
             services.AddAuthorization(option =>
             {
                 option.AddPolicy(ServerPolicy.Admin, ServerPolicy.CreatePolicyAdmin());
@@ -70,24 +70,20 @@ namespace ServerGrpc
                 });
             });
 
-            services.AddLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.AddSerilog(Log.Logger);
-            });
-
             services.AddGrpc(options =>
             {
                 options.MaxSendMessageSize = 1024 * 1024 * 4;
                 options.MaxReceiveMessageSize = 1024 * 1024 * 4;
                 options.Interceptors.Add<ServerInterceptor>();
 
-                //if (development)
-                //{
-                //    options.EnableDetailedErrors = true;
-                //}
+                if (isDevelop)
+                {
+                    options.EnableDetailedErrors = true;
+                }
             });
-            
+
+            services.AddGrpcReflection();
+
             //
             services.AddSingleton<MainService>();
         }
@@ -96,7 +92,7 @@ namespace ServerGrpc
         {
             if (env.IsDevelopment())
             {
-
+                
             }
 
             app.UseStaticFiles();
@@ -106,9 +102,11 @@ namespace ServerGrpc
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.UseGrpcWeb();
+            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
+
             app.UseEndpoints(endPoints =>
             {
+                endPoints.MapGrpcReflectionService();
                 endPoints.MapGrpcService<MainController>();
             });
 

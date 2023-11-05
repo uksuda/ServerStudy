@@ -1,10 +1,12 @@
 ﻿using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace ServerGrpc.Logger
 {
     public class AppLogManager
     {
-        private static Serilog.ILogger _logger;
+        //private static Serilog.ILogger _logger;
+        private static ILoggerProvider _provider;
 
         public static void Init()
         {
@@ -18,12 +20,25 @@ namespace ServerGrpc.Logger
                 .WriteTo.File(path, rollingInterval: RollingInterval.Day)
                 .CreateBootstrapLogger();
 
-            _logger = Log.Logger;
+            _provider = new SerilogLoggerProvider(Log.Logger);
         }
 
-        public static Serilog.ILogger GetLogger()
+        public static ILoggerProvider GetProvider()
         {
-            return _logger;
+            if (_provider == null)
+            {
+                Init();
+            }
+            return _provider;
+        }
+
+        public static Microsoft.Extensions.Logging.ILogger GetLogger(string name)
+        {
+            if (_provider == null)
+            {
+                Init();
+            }
+            return _provider.CreateLogger(name);
         }
     }
 }

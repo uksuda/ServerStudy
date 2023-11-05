@@ -1,9 +1,7 @@
-using Serilog;
-using ServerGrpc.Controller;
-using ServerGrpc.Grpc;
 using ServerGrpc.Logger;
-using ServerGrpc.Services;
 using System.Net;
+using System.Reflection;
+using System.Text;
 
 namespace ServerGrpc
 {
@@ -13,9 +11,46 @@ namespace ServerGrpc
         {
             AppLogManager.Init();
 
-            Log.Information("Start ");
+            var logger = AppLogManager.GetLogger("Program");
+            
+            PrintInfomation(logger);
 
-            var builder = CreateHostBuilder(args)
+            var builder = CreateHostBuilder(args);
+            var app = builder.Build();
+
+            //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+
+            //app.Run();
+
+            // Additional configuration is required to successfully run gRPC on macOS.
+            // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
+
+            //Log.Information($"Env: {app.Environment.ApplicationName}, {app.Environment.EnvironmentName}");
+
+            logger.LogInformation("server started");
+
+            try
+            {
+                app.Run();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.ToString());
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder.UseStartup<StartUp>();
+                })
+                .ConfigureLogging((ctx, builder) =>
+                {
+                    builder.ClearProviders();
+                    builder.AddProvider(AppLogManager.GetProvider());
+                })
                 .ConfigureAppConfiguration((ctx, config) =>
                 {
                     if (ctx.HostingEnvironment.IsDevelopment() == true)
@@ -28,36 +63,24 @@ namespace ServerGrpc
                         config.AddJsonFile($"appsettings.{env}.json");
                     }
                 });
-
-            var app = builder.Build();
-
-            //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-
-            //app.Run();
-
-            // Additional configuration is required to successfully run gRPC on macOS.
-            // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
-            
-            //Log.Information($"Env: {app.Environment.ApplicationName}, {app.Environment.EnvironmentName}");
-            Log.Information("app started");
-
-            try
-            {
-                app.Run();
-            }
-            catch (Exception e)
-            {
-                Log.Error($"{e}");
-            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        public static void PrintInfomation(ILogger logger)
         {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(builder =>
+            logger.LogInformation("Name: [{0}]", Assembly.GetEntryAssembly().FullName);
+            
+            var host = Dns.GetHostName();
+            var ipEntry = Dns.GetHostEntry(host);
+
+            logger.LogInformation("Host: [{0}]", host);
+
+            foreach (var ip in ipEntry.AddressList)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 {
-                    builder.UseStartup<StartUp>();
-                });
+                    logger.LogInformation("Endpoint: {0}", ip);
+                }
+            }
         }
     }
 }
