@@ -22,6 +22,16 @@ namespace ServerGrpc.Controller
             _clientManager = clientManager;
         }
 
+        public override async Task<JoinRes> Join(JoinReq request, ServerCallContext context)
+        {
+            return default;
+        }
+
+        public override async Task<LoginRes> Login(LoginReq request, ServerCallContext context)
+        {
+            return default;
+        }
+
         public override async Task<UnaryData> UnaryDataSend(UnaryData request, ServerCallContext context)
         {
             try

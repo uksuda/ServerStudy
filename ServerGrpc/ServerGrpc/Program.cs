@@ -59,8 +59,9 @@ namespace ServerGrpc
                     }
                     else
                     {
-                        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                        config.AddJsonFile($"appsettings.{env}.json");
+                        config.AddJsonFile("appsettings.json");
+                        //var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                        //config.AddJsonFile($"appsettings.{env}.json");
                     }
                 });
         }

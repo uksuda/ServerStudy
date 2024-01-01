@@ -17,18 +17,18 @@ namespace ServerGrpc.Grpc
         {
             try
             {
-                var session = context.GetClientSession();
-                if (session == null)
-                {
-                    var xtid = Guid.NewGuid().ToString();
-                    var id = context.GetHttpContext().Request.Headers["id"];
-                    var password = context.GetHttpContext().Request.Headers["password"];
+                //var session = context.GetClientSession();
+                //if (session == null)
+                //{
+                //    var xtid = Guid.NewGuid().ToString();
+                //    var id = context.GetHttpContext().Request.Headers["id"];
+                //    var password = context.GetHttpContext().Request.Headers["password"];
 
-                    session = new ClientSession(xtid, id, password);
-                    context.SetClientSession(session);
-                }
+                //    session = new ClientSession(xtid, id, password);
+                //    context.SetClientSession(session);
+                //}
 
-                _logger.LogDebug($"call Type: {MethodType.Unary}. Method: {context.Method}. {session.XTID} id: {session.ID}, password: {session.PASS}");
+                //_logger.LogDebug($"call Type: {MethodType.Unary}. Method: {context.Method}. {session.XTID} id: {session.ID}, password: {session.PASS}");
                 _logger.LogDebug($"request: {request}");
 
                 var res = await continuation(request, context);
@@ -60,18 +60,18 @@ namespace ServerGrpc.Grpc
 
             try
             {
-                var session = context.GetClientSession();
-                if (session == null)
-                {
-                    var xtid = Guid.NewGuid().ToString();
-                    var id = context.GetHttpContext().Request.Headers["id"];
-                    var password = context.GetHttpContext().Request.Headers["password"];
+                //var session = context.GetClientSession();
+                //if (session == null)
+                //{
+                //    var xtid = Guid.NewGuid().ToString();
+                //    var id = context.GetHttpContext().Request.Headers["id"];
+                //    var password = context.GetHttpContext().Request.Headers["password"];
 
-                    session = new ClientSession(xtid, id, password);
-                    context.SetClientSession(session);
-                }
+                //    session = new ClientSession(xtid, id, password);
+                //    context.SetClientSession(session);
+                //}
 
-                _logger.LogDebug($"call Type: {MethodType.DuplexStreaming}. Method: {context.Method}. {session.XTID} id: {session.ID}, password: {session.PASS}");
+                //_logger.LogDebug($"call Type: {MethodType.DuplexStreaming}. Method: {context.Method}. {session.XTID} id: {session.ID}, password: {session.PASS}");
             }
             catch (Exception ex)
             {

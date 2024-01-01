@@ -18,7 +18,9 @@ namespace ServerGrpc.Infra
         private readonly TokenValidationParameters _validateParameters;
         private readonly SigningCredentials _signingCredentials;
 
-        public JwtTokenBuilder()
+        private readonly ILogger<JwtTokenBuilder> _logger;
+
+        public JwtTokenBuilder(ILogger<JwtTokenBuilder> logger)
         {
             var secret = Encoding.ASCII.GetBytes(Secret);
             _signingCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature);
@@ -34,6 +36,8 @@ namespace ServerGrpc.Infra
                 ClockSkew = TimeSpan.Zero,
             };
             _tokenHandler = new JwtSecurityTokenHandler();
+
+            _logger = logger;
         }
 
         public string GenerateJwtToken(DateTime notBefore, int expireSec, string role, string jti, string uid)
@@ -60,7 +64,6 @@ namespace ServerGrpc.Infra
         public (ClaimsPrincipal, JwtSecurityToken) ValidateToken(string token)
         {
             //var jwtToken = _tokenHandler.ReadJwtToken(token);
-
             var principal = _tokenHandler.ValidateToken(token, _validateParameters, out var validatedToken);
             return (principal, validatedToken as JwtSecurityToken);
         }

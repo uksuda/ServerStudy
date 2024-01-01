@@ -4,6 +4,7 @@ using ServerGrpc.Controller;
 using ServerGrpc.Grpc;
 using ServerGrpc.Infra;
 using ServerGrpc.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ServerGrpc
@@ -44,16 +45,17 @@ namespace ServerGrpc
 
                     options.Events = new JwtBearerEvents
                     {
-                        OnTokenValidated = (ctx) =>
-                        {
-                            // TODO
-                            return Task.CompletedTask;
-                        },
+                        //OnTokenValidated = (ctx) =>
+                        //{
+                        //    // TODO
+                        //    return Task.CompletedTask;
+                        //},
+                        OnTokenValidated = OnTokenValidate,
                         OnMessageReceived = (ctx) =>
                         {
                             // TODO
                             return Task.CompletedTask;
-                        }                        
+                        }                     
                     };
                 });
 
@@ -85,6 +87,7 @@ namespace ServerGrpc
             services.AddGrpcReflection();
 
             //
+            services.AddSingleton<JwtTokenBuilder>();
             services.AddSingleton<MainService>();
         }
 
@@ -112,6 +115,16 @@ namespace ServerGrpc
 
             // Configure the HTTP request pipeline.
             //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+        }
+
+        public async Task OnTokenValidate(TokenValidatedContext ctx)
+        {
+            if (ctx.SecurityToken is JwtSecurityToken token)
+            {
+                var tokenBuilder = ctx.HttpContext.RequestServices.GetRequiredService<JwtTokenBuilder>();
+                //var (prins, token) = tokenBuilder.ValidateToken(token.ToString());
+            }
+            await Task.CompletedTask;
         }
     }
 }
