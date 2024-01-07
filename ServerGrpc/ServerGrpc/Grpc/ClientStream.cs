@@ -8,8 +8,6 @@ namespace ServerGrpc.Grpc
     {
         public string XTID => _session.XTID;
         public string ID => _session.ID;
-        public string PASS => _session.PASS;
-
         
         private readonly IAsyncStreamReader<StreamMsg> _reader;
         private readonly IServerStreamWriter<StreamMsg> _writer;

@@ -1,6 +1,5 @@
 ﻿using Grpc.Core.Interceptors;
 using Grpc.Core;
-using ServerGrpc.Common;
 
 namespace ServerGrpc.Grpc
 {

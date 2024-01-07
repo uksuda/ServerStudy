@@ -6,6 +6,29 @@ namespace ServerGrpc.Grpc
     public static class GrpcExtension
     {
         public const string CLIENT_SESSION = "client_session";
+        public const string XTID = "x-tid";
+
+        public static void SetXtid(this ServerCallContext context, string xtid)
+        {
+            var httpContext = context.GetHttpContext();
+            if (httpContext == null)
+            {
+                throw new NullReferenceException("http context is empty");
+            }
+            httpContext.Items.Add(XTID, xtid);
+        }
+
+        public static string GetXtid(this ServerCallContext context)
+        {
+            var httpContext = context.GetHttpContext();
+            if (httpContext == null)
+            {
+                throw new NullReferenceException("http context is empty");
+            }
+
+            httpContext.Items.TryGetValue(XTID, out var xtid);
+            return (xtid == null) ? string.Empty : xtid.ToString();
+        }
 
         public static ClientSession GetClientSession(this ServerCallContext context)
         {

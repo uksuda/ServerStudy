@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using ServerGrpc.Controller;
 using ServerGrpc.Grpc;
 using ServerGrpc.Infra;
 using ServerGrpc.Services;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ServerGrpc
@@ -76,6 +76,7 @@ namespace ServerGrpc
             {
                 options.MaxSendMessageSize = 1024 * 1024 * 4;
                 options.MaxReceiveMessageSize = 1024 * 1024 * 4;
+                options.Interceptors.Add<AutoHeaderInterceptor>();
                 options.Interceptors.Add<ServerInterceptor>();
 
                 if (isDevelop)
@@ -119,9 +120,12 @@ namespace ServerGrpc
 
         public async Task OnTokenValidate(TokenValidatedContext ctx)
         {
-            if (ctx.SecurityToken is JwtSecurityToken token)
+            //if (ctx.SecurityToken is JwtSecurityToken token)
+            if (ctx.SecurityToken is JsonWebToken token)
             {
-                var tokenBuilder = ctx.HttpContext.RequestServices.GetRequiredService<JwtTokenBuilder>();
+                var tokenString = token.UnsafeToString();
+                var jwtBuilder = ctx.HttpContext.RequestServices.GetRequiredService<JwtTokenBuilder>();
+                var (prins, validToken) = jwtBuilder.ValidateToken(tokenString);
                 //var (prins, token) = tokenBuilder.ValidateToken(token.ToString());
             }
             await Task.CompletedTask;

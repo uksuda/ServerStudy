@@ -1,5 +1,4 @@
 using ClientGrpc.Client;
-using Microsoft.VisualBasic.Devices;
 using System.Text;
 using System;
 using System.Windows.Forms;
@@ -38,12 +37,12 @@ namespace ClientGrpc
 
         private void stream_open_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void ip_text_box_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private async void message_btn_Click(object sender, EventArgs e)
@@ -93,7 +92,7 @@ namespace ClientGrpc
                 CommandReq = msg,
             };
 
-            var result = await _client.UnaryDataSend(unaryData);
+            var (result, resMsg) = await _client.UnaryDataSend(unaryData);
             DispatchUnary(result);
         }
 
@@ -114,7 +113,7 @@ namespace ClientGrpc
                 
             };
 
-            var result = await _client.Join(req);
+            var (result, resMsg) = await _client.Join(req);
             var sb = new StringBuilder();
             sb.AppendLine($"Join result: {result.Result}");
             sb.AppendLine($"Token: {result.Token}");
@@ -125,7 +124,7 @@ namespace ClientGrpc
 
         private void RichTextBoxString(string str)
         {
-            
+
         }
 
         #region Dispatch Stream
