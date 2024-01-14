@@ -109,11 +109,11 @@ namespace ClientGrpc.Client
             }
         }
 
-        public async Task<(UnaryData, string)> UnaryDataSend(UnaryData request)
+        public async Task<(UnaryData, string)> UnaryDataSend(UnaryData req)
         {
             try
             {
-                var res = await _mainClient.UnaryDataSendAsync(request);
+                var res = await _mainClient.UnaryDataSendAsync(req);
                 return (res, string.Empty);
             }
             catch (Exception e)

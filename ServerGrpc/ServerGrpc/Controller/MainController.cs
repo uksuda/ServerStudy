@@ -22,22 +22,52 @@ namespace ServerGrpc.Controller
             _clientManager = clientManager;
         }
 
-        public override async Task<JoinRes> Join(JoinReq request, ServerCallContext context)
+        public override async Task<JoinRes> Join(JoinReq requset, ServerCallContext context)
         {
-            return default;
+            if (string.IsNullOrEmpty(requset.Id) || string.IsNullOrEmpty(requset.Password))
+            {
+                _logger.LogError($"invalid Join : id or password is invalid {requset.Id} {requset.Password}");
+                return new JoinRes
+                {
+                    Result = Network.Types.StatusCode.Invalid,
+                };
+            }
+
+            if (string.IsNullOrEmpty(requset.Nickname) == true)
+            {
+                _logger.LogError($"invalid Join : nickname is invalid {requset.Nickname}");
+                return new JoinRes
+                {
+                    Result = Network.Types.StatusCode.Invalid,
+                };
+            }
+
+            var xtid = context.GetXtid();
+            var res = await _service.Join(requset, xtid);
+            return res;
         }
 
-        public override async Task<LoginRes> Login(LoginReq request, ServerCallContext context)
+        public override async Task<LoginRes> Login(LoginReq requset, ServerCallContext context)
         {
-            return default;
+            if (string.IsNullOrEmpty(requset.Id) || string.IsNullOrEmpty(requset.Password))
+            {
+                _logger.LogError($"invalid Login : id or password is invalid {requset.Id} {requset.Password}");
+                return new LoginRes
+                {
+                    Result = Network.Types.StatusCode.Invalid,
+                };
+            }
+            var session = context.GetClientSession();
+            var res = await _service.Login(requset, session);
+            return res;
         }
 
-        public override async Task<UnaryData> UnaryDataSend(UnaryData request, ServerCallContext context)
+        public override async Task<UnaryData> UnaryDataSend(UnaryData requset, ServerCallContext context)
         {
             try
             {
                 var session = context.GetClientSession();
-                return await _service.UnaryDataSend(request, session);
+                return await _service.UnaryDataSend(requset, session);
             }
             catch (Exception e)
             {
@@ -46,11 +76,11 @@ namespace ServerGrpc.Controller
             }
         }
 
-        public override async Task StreamOpen(IAsyncStreamReader<StreamMsg> requestStream, IServerStreamWriter<StreamMsg> responseStream, ServerCallContext context)
+        public override async Task StreamOpen(IAsyncStreamReader<StreamMsg> reqStream, IServerStreamWriter<StreamMsg> resStream, ServerCallContext context)
         {
             // https://learn.microsoft.com/ko-kr/aspnet/core/grpc/services?view=aspnetcore-7.0
 
-            var client = new ClientStream(requestStream, responseStream, context);
+            var client = new ClientStream(reqStream, resStream, context);
 
             try
             {

@@ -16,7 +16,7 @@ namespace ServerGrpc.Grpc
             var xtid = context.GetXtid();
             if (string.IsNullOrEmpty(xtid) == true)
             {
-                var guid = Guid.NewGuid().ToString();
+                var guid = Guid.NewGuid().ToString("N");
                 context.SetXtid(guid);
             }
         }

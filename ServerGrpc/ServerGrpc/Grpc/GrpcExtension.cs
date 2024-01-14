@@ -6,7 +6,7 @@ namespace ServerGrpc.Grpc
     public static class GrpcExtension
     {
         public const string CLIENT_SESSION = "client_session";
-        public const string XTID = "x-tid";
+        public const string XTID = "xtid";
 
         public static void SetXtid(this ServerCallContext context, string xtid)
         {

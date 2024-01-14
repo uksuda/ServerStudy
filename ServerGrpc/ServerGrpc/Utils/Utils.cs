@@ -10,7 +10,7 @@ namespace ServerGrpc.Utils
 
         public static string GetRandomKey()
         {
-            return Guid.NewGuid().ToString();
+            return Guid.NewGuid().ToString("N");
         }
 
         public static int GetRandom(int min, int max)

@@ -32,6 +32,24 @@ namespace ServerGrpc.Logger
             return _provider;
         }
 
+        public static Microsoft.Extensions.Logging.ILogger GetLogger<T>()
+        {
+            if (_provider == null)
+            {
+                Init();
+            }
+            return GetLogger(typeof(T));
+        }
+
+        public static Microsoft.Extensions.Logging.ILogger GetLogger(Type type)
+        {
+            if (_provider == null)
+            {
+                Init();
+            }
+            return GetLogger(type.Name);
+        }
+
         public static Microsoft.Extensions.Logging.ILogger GetLogger(string name)
         {
             if (_provider == null)

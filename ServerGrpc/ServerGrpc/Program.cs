@@ -11,7 +11,7 @@ namespace ServerGrpc
         {
             AppLogManager.Init();
 
-            var logger = AppLogManager.GetLogger("Program");
+            var logger = AppLogManager.GetLogger<Program>();
             
             PrintInfomation(logger);
 
@@ -55,7 +55,7 @@ namespace ServerGrpc
                 {
                     if (ctx.HostingEnvironment.IsDevelopment() == true)
                     {
-                        config.AddJsonFile("appsettings.Development.json");
+                        config.AddJsonFile("appsettings.development.json");
                     }
                     else
                     {

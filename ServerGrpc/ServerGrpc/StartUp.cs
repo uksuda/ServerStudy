@@ -19,7 +19,7 @@ namespace ServerGrpc
 
         public void ConfigureServices(IServiceCollection services)
         {
-            bool isDevelop = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Development");
+            bool isDevelop = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("development");
             services.AddAuthorization(option =>
             {
                 option.AddPolicy(ServerPolicy.Admin, ServerPolicy.CreatePolicyAdmin());
@@ -74,18 +74,21 @@ namespace ServerGrpc
 
             services.AddGrpc(options =>
             {
-                options.MaxSendMessageSize = 1024 * 1024 * 4;
-                options.MaxReceiveMessageSize = 1024 * 1024 * 4;
+                options.MaxSendMessageSize = ServerConst.GRPC_MAX_SEND_SIZE;
+                options.MaxReceiveMessageSize = ServerConst.GRPC_MAX_RECV_SIZE;
+                options.ResponseCompressionAlgorithm = ServerConst.GRPC_COMPRESS_ALGORITHM;
+
                 options.Interceptors.Add<AutoHeaderInterceptor>();
                 options.Interceptors.Add<ServerInterceptor>();
 
                 if (isDevelop)
                 {
                     options.EnableDetailedErrors = true;
+                    services.AddGrpcReflection();
                 }
             });
 
-            services.AddGrpcReflection();
+            //services.AddGrpcReflection();
 
             //
             services.AddSingleton<JwtTokenBuilder>();

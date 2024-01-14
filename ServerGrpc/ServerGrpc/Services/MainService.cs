@@ -17,31 +17,40 @@ namespace ServerGrpc.Services
         }
 
         #region Join & Login
+        public async Task<JoinRes> Join(JoinReq requset, string xtid)
+        {
 
+            return default;
+        }
+
+        public async Task<LoginRes> Login(LoginReq requset, ClientSession session)
+        {
+            return default;
+        }
         #endregion
 
         #region Unary Data
-        public async Task<UnaryData> UnaryDataSend(UnaryData request, ClientSession session)
+        public async Task<UnaryData> UnaryDataSend(UnaryData requset, ClientSession session)
         {
-            if (request != null)
+            if (requset != null)
             {
-                _logger.LogDebug($"{MethodBase.GetCurrentMethod()} - {request}");
+                _logger.LogDebug($"{MethodBase.GetCurrentMethod()} - {requset}");
             }
 
             UnaryData response = null;
-            switch (request.Type)
+            switch (requset.Type)
             {
                 case Network.Types.UnaryDataType.CommandReq:
-                    response = await UnaryDispatch_CommandReq(request.CommandReq, session);
+                    response = await UnaryDispatch_CommandReq(requset.CommandReq, session);
                     break;
                 default:
-                    throw new InvalidEnumArgumentException($"invalid request type {request.Type}");
+                    throw new InvalidEnumArgumentException($"invalid request type {requset.Type}");
             }
 
             return response;
         }
 
-        private async Task<UnaryData> UnaryDispatch_CommandReq(Unary_CommandReq requesyt, ClientSession session)
+        private async Task<UnaryData> UnaryDispatch_CommandReq(Unary_CommandReq request, ClientSession session)
         {
             return default;
         }
