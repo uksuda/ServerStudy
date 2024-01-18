@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using ServerGrpc.Controller;
 using ServerGrpc.Grpc;
 using ServerGrpc.Infra;
+using ServerGrpc.Logger;
 using ServerGrpc.Services;
 using System.Text;
 
@@ -11,10 +12,12 @@ namespace ServerGrpc
 {
     public class StartUp
     {
-        public IConfiguration Config { get; }
+        private readonly ILogger _logger = AppLogManager.GetLogger<StartUp>();
+        private readonly IConfiguration _config;
+
         public StartUp(IConfiguration config)
         {
-            Config = config;
+            _config = config;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -84,11 +87,13 @@ namespace ServerGrpc
                 if (isDevelop)
                 {
                     options.EnableDetailedErrors = true;
-                    services.AddGrpcReflection();
+                    //services.AddGrpcReflection();
                 }
             });
 
-            //services.AddGrpcReflection();
+            services.AddGrpcReflection();
+
+            services.AddControllers().AddApplicationPart(System.Reflection.Assembly.GetExecutingAssembly());
 
             //
             services.AddSingleton<JwtTokenBuilder>();
@@ -101,11 +106,11 @@ namespace ServerGrpc
             {
                 
             }
-
+            
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -113,24 +118,31 @@ namespace ServerGrpc
 
             app.UseEndpoints(endPoints =>
             {
-                endPoints.MapGrpcReflectionService();
+                if (env.IsDevelopment() == true)
+                {
+                    endPoints.MapGrpcReflectionService();
+                }
+                endPoints.MapControllers();
+
                 endPoints.MapGrpcService<MainController>();
             });
 
             // Configure the HTTP request pipeline.
             //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+            var endpointUrl = _config.GetValue<string>("Kestrel:Endpoints:http:Url");
+
         }
 
         public async Task OnTokenValidate(TokenValidatedContext ctx)
         {
             //if (ctx.SecurityToken is JwtSecurityToken token)
-            if (ctx.SecurityToken is JsonWebToken token)
-            {
-                var tokenString = token.UnsafeToString();
-                var jwtBuilder = ctx.HttpContext.RequestServices.GetRequiredService<JwtTokenBuilder>();
-                var (prins, validToken) = jwtBuilder.ValidateToken(tokenString);
-                //var (prins, token) = tokenBuilder.ValidateToken(token.ToString());
-            }
+            //if (ctx.SecurityToken is JsonWebToken token)
+            //{
+            //    var tokenString = token.UnsafeToString();
+            //    var jwtBuilder = ctx.HttpContext.RequestServices.GetRequiredService<JwtTokenBuilder>();
+            //    var (prins, validToken) = jwtBuilder.ValidateToken(tokenString);
+            //    //var (prins, token) = tokenBuilder.ValidateToken(token.ToString());
+            //}
             await Task.CompletedTask;
         }
     }

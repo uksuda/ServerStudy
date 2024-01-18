@@ -1,4 +1,5 @@
 using ServerGrpc.Logger;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -12,8 +13,6 @@ namespace ServerGrpc
             AppLogManager.Init();
 
             var logger = AppLogManager.GetLogger<Program>();
-            
-            PrintInfomation(logger);
 
             var builder = CreateHostBuilder(args);
             var app = builder.Build();
@@ -26,6 +25,7 @@ namespace ServerGrpc
             // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
             //Log.Information($"Env: {app.Environment.ApplicationName}, {app.Environment.EnvironmentName}");
+            PrintInfomation(logger);
 
             logger.LogInformation("server started");
 
@@ -48,7 +48,7 @@ namespace ServerGrpc
                 })
                 .ConfigureLogging((ctx, builder) =>
                 {
-                    builder.ClearProviders();
+                    //builder.ClearProviders();
                     builder.AddProvider(AppLogManager.GetProvider());
                 })
                 .ConfigureAppConfiguration((ctx, config) =>
@@ -69,7 +69,11 @@ namespace ServerGrpc
         public static void PrintInfomation(ILogger logger)
         {
             logger.LogInformation("Name: [{0}]", Assembly.GetEntryAssembly().FullName);
-            
+            logger.LogInformation("UserName={0}", Environment.UserName);
+            logger.LogInformation("ProcessId={0}", Environment.ProcessId);
+            logger.LogInformation("ProcessorCount={0}", Environment.ProcessorCount);
+            logger.LogInformation("ThreadCount={0}", Process.GetCurrentProcess().Threads.Count);
+
             var host = Dns.GetHostName();
             var ipEntry = Dns.GetHostEntry(host);
 
