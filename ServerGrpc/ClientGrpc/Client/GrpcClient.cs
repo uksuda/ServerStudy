@@ -78,16 +78,16 @@ namespace ClientGrpc.Client
             try
             {
                 var res = await _mainClient.JoinAsync(req);
-                if (res.Result == Network.Types.StatusCode.Success)
+                if (res.Result.Code == Network.Types.ResultCode.Success)
                 {
                     _serverToken = res.Token;
                 }
-                return (res, res.Result.ToString());
+                return (res, res.Result.Msg);
             }
             catch (Exception e)
             {
                 //MessageBox.Show($"exception - {e}");
-                return (null, $"exception - {e}");
+                return (null, $"error - {e}");
             }
         }
 
@@ -96,16 +96,16 @@ namespace ClientGrpc.Client
             try
             {
                 var res = await _mainClient.LoginAsync(req);
-                if (res.Result == Network.Types.StatusCode.Success)
+                if (res.Result.Code == Network.Types.ResultCode.Success)
                 {
                     _serverToken = res.Token;
                 }
-                return (res, res.Result.ToString());
+                return (res, res.Result.Msg);
             }
             catch (Exception e)
             {
                 //MessageBox.Show($"exception - {e}");
-                return (null, $"exception - {e}");
+                return (null, $"error - {e}");
             }
         }
 

@@ -12,6 +12,40 @@ namespace ServerGrpc.Grpc
             _logger = logger;
         }
 
+        private string MakePreMsg(ServerCallContext context)
+        {
+            if (context == null)
+            {
+                return string.Empty;
+            }
+
+            var method = context.Method;
+            var session = context.GetClientSession();
+
+            string xtid = string.Empty;
+
+            if (session == null)
+            {
+                xtid = context.GetXtid();
+                return $"[Xtid]: {xtid} [Method]: {method} - ";
+            }
+
+            var mber = session.MBER_NO;
+            return $"[Xtid]: {xtid} [Method]: {method} [Mber]: {mber} - ";
+        }
+
+        private void LogMessage(ServerCallContext context, string msg, LogLevel level)
+        {
+            var preMsg = MakePreMsg(context);
+            _logger.Log(level, preMsg + msg);
+        }
+
+        private void LogError(ServerCallContext context, Exception e)
+        {
+            var preMsg = MakePreMsg(context);
+            _logger.LogError(preMsg + $"err {e} - {e.Message}");
+        }
+
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context, UnaryServerMethod<TRequest, TResponse> continuation)
         {
             try

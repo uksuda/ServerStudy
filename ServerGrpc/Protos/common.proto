@@ -9,6 +9,11 @@ import "types.proto";
 message Empty {
 }
 
+message Result {
+    network.types.ResultCode code = 1;
+    string msg = 2;
+}
+
 message UserInfo {
     int32 user_index = 1;
     string nickname = 2;

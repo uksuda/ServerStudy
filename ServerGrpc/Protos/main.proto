@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Network.Main";
 
-// import "common.proto";
+import "common.proto";
 import "types.proto";
 import "unary.proto";
 import "stream.proto";
@@ -25,7 +25,7 @@ message JoinReq {
 }
 
 message JoinRes {
-    network.types.StatusCode result = 1;
+    network.common.Result result = 1;
     string token  = 2;
 }
 
@@ -37,7 +37,7 @@ message LoginReq {
 }
 
 message LoginRes {
-    network.types.StatusCode result = 1;
+    network.common.Result result = 1;
     string token = 2;
 }
 

@@ -29,7 +29,7 @@ namespace ServerGrpc.Controller
                 _logger.LogError($"invalid Join : id or password is invalid {requset.Id} {requset.Password}");
                 return new JoinRes
                 {
-                    Result = Network.Types.StatusCode.UnknownError,
+                    //Result = Network.Types.StatusCode.UnknownError,
                 };
             }
 
@@ -38,7 +38,7 @@ namespace ServerGrpc.Controller
                 _logger.LogError($"invalid Join : nickname is invalid {requset.Nickname}");
                 return new JoinRes
                 {
-                    Result = Network.Types.StatusCode.UnknownError,
+                    //Result = Network.Types.StatusCode.UnknownError,
                 };
             }
 
@@ -54,7 +54,7 @@ namespace ServerGrpc.Controller
                 _logger.LogError($"invalid Login : id or password is invalid {requset.Id} {requset.Password}");
                 return new LoginRes
                 {
-                    Result = Network.Types.StatusCode.UnknownError,
+                    //Result = Network.Types.StatusCode.UnknownError,
                 };
             }
             var session = context.GetClientSession();

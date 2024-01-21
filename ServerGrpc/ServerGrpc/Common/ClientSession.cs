@@ -6,6 +6,7 @@
         private readonly string _xtid;
         private readonly string _id;
 
+        public int MBER_NO => _mberNo;
         public string XTID => _xtid;
         public string ID => _id;
 

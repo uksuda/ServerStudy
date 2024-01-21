@@ -13,6 +13,6 @@ message Unary_CommandReq {
 }
 
 message Unary_CommandRes {
-    network.types.StatusCode result = 1;
+    network.types.ResultCode result = 1;
     string cmd_res = 2;
 }
