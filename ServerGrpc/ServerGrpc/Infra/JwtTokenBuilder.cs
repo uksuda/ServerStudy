@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using ServerGrpc.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -7,65 +9,95 @@ namespace ServerGrpc.Infra
 {
     public class JwtTokenBuilder
     {
-        public const string Audience = "Client";
-        public const string Issuer = "Server";
-        public const string Secret = "Secret"; // qk77n79is707yy9s7gsgr7wxlksef7km
+        private const int ADMIN_TOKEN_EXPIRE_SEC = 60 * 5; // 5분
+        private const int USER_TOKEN_EXPIRE_SEC = 60 * 5;
 
-        // claims
-        public const string JwtUserUid = "uid";
+        private readonly string _issuer;
+        private readonly string _audience;
 
+        private readonly SigningCredentials _signCredentials;
+        private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly JwtSecurityTokenHandler _tokenHandler;
-        private readonly TokenValidationParameters _validateParameters;
-        private readonly SigningCredentials _signingCredentials;
+        private readonly SecurityTokenDescriptor _tokenDescriptor;
 
-        private readonly ILogger<JwtTokenBuilder> _logger;
 
-        public JwtTokenBuilder(ILogger<JwtTokenBuilder> logger)
+        public TokenValidationParameters TokenValidationParameter => _tokenValidationParameters;
+
+        public JwtTokenBuilder(AppSettings appsettings)
         {
-            var secret = Encoding.ASCII.GetBytes(Secret);
-            _signingCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature);
-            _validateParameters = new TokenValidationParameters
+            var secret = Encoding.ASCII.GetBytes(appsettings.Jwt.Secret);
+            _issuer = appsettings.Jwt.Issuer;
+            _audience = appsettings.Jwt.Audience;
+
+            var key = new SymmetricSecurityKey(secret);
+            _signCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            _tokenValidationParameters = new TokenValidationParameters
             {
-                ValidIssuer = Issuer,
-                ValidAudience = Audience,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                IssuerSigningKey = new SymmetricSecurityKey(secret),
                 ValidateIssuerSigningKey = true,
+                ValidAudience = appsettings.Jwt.Audience,
+                ValidIssuer = appsettings.Jwt.Issuer,
                 ValidateLifetime = false,
                 ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = key,
             };
             _tokenHandler = new JwtSecurityTokenHandler();
 
-            _logger = logger;
+            _tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _issuer,
+                Audience = _audience,
+                SigningCredentials = _signCredentials,
+                //Subject,
+                //Expires,
+            };
         }
 
-        public string GenerateJwtToken(DateTime notBefore, int expireSec, string role, string jti, string uid)
+        public string GenerateToken(string guid, int mberNo, string role = ServerPolicy.User)
         {
-            var claims = GetClaims(role, jti, uid);
-            
-            ClaimsIdentity identity = new ClaimsIdentity(claims);
+            bool isAdmin = role.Equals(ServerPolicy.Admin);
 
-            var jwtToken = _tokenHandler.CreateJwtSecurityToken(Issuer, Audience, identity, notBefore, DateTime.Now.AddSeconds(expireSec), signingCredentials: _signingCredentials);
-            return _tokenHandler.WriteToken(jwtToken);
+            ClaimsIdentity claimsIdentity = (isAdmin) ? GetAdminClaims(guid, mberNo) : GetUserClaims(guid, mberNo);
+            int expire = (isAdmin) ? ADMIN_TOKEN_EXPIRE_SEC : USER_TOKEN_EXPIRE_SEC;
+            return BuildToken(DateTime.UtcNow, expire, claimsIdentity);
         }
 
-        public Claim[] GetClaims(string role, string jti, string uid)
+        public (ClaimsPrincipal, JsonWebToken) ValidateToken(string token)
+        {
+            var principal = _tokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken);
+            return (principal, validatedToken as JsonWebToken);
+        }
+
+        private ClaimsIdentity GetAdminClaims(string guid, int mberNo)
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, jti),
-                new Claim(JwtUserUid, uid),
+                new Claim(ClaimTypes.Role, ServerPolicy.Admin),
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, guid),
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId, mberNo.ToString()),
             };
-            return claims;
+            return new ClaimsIdentity(claims);
         }
-        
-        public (ClaimsPrincipal, JwtSecurityToken) ValidateToken(string token)
+
+        private ClaimsIdentity GetUserClaims(string guid, int mberNo)
         {
-            //var jwtToken = _tokenHandler.ReadJwtToken(token);
-            var principal = _tokenHandler.ValidateToken(token, _validateParameters, out var validatedToken);
-            return (principal, validatedToken as JwtSecurityToken);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Role, ServerPolicy.User),
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, guid),
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId, mberNo.ToString()),
+            };
+            return new ClaimsIdentity(claims);
+        }
+
+        private string BuildToken(DateTime now, int expireSec, ClaimsIdentity claimsIdentity)
+        {
+            _tokenDescriptor.Subject = claimsIdentity;
+            _tokenDescriptor.Expires = now.AddSeconds(expireSec);
+
+            var token = _tokenHandler.CreateToken(_tokenDescriptor);
+            return token.UnsafeToString();
         }
     }
 }

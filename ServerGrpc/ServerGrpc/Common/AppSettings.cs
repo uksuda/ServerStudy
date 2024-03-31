@@ -12,7 +12,6 @@
 
         public string GetConnectionString()
         {
-            //TODO : pool값 수정해야함
             return $"server={Host};port={Port};user={User};password={Password};database={Database};Min Pool Size={PoolCount};Max Pool Size={PoolCount + 20};Allow User Variables=True";
         }
     }
@@ -22,24 +21,23 @@
         public string Host { get; set; }
         public int Port { get; set; }
         public string Password { get; set; }
+        public int Database { get; set; }
+    }
+    #endregion
 
-        public (string, string) GetConnectionAndPassword()
-        {
-            if (string.IsNullOrEmpty(Password))
-            {
-                return ($"{Host}:{Port}", string.Empty);
-            }
-            else
-            {
-                return ($"{Host}:{Port}", Password);
-            }
-        }
+    #region Jwt
+    public class JwtSection
+    {
+        public string Secret { get; set; }
+        public string Issuer { get; set; }
+        public string Audience { get; set; }
     }
     #endregion
 
     public class AppSettings
     {
+        public JwtSection Jwt { get; set; }
         public Dictionary<DataBaseType, DatabaseSection> Database { get; set; }
-        public RedisSection Caches { get; set; }
+        public Dictionary<CacheType, RedisSection> Caches { get; set; }
     }
 }
