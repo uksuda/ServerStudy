@@ -1,10 +1,13 @@
 ﻿using Grpc.Core;
-using Network.Main;
+using Microsoft.AspNetCore.Authorization;
+using Game.Main;
+using ServerGrpc.Common;
 using ServerGrpc.Grpc;
 using ServerGrpc.Services;
 
 namespace ServerGrpc.Controller
 {
+    [Authorize]
     public class MainController : Main.MainBase
     {
         private readonly ILogger<MainController> _logger;
@@ -22,44 +25,43 @@ namespace ServerGrpc.Controller
             _clientManager = clientManager;
         }
 
+        [AllowAnonymous]
         public override async Task<JoinRes> Join(JoinReq requset, ServerCallContext context)
         {
-            if (string.IsNullOrEmpty(requset.Id) || string.IsNullOrEmpty(requset.Password))
+            try
             {
-                _logger.LogError($"invalid Join : id or password is invalid {requset.Id} {requset.Password}");
-                return new JoinRes
+                if (string.IsNullOrEmpty(requset.Id) || string.IsNullOrEmpty(requset.Password))
                 {
-                    //Result = Network.Types.StatusCode.UnknownError,
-                };
-            }
+                    throw ErrorHandler.Error(Game.Types.ResultCode.InvalidReqParam, "invalid id & password");
+                }
 
-            if (string.IsNullOrEmpty(requset.Nickname) == true)
+                var xtid = context.GetXtid();
+                var res = await _service.Join(requset, xtid);
+                return res;
+            }
+            catch (Exception)
             {
-                _logger.LogError($"invalid Join : nickname is invalid {requset.Nickname}");
-                return new JoinRes
-                {
-                    //Result = Network.Types.StatusCode.UnknownError,
-                };
+                throw;
             }
-
-            var xtid = context.GetXtid();
-            var res = await _service.Join(requset, xtid);
-            return res;
         }
 
         public override async Task<LoginRes> Login(LoginReq requset, ServerCallContext context)
         {
-            if (string.IsNullOrEmpty(requset.Id) || string.IsNullOrEmpty(requset.Password))
+            try
             {
-                _logger.LogError($"invalid Login : id or password is invalid {requset.Id} {requset.Password}");
-                return new LoginRes
+                if (string.IsNullOrEmpty(requset.Id) || string.IsNullOrEmpty(requset.Password))
                 {
-                    //Result = Network.Types.StatusCode.UnknownError,
-                };
+                    throw ErrorHandler.Error(Game.Types.ResultCode.InvalidReqParam, "invalid id & password");
+                }
+
+                var session = context.GetClientSession();
+                var res = await _service.Login(requset, session);
+                return res;
             }
-            var session = context.GetClientSession();
-            var res = await _service.Login(requset, session);
-            return res;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public override async Task<UnaryData> UnaryDataSend(UnaryData requset, ServerCallContext context)
@@ -69,9 +71,8 @@ namespace ServerGrpc.Controller
                 var session = context.GetClientSession();
                 return await _service.UnaryDataSend(requset, session);
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ToString());
+            catch (Exception)
+            {               
                 throw;
             }
         }

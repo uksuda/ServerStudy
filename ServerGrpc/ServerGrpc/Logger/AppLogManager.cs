@@ -12,8 +12,8 @@ namespace ServerGrpc.Logger
         {
             var path = AppDomain.CurrentDomain.BaseDirectory + "log\\app_.log";
             Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Fatal)
-                .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Fatal)
+                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+                .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
                 //.MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Fatal)
                 //.MinimumLevel.Override("Default", Serilog.Events.LogEventLevel.Fatal)
                 .WriteTo.Console()

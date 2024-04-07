@@ -44,18 +44,16 @@ namespace ServerGrpc
             var builder = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((ctx, config) =>
                 {
-                    if (ctx.HostingEnvironment.IsDevelopment() == true)
+                    if (ctx.HostingEnvironment.IsEnvironment("development") || OperatingSystem.IsWindows())
                     {
                         config.AddJsonFile("appsettings.development.json");
+                        _logger.LogInformation("App start: development env");
                     }
                     else
                     {
                         config.AddJsonFile("appsettings.json");
-                        //var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                        //config.AddJsonFile($"appsettings.{env}.json");
+                        _logger.LogInformation("App start: production env");
                     }
-
-                    logger.LogInformation($"App start: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")} env");
                 })
                 .ConfigureLogging((ctx, builder) =>
                 {
@@ -75,7 +73,7 @@ namespace ServerGrpc
         {
             builder.ConfigureServices((ctx, services) =>
             {
-                var isDevelop = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("development");
+                var isDevelop = (ctx.HostingEnvironment.IsEnvironment("development") || OperatingSystem.IsWindows());
                 var appsettings = ctx.Configuration.Get<AppSettings>();
                 services.AddSingleton(appsettings);
 
@@ -160,6 +158,8 @@ namespace ServerGrpc
 
                 services.AddSingleton<AccountRedisContext>();
                 services.AddSingleton<GameRedisContext>();
+
+                services.AddSingleton<ClientManager>();
             });
         }
         public void Configure(IWebHostBuilder builder)
@@ -175,7 +175,7 @@ namespace ServerGrpc
 
                 app.UseEndpoints(endpoints =>
                 {
-                    if (ctx.HostingEnvironment.IsDevelopment())
+                    if (ctx.HostingEnvironment.IsDevelopment() || OperatingSystem.IsWindows())
                     {
                         endpoints.MapGrpcReflectionService();
                     }

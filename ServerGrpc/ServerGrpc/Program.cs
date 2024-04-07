@@ -2,7 +2,6 @@ using ServerGrpc.Logger;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
-using System.Text;
 
 namespace ServerGrpc
 {

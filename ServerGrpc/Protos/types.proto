@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Network.Types";
+option csharp_namespace = "Game.Types";
 
-package network.types;
+package game.types;
 
 enum StreamPacket {
     STREAM_PACKET_NONE = 0;
@@ -27,6 +27,7 @@ enum UnaryDataType {
 enum ResultCode {
     RESULT_CODE_SUCCESS = 0;
 
+    RESULT_CODE_INVALID_REQ_PARAM = 10;
     RESULT_CODE_NOT_EXIST = 100;
     RESULT_CODE_DUPLICATED = 200;
 

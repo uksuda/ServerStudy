@@ -2,64 +2,114 @@ using ClientGrpc.Client;
 using System.Text;
 using System;
 using System.Windows.Forms;
-using Network.Main;
-using Network.Stream;
-using Network.Unary;
+using Game.Main;
+using Game.Stream;
+using Game.Unary;
 
 namespace ClientGrpc
 {
     public partial class MainForm : Form
     {
-        private string _serverAddr = "http://localhost:5041"; //"http://127.0.0.1:5042"
-        private string _message = string.Empty;
-
         private GrpcClient _client;
 
         public MainForm()
         {
             InitializeComponent();
+            InitUI();
         }
 
         public void InitUI()
         {
+            rich_text_box_detail_info.Clear();
+            label_token_value.ResetText();
+            
+            text_box_server_ip.Clear();
 
+            text_box_id.Clear();
+            text_box_password.Clear();
+            text_box_nickname.Clear();
+
+            text_box_command.Clear();
+            text_box_message.Clear();
+            text_box_params.Clear();
+
+            ButtonEnableChange(false);
         }
 
-        public void InitClient()
+        private void button_server_connect_Click(object sender, EventArgs e)
         {
-            if (_client == null)
+            if (string.IsNullOrEmpty(text_box_server_ip.Text) == true)
             {
-                _client = new GrpcClient();
-            }
-
-            _client.SetStreamCallBack(DispatchStream);
-        }
-
-        private void stream_open_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ip_text_box_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private async void message_btn_Click(object sender, EventArgs e)
-        {
-            if (_client.IsReadyChannel() == false)
-            {
-                MessageBox.Show("you need to stream or join first");
+                MessageBox.Show("server ip is empty");
                 return;
             }
 
+            try
+            {
+                _client = new GrpcClient();
+                _client.InitChannel(text_box_server_ip.Text);
+                _client.SetStreamCallBack(DispatchStream);
+
+                ButtonEnableChange(true);
+                RichTextBoxString($"{text_box_server_ip.Text} server connected");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"error : {ex}");
+            }
+        }
+
+        private async void button_join_Click(object sender, EventArgs e)
+        {
+            var req = new JoinReq
+            {
+
+            };
+
+            var (code, msg, res) = await _client.Join(req);
+            if (code != Game.Types.ResultCode.Success)
+            {
+                MessageBox.Show($"code: {code} msg: {msg} res: {res}");
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Join result: {res}");
+            sb.AppendLine($"Token: {res.Token}");
+            RichTextBoxString(sb.ToString());
+        }
+
+        private async void button_login_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void button_command_Click(object sender, EventArgs e)
+        {
+            var msg = new Unary_CommandReq
+            {
+                Command = "",
+            };
+
+            var unaryData = new UnaryData
+            {
+                Type = Game.Types.UnaryDataType.CommandReq,
+                CommandReq = msg,
+            };
+
+            var (resMsg, res) = await _client.UnaryDataSend(unaryData);
+            DispatchUnary(res);
+        }
+
+        private async void button_message_Click(object sender, EventArgs e)
+        {
             var msg = new Stream_MessageSend
             {
                 Message = "",
             };
             var data = new StreamMsg()
             {
-                Packet = Network.Types.StreamPacket.MessageSend,
+                Packet = Game.Types.StreamPacket.MessageSend,
                 MessageSend = msg,
             };
 
@@ -73,58 +123,19 @@ namespace ClientGrpc
             }
         }
 
-        private async void command_send_btn_Click(object sender, EventArgs e)
+        private void RichTextBoxString(string s)
         {
-            if (_client.IsReadyChannel() == false)
-            {
-                MessageBox.Show("you need to stream or join first");
-                return;
-            }
-
-            var msg = new Unary_CommandReq
-            {
-                Command = "",
-            };
-
-            var unaryData = new UnaryData
-            {
-                Type = Network.Types.UnaryDataType.CommandReq,
-                CommandReq = msg,
-            };
-
-            var (result, resMsg) = await _client.UnaryDataSend(unaryData);
-            DispatchUnary(result);
+            rich_text_box_detail_info.Focus();
+            rich_text_box_detail_info.AppendText(s);
+            rich_text_box_detail_info.ScrollToCaret();
         }
 
-        private async void join_req_button_Click(object sender, EventArgs e)
+        private void ButtonEnableChange(bool enable)
         {
-            if (_client == null)
-            {
-                InitClient();
-            }
-
-            if (_client.IsReadyChannel() == false)
-            {
-                //_client.InitChannel(_serverAddr, id, password);
-            }
-
-            var req = new JoinReq
-            {
-                
-            };
-
-            var (result, resMsg) = await _client.Join(req);
-            var sb = new StringBuilder();
-            sb.AppendLine($"Join result: {result.Result}");
-            sb.AppendLine($"Token: {result.Token}");
-
-            RichTextBoxString(sb.ToString());
-            //RichTextBoxString();
-        }
-
-        private void RichTextBoxString(string str)
-        {
-
+            button_join.Enabled = enable;
+            button_login.Enabled = enable;
+            button_command.Enabled = enable;
+            button_message.Enabled = enable;
         }
 
         #region Dispatch Stream
@@ -151,21 +162,21 @@ namespace ClientGrpc
 
         private bool DispatchStream_ConnectRes(Stream_ConnectRes res)
         {
-            var resultStr = $"stream recv: {Network.Types.StreamPacket.ConnectRes} status code: {res.Result}";
+            var resultStr = $"stream recv: {Game.Types.StreamPacket.ConnectRes} status code: {res.Result}";
             RichTextBoxString(resultStr);
             return true;
         }
 
         private bool DispatchStream_Disconnected(Stream_Disconnected res)
         {
-            RichTextBoxString($"stream recv: {Network.Types.StreamPacket.Disconnected} status code: {res.Result}");
+            RichTextBoxString($"stream recv: {Game.Types.StreamPacket.Disconnected} status code: {res.Result}");
             return true;
         }
 
         private bool DispatchStream_UserConnect(Stream_UserConnect res)
         {
             var builder = new StringBuilder();
-            builder.AppendLine($"stream recv: {Network.Types.StreamPacket.UserConnect}");
+            builder.AppendLine($"stream recv: {Game.Types.StreamPacket.UserConnect}");
             builder.AppendLine($"user: {res.ConnectUser.UserIndex}. {res.ConnectUser.Nickname}");
             RichTextBoxString(builder.ToString());
             return true;
@@ -174,7 +185,7 @@ namespace ClientGrpc
         private bool DispatchStream_UserDisconnect(Stream_UserDisconnect res)
         {
             var builder = new StringBuilder();
-            builder.AppendLine($"stream recv: {Network.Types.StreamPacket.UserDisconnect}");
+            builder.AppendLine($"stream recv: {Game.Types.StreamPacket.UserDisconnect}");
             builder.AppendLine($"user: {res.DisconnectUser.UserIndex}. {res.DisconnectUser.Nickname}");
             RichTextBoxString(builder.ToString());
             return true;
@@ -183,7 +194,7 @@ namespace ClientGrpc
         private bool DispatchStream_MessageRecv(Stream_MessageRecv res)
         {
             var builder = new StringBuilder();
-            builder.AppendLine($"stream recv: {Network.Types.StreamPacket.MessageRecv}");
+            builder.AppendLine($"stream recv: {Game.Types.StreamPacket.MessageRecv}");
             builder.AppendLine($"user: {res.SendUser.UserIndex}. {res.SendUser.Nickname}");
             builder.AppendLine($"message: {res.Message}");
             RichTextBoxString(builder.ToString());
@@ -208,7 +219,7 @@ namespace ClientGrpc
 
         private bool DispatchUnary_CommandRes(Unary_CommandRes res)
         {
-            var resultStr = $"unary recv: {Network.Types.UnaryDataType.CommandRes} status code: {res.Result}\r\n";
+            var resultStr = $"unary recv: {Game.Types.UnaryDataType.CommandRes} status code: {res.Result}\r\n";
             RichTextBoxString(resultStr + res.Result);
             return true;
         }

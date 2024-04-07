@@ -1,6 +1,5 @@
-using Grpc.Core;
-using Network.Main;
-using Network.Unary;
+using Game.Main;
+using Game.Unary;
 using ServerGrpc.Common;
 using ServerGrpc.Grpc;
 using System.ComponentModel;
@@ -40,7 +39,7 @@ namespace ServerGrpc.Services
             UnaryData response = null;
             switch (requset.Type)
             {
-                case Network.Types.UnaryDataType.CommandReq:
+                case Game.Types.UnaryDataType.CommandReq:
                     response = await UnaryDispatch_CommandReq(requset.CommandReq, session);
                     break;
                 default:
@@ -61,9 +60,9 @@ namespace ServerGrpc.Services
         {
             switch (data.Packet)
             {
-                case Network.Types.StreamPacket.Disconnected:
+                case Game.Types.StreamPacket.Disconnected:
                     break;
-                case Network.Types.StreamPacket.MessageSend:
+                case Game.Types.StreamPacket.MessageSend:
                     break;
                 default:
                     throw new InvalidEnumArgumentException($"invalid stream data {data.Packet}");

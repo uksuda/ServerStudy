@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Network.Unary";
+option csharp_namespace = "Game.Unary";
 
-package network.unary;
+package game.unary;
 
 import "common.proto";
 import "types.proto";
@@ -13,6 +13,6 @@ message Unary_CommandReq {
 }
 
 message Unary_CommandRes {
-    network.types.ResultCode result = 1;
+    game.types.ResultCode result = 1;
     string cmd_res = 2;
 }

@@ -68,6 +68,7 @@
             button_join.TabIndex = 1;
             button_join.Text = "Join";
             button_join.UseVisualStyleBackColor = true;
+            button_join.Click += new System.EventHandler(this.button_join_Click);
             // 
             // text_box_server_ip
             // 
@@ -207,6 +208,7 @@
             button_login.TabIndex = 19;
             button_login.Text = "Login";
             button_login.UseVisualStyleBackColor = true;
+            button_login.Click += new System.EventHandler(this.button_login_Click);
             // 
             // button_command
             // 
@@ -216,6 +218,7 @@
             button_command.TabIndex = 21;
             button_command.Text = "Command";
             button_command.UseVisualStyleBackColor = true;
+            button_command.Click += new System.EventHandler(this.button_command_Click);
             // 
             // button_message
             // 
@@ -225,6 +228,7 @@
             button_message.TabIndex = 22;
             button_message.Text = "Message";
             button_message.UseVisualStyleBackColor = true;
+            button_message.Click += new System.EventHandler(this.button_message_Click);
             // 
             // button_server_connect
             // 
@@ -234,6 +238,7 @@
             button_server_connect.TabIndex = 23;
             button_server_connect.Text = "Connect";
             button_server_connect.UseVisualStyleBackColor = true;
+            button_server_connect.Click += new System.EventHandler(this.button_server_connect_Click);
             // 
             // MainForm
             // 

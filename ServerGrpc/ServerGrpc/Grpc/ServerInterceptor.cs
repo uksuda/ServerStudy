@@ -52,7 +52,7 @@ namespace ServerGrpc.Grpc
             where TRequest : class
             where TResponse : class
         {
-            _logger.LogWarning($"Starting call. Type: {methodType}. Request: {typeof(TRequest)}. Response: {typeof(TResponse)}");
+            _logger.LogDebug($"Starting call. Type: {methodType}. Request: {typeof(TRequest)}. Response: {typeof(TResponse)}");
             WriteMetadata(context.RequestHeaders, "caller-user");
             WriteMetadata(context.RequestHeaders, "caller-machine");
             WriteMetadata(context.RequestHeaders, "caller-os");
@@ -60,7 +60,7 @@ namespace ServerGrpc.Grpc
             void WriteMetadata(Metadata headers, string key)
             {
                 var headerValue = headers.GetValue(key) ?? "(unknown)";
-                _logger.LogWarning($"{key}: {headerValue}");
+                _logger.LogDebug($"{key}: {headerValue}");
             }
         }
 
@@ -118,7 +118,7 @@ namespace ServerGrpc.Grpc
                 sw.Stop();
                 var time = sw.ElapsedMilliseconds;
                 LogMessage(context, $"[Elapsed]={time}ms", LogLevel.Debug);
-                _logger.LogDebug($"response: {response.Result}");
+                _logger.LogDebug($"response: {response.Result ?? null}");
             }
         }
 

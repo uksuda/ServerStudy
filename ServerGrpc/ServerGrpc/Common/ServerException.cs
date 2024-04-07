@@ -1,7 +1,7 @@
 ﻿using Google.Protobuf;
 using Grpc.Core;
-using Network.Common;
-using Network.Types;
+using Game.Common;
+using Game.Types;
 
 namespace ServerGrpc.Common
 {

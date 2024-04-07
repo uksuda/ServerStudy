@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
-using Network.Main;
+using Game.Main;
+using Game.Types;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,91 +36,73 @@ namespace ClientGrpc.Client
             _callBack = callBack;
         }
 
-        public bool IsReadyChannel()
-        {
-            return (_channel != null && _channel.State == ConnectivityState.Ready);
-        }
-
-        public ConnectivityState GetChannelState()
-        {
-            if (_channel == null)
-            {
-                return ConnectivityState.Idle;
-            }
-
-            return _channel.State;
-        }
-
         public bool InitChannel(string serverAddress)
         {
             var callCredentials = CallCredentials.FromInterceptor((ctx, meta) =>
             {
                 if (string.IsNullOrEmpty(_serverToken) == false)
                 {
-                    meta.Add(AUTHORIZATION, _serverToken);
+                    meta.Add(AUTHORIZATION, "Bearer " + _serverToken);
                 }
                 return Task.CompletedTask;
             });
+
             var channelCredentials = ChannelCredentials.Create(ChannelCredentials.Insecure, callCredentials);
             var channelOptions = new GrpcChannelOptions
             {
-                //UnsafeUseInsecureChannelCallCredentials = true,
+                UnsafeUseInsecureChannelCallCredentials = true,
                 Credentials = channelCredentials,
             };
 
             _channel = GrpcChannel.ForAddress(serverAddress, channelOptions);
-
             _mainClient = new Main.MainClient(_channel);
             return true;
         }
 
-        public async Task<(JoinRes, string)> Join(JoinReq req)
+        public async Task<(ResultCode, string, JoinRes)> Join(JoinReq req)
         {
             try
             {
                 var res = await _mainClient.JoinAsync(req);
-                if (res.Result.Code == Network.Types.ResultCode.Success)
+                if (res.Result.Code == Game.Types.ResultCode.Success)
                 {
                     _serverToken = res.Token;
                 }
-                return (res, res.Result.Msg);
+                return (res.Result.Code, res.Result.Msg, res);
             }
             catch (Exception e)
             {
-                //MessageBox.Show($"exception - {e}");
-                return (null, $"error - {e}");
+                return (ResultCode.ServerInternalError, e.ToString(), null);
             }
         }
 
-        public async Task<(LoginRes, string)> Login(LoginReq req)
+        public async Task<(ResultCode, string, LoginRes)> Login(LoginReq req)
         {
             try
             {
                 var res = await _mainClient.LoginAsync(req);
-                if (res.Result.Code == Network.Types.ResultCode.Success)
+                if (res.Result.Code == Game.Types.ResultCode.Success)
                 {
                     _serverToken = res.Token;
                 }
-                return (res, res.Result.Msg);
+                return (res.Result.Code, res.Result.Msg, res);
             }
             catch (Exception e)
             {
-                //MessageBox.Show($"exception - {e}");
-                return (null, $"error - {e}");
+                return (ResultCode.ServerInternalError, e.ToString(), null);
             }
         }
 
-        public async Task<(UnaryData, string)> UnaryDataSend(UnaryData req)
+        public async Task<(string, UnaryData)> UnaryDataSend(UnaryData req)
         {
             try
             {
                 var res = await _mainClient.UnaryDataSendAsync(req);
-                return (res, string.Empty);
+                return (string.Empty, res);
             }
             catch (Exception e)
             {
-                //MessageBox.Show($"exception - {e}");
-                return (null, $"exception - {e}");
+                return (e.ToString(), null);
             }
         }
 
@@ -152,12 +135,6 @@ namespace ClientGrpc.Client
 
         public bool StreamOpen()
         {
-            if (IsReadyChannel() == false)
-            {
-                MessageBox.Show($"invalid grpc channel");
-                return false;
-            }
-
             var call = _mainClient.StreamOpen(cancellationToken: _tokenSource.Token);
             _streamReader = call.ResponseStream;
             _streamWriter = call.RequestStream;

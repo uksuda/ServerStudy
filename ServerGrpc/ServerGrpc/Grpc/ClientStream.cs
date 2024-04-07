@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using Network.Main;
+using Game.Main;
 using ServerGrpc.Common;
 
 namespace ServerGrpc.Grpc

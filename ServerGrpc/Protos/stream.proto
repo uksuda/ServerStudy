@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "Network.Stream";
+option csharp_namespace = "Game.Stream";
 
-package network.stream;
+package game.stream;
 
 import "common.proto";
 import "types.proto";
@@ -11,19 +11,19 @@ message Stream_ConnectReq {
 }
 
 message Stream_ConnectRes {
-    network.types.ResultCode result = 1;
+    game.types.ResultCode result = 1;
 }
 
 message Stream_Disconnected {
-    network.types.ResultCode result = 1;
+    game.types.ResultCode result = 1;
 }
 
 message Stream_UserConnect {
-    network.common.UserInfo connect_user = 1;
+    game.common.UserInfo connect_user = 1;
 }
 
 message Stream_UserDisconnect {
-    network.common.UserInfo disconnect_user = 1;
+    game.common.UserInfo disconnect_user = 1;
 }
 
 message Stream_MessageSend {
@@ -31,6 +31,6 @@ message Stream_MessageSend {
 }
 
 message Stream_MessageRecv {
-    network.common.UserInfo send_user = 1;
+    game.common.UserInfo send_user = 1;
     string message = 2;
 }

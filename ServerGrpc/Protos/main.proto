@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-option csharp_namespace = "Network.Main";
+option csharp_namespace = "Game.Main";
 
 import "common.proto";
 import "types.proto";
 import "unary.proto";
 import "stream.proto";
 
-package network.main;
+package game.main;
 
 
 service Main {
@@ -21,11 +21,10 @@ service Main {
 message JoinReq {
     string id = 1;
     string password = 2;
-    string nickname = 3;
 }
 
 message JoinRes {
-    network.common.Result result = 1;
+    game.common.Result result = 1;
     string token  = 2;
 }
 
@@ -37,31 +36,31 @@ message LoginReq {
 }
 
 message LoginRes {
-    network.common.Result result = 1;
+    game.common.Result result = 1;
     string token = 2;
 }
 
 
 message StreamMsg {
-  network.types.StreamPacket packet = 1;
+  game.types.StreamPacket packet = 1;
   oneof data{
-      network.stream.Stream_ConnectReq connect_req = 10;
-      network.stream.Stream_ConnectRes connect_res = 11;
+    game.stream.Stream_ConnectReq connect_req = 10;
+    game.stream.Stream_ConnectRes connect_res = 11;
 
-      network.stream.Stream_Disconnected disconnected = 20;
+    game.stream.Stream_Disconnected disconnected = 20;
 
-      network.stream.Stream_UserConnect user_connect = 30;
-      network.stream.Stream_UserDisconnect user_disconnect = 31;
+    game.stream.Stream_UserConnect user_connect = 30;
+    game.stream.Stream_UserDisconnect user_disconnect = 31;
 
-      network.stream.Stream_MessageSend message_send = 100;
-      network.stream.Stream_MessageRecv message_recv = 101;
+    game.stream.Stream_MessageSend message_send = 100;
+    game.stream.Stream_MessageRecv message_recv = 101;
   }
 }
 
 message UnaryData {
-  network.types.UnaryDataType type = 1;
+  game.types.UnaryDataType type = 1;
   oneof data {
-      network.unary.Unary_CommandReq command_req = 10;
-      network.unary.Unary_CommandRes command_res = 11;
+    game.unary.Unary_CommandReq command_req = 10;
+    game.unary.Unary_CommandRes command_res = 11;
   }
 }
