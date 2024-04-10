@@ -37,7 +37,8 @@ message LoginReq {
 
 message LoginRes {
     game.common.Result result = 1;
-    string token = 2;
+    repeated game.common.CharacterInfo character_list = 2;
+    string token = 3;
 }
 
 

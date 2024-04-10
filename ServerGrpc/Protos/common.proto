@@ -18,3 +18,12 @@ message UserInfo {
     int32 user_index = 1;
     string nickname = 2;
 }
+
+message CharacterInfo {
+    int32 character_no = 1;
+    string job = 2;
+    string nickname = 3;
+    int32 level = 4;
+    int64 exp = 5;
+    int64 create = 6;
+}

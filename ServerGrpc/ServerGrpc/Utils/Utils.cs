@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json;
 
 namespace ServerGrpc.Utils
 {
@@ -7,6 +8,12 @@ namespace ServerGrpc.Utils
         private const string _stringSet = "1234567890abcdefghijklmnopqrstuvwxyz";
 
         private static readonly Random _random = new(Guid.NewGuid().GetHashCode());
+
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            IncludeFields = true,
+            PropertyNameCaseInsensitive = true,
+        };
 
         public static string GetRandomKey()
         {
@@ -35,6 +42,16 @@ namespace ServerGrpc.Utils
                 // rr = string.Join(rr, _stringSet.ElementAt(index));
             }
             return r.ToString();
+        }
+
+        public static string Serialize<T>(T obj)
+        {
+            return JsonSerializer.Serialize(obj, _jsonOptions);
+        }
+
+        public static T Deserialize<T>(string json)
+        {
+            return JsonSerializer.Deserialize<T>(json, _jsonOptions);
         }
     }
 }

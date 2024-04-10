@@ -65,17 +65,15 @@ namespace ServerGrpc.Grpc
         }
 
         #region Server's handler
-        public override Task DuplexStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, DuplexStreamingServerMethod<TRequest, TResponse> continuation)
+        public override async Task DuplexStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, DuplexStreamingServerMethod<TRequest, TResponse> continuation)
         {
             LogCall<TRequest, TResponse>(MethodType.DuplexStreaming, context);
 
             try
             {
                 LogMessage(context, "Begin. ", LogLevel.Debug);
-                var res = base.DuplexStreamingServerHandler(requestStream, responseStream, context, continuation);
+                await continuation(requestStream, responseStream, context);
                 LogMessage(context, "End. ", LogLevel.Debug);
-
-                return res;
             }
             catch (Exception e)
             {
@@ -84,19 +82,19 @@ namespace ServerGrpc.Grpc
             }
         }
 
-        public override Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context, UnaryServerMethod<TRequest, TResponse> continuation)
+        public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context, UnaryServerMethod<TRequest, TResponse> continuation)
         {
             LogCall<TRequest, TResponse>(MethodType.Unary, context);
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Task<TResponse> response = null;
+            TResponse response = null;
             try
             {
                 _logger.LogDebug($"request: {request}");
 
                 LogMessage(context, "Begin. ", LogLevel.Debug);
-                response = continuation(request, context);
+                response = await continuation(request, context);
                 LogMessage(context, "End. ", LogLevel.Debug);
 
                 return response;
@@ -104,8 +102,7 @@ namespace ServerGrpc.Grpc
             catch (ServerException e)
             {
                 LogError(context, e);
-                var res = ErrorHandler.ErrorResponse<TResponse>(e.Code, e.Msg);
-                response = Task.FromResult(res);
+                response = ErrorHandler.ErrorResponse<TResponse>(e.Code, e.Msg);
                 return response;
             }
             catch (Exception e)
@@ -118,18 +115,18 @@ namespace ServerGrpc.Grpc
                 sw.Stop();
                 var time = sw.ElapsedMilliseconds;
                 LogMessage(context, $"[Elapsed]={time}ms", LogLevel.Debug);
-                _logger.LogDebug($"response: {response.Result ?? null}");
+                _logger.LogDebug($"response: {response}");
             }
         }
 
-        public override Task<TResponse> ClientStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, ServerCallContext context, ClientStreamingServerMethod<TRequest, TResponse> continuation)
+        public override async Task<TResponse> ClientStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, ServerCallContext context, ClientStreamingServerMethod<TRequest, TResponse> continuation)
         {
             try
             {
                 LogCall<TRequest, TResponse>(MethodType.ClientStreaming, context);
 
                 LogMessage(context, "Begin. ", LogLevel.Debug);
-                var res = base.ClientStreamingServerHandler(requestStream, context, continuation);
+                var res = await continuation(requestStream, context);
                 LogMessage(context, "End. ", LogLevel.Debug);
 
                 return res;
@@ -141,17 +138,15 @@ namespace ServerGrpc.Grpc
             }
         }
 
-        public override Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
+        public override async Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
         {
             try
             {
                 LogCall<TRequest, TResponse>(MethodType.ServerStreaming, context);
 
                 LogMessage(context, "Begin. ", LogLevel.Debug);
-                var res = base.ServerStreamingServerHandler(request, responseStream, context, continuation);
+                await continuation(request, responseStream, context);
                 LogMessage(context, "End. ", LogLevel.Debug);
-
-                return res;
             }
             catch (Exception e)
             {

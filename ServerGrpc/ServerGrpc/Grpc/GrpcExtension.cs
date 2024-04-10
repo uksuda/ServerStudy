@@ -10,24 +10,12 @@ namespace ServerGrpc.Grpc
 
         public static void SetXtid(this ServerCallContext context, string xtid)
         {
-            var httpContext = context.GetHttpContext();
-            if (httpContext == null)
-            {
-                throw new NullReferenceException("http context is empty");
-            }
-            httpContext.Items.Add(XTID, xtid);
+            context.RequestHeaders.Add(XTID, xtid);
         }
 
         public static string GetXtid(this ServerCallContext context)
         {
-            var httpContext = context.GetHttpContext();
-            if (httpContext == null)
-            {
-                throw new NullReferenceException("http context is empty");
-            }
-
-            httpContext.Items.TryGetValue(XTID, out var xtid);
-            return (xtid == null) ? string.Empty : xtid.ToString();
+            return context.RequestHeaders.GetValue(XTID);
         }
 
         public static ClientSession GetClientSession(this ServerCallContext context)

@@ -1,14 +1,71 @@
-﻿namespace ServerGrpc.DB.Table
+﻿using Dapper;
+
+namespace ServerGrpc.DB.Table
 {
-    public class CharacterDB
+    public class CharacterDB : IDataTable
     {
-        public const string Table = "";
+        public const string Table = "t_character";
         public int mber_no {  get; set; }
         public byte character_no { get; set; }
         public string job { get; set; }
         public string nickname { get; set; }
+        public int lv { get; set; }
+        public long exp { get; set; }
         public DateTime create { get; set; }
         public DateTime update { get; set; }
 
+        public static CharacterDB Create(int mberNo, byte charNo, string jobStr, string name, int level, long expVal, DateTime createTime, DateTime updateTime)
+        {
+            return new CharacterDB
+            {
+                mber_no = mberNo,
+                character_no = charNo,
+                job = jobStr,
+                nickname = name,
+                lv = level,
+                exp = expVal,
+                create = createTime,
+                update = updateTime
+            };
+        }
+
+        #region Query
+        public static (string, DynamicParameters) Select(int mberNo)
+        {
+            var query = $@"select * from {Table} where {nameof(mber_no)}=@{nameof(mber_no)}";
+            var param = new DynamicParameters();
+            param.Add(nameof(mber_no), mberNo);
+            return (query, param);
+        }
+
+        public static (string, DynamicParameters) Update(CharacterDB db)
+        {
+            var query = $@"update {Table} set {nameof(lv)}=@{nameof(lv)}, {nameof(exp)}=@{nameof(exp)}, {nameof(update)}=@{nameof(update)} where {nameof(mber_no)}=@{nameof(mber_no)}";
+            var param = new DynamicParameters();
+            param.Add(nameof(mber_no), db.mber_no);
+            param.Add(nameof(lv), db.lv);
+            param.Add(nameof(exp), db.exp);
+            param.Add(nameof(update), db.update);
+            return (query, param);
+        }
+
+        public static (string, DynamicParameters) Insert(CharacterDB db)
+        {
+            var query = $@"insert into {Table} ({nameof(mber_no)}, {nameof(character_no)}, {nameof(job)}, {nameof(nickname)}, {nameof(lv)}, {nameof(exp)}, {nameof(create)}, {nameof(update)})
+                           values (@{nameof(mber_no)}, @{nameof(character_no)}, @{nameof(job)}, @{nameof(nickname)}, @{nameof(lv)}, @{nameof(exp)}, @{nameof(create)}, @{nameof(update)})";
+
+            var param = new DynamicParameters();
+            param.Add(nameof(mber_no), db.mber_no);
+            param.Add(nameof(character_no), db.character_no);
+            param.Add(nameof(job), db.job);
+            param.Add(nameof(nickname), db.nickname);
+            param.Add(nameof(lv), db.lv);
+            param.Add(nameof(exp), db.exp);
+            param.Add(nameof(create), db.create);
+            param.Add(nameof(update), db.update);
+
+            return (query, param);
+        }
+        #endregion
     }
 }
