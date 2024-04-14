@@ -13,11 +13,14 @@ namespace ServerGrpc
 {
     public class AppMain
     {
+        private readonly CancellationTokenSource _tokenSource;
         private readonly ILogger _logger;
         private readonly string[] _args;
 
         public AppMain(ILogger logger, string[] args)
         {
+            _tokenSource = new CancellationTokenSource();
+
             _logger = logger;
             _args = args;
         }
@@ -26,7 +29,8 @@ namespace ServerGrpc
         {
             var app = CreateHostBuilder(_logger, _args).Build();
             var lifeTime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-
+            
+            //var tokenSource = app.Services.GetRequiredService<CancellationTokenSource>();
             //lifeTime.ApplicationStarted;
             //lifeTime.ApplicationStopping;
             //lifeTime.ApplicationStarted;
@@ -120,8 +124,14 @@ namespace ServerGrpc
                     //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appsettings.Jwt.Secret)),
                     //};
                     options.Events = new JwtBearerEvents();
-                    options.Events.OnTokenValidated = (context) => Task.CompletedTask;
-                    options.Events.OnMessageReceived = (context) => Task.CompletedTask;
+                    options.Events.OnTokenValidated = (context) =>
+                    {
+                        return Task.CompletedTask;
+                    };
+                    options.Events.OnMessageReceived = (context) =>
+                    {
+                        return Task.CompletedTask;
+                    };
                 });
 
                 MySqlConnectorLogManager.Provider = new SerilogLoggerProvider();
@@ -147,6 +157,10 @@ namespace ServerGrpc
                 }
 
                 services.AddControllers().AddApplicationPart(Assembly.GetExecutingAssembly());
+
+                // cancel token
+                //services.AddSingleton<CancellationTokenSource>();
+                services.AddSingleton(_tokenSource);
 
                 // service
                 services.AddSingleton<MainService>();

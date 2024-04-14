@@ -23,7 +23,7 @@ message Stream_UserConnect {
 }
 
 message Stream_UserDisconnect {
-    game.common.UserInfo disconnect_user = 1;
+    int32 user_index = 1;
 }
 
 message Stream_MessageSend {

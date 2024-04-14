@@ -48,10 +48,10 @@ message StreamMsg {
     game.stream.Stream_ConnectReq connect_req = 10;
     game.stream.Stream_ConnectRes connect_res = 11;
 
-    game.stream.Stream_Disconnected disconnected = 20;
+    game.stream.Stream_UserConnect user_connect = 15;
+    game.stream.Stream_UserDisconnect user_disconnect = 16;
 
-    game.stream.Stream_UserConnect user_connect = 30;
-    game.stream.Stream_UserDisconnect user_disconnect = 31;
+    game.stream.Stream_Disconnected disconnected = 20;
 
     game.stream.Stream_MessageSend message_send = 100;
     game.stream.Stream_MessageRecv message_recv = 101;

@@ -11,8 +11,11 @@ namespace ServerGrpc.DB.Table
         public DateTime create { get; set; }
         public DateTime last_login { get; set; }
 
+        public static TimeSpan Expire => TimeSpan.FromMinutes(1);
+
         public static MemberDB Create(int mberNo, string idStr, string passStr, DateTime createTime, DateTime loginTime)
         {
+            
             return new MemberDB
             {
                 mber_no = mberNo,

@@ -14,6 +14,8 @@ namespace ServerGrpc.DB.Table
         public DateTime create { get; set; }
         public DateTime update { get; set; }
 
+        public static TimeSpan Expire => TimeSpan.FromMinutes(1);
+
         public static CharacterDB Create(int mberNo, byte charNo, string jobStr, string name, int level, long expVal, DateTime createTime, DateTime updateTime)
         {
             return new CharacterDB

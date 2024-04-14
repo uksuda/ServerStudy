@@ -15,6 +15,7 @@ namespace ServerGrpc.Utils
             PropertyNameCaseInsensitive = true,
         };
 
+        #region Random
         public static string GetRandomKey()
         {
             return Guid.NewGuid().ToString("N");
@@ -43,7 +44,9 @@ namespace ServerGrpc.Utils
             }
             return r.ToString();
         }
+        #endregion
 
+        #region Json
         public static string Serialize<T>(T obj)
         {
             return JsonSerializer.Serialize(obj, _jsonOptions);
@@ -53,5 +56,18 @@ namespace ServerGrpc.Utils
         {
             return JsonSerializer.Deserialize<T>(json, _jsonOptions);
         }
+        #endregion
+
+        #region Redis
+        public static string GetRedisKey(string key, int val)
+        {
+            return $"{key}:{val}";
+        }
+
+        public static string GetRedisKey(string key, int val, int val2)
+        {
+            return $"{key}:{val}:{val2}";
+        }
+        #endregion
     }
 }

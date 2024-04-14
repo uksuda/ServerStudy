@@ -45,6 +45,7 @@ namespace ServerGrpc.Controller
             }
         }
 
+        [AllowAnonymous]
         public override async Task<LoginRes> Login(LoginReq requset, ServerCallContext context)
         {
             try
@@ -54,8 +55,8 @@ namespace ServerGrpc.Controller
                     throw ErrorHandler.Error(Game.Types.ResultCode.InvalidReqParam, "invalid id & password");
                 }
 
-                var session = context.GetClientSession();
-                var res = await _service.Login(requset, session);
+                var xtid = context.GetXtid();
+                var res = await _service.Login(requset, xtid);
                 return res;
             }
             catch (Exception)
@@ -72,7 +73,7 @@ namespace ServerGrpc.Controller
                 return await _service.UnaryDataSend(requset, session);
             }
             catch (Exception)
-            {               
+            {
                 throw;
             }
         }

@@ -16,7 +16,9 @@ message Result {
 
 message UserInfo {
     int32 user_index = 1;
-    string nickname = 2;
+    string job = 2;
+    string nickname = 3;
+    int32 level = 4;
 }
 
 message CharacterInfo {

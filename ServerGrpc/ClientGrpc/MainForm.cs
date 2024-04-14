@@ -186,7 +186,7 @@ namespace ClientGrpc
         {
             var builder = new StringBuilder();
             builder.AppendLine($"stream recv: {Game.Types.StreamPacket.UserDisconnect}");
-            builder.AppendLine($"user: {res.DisconnectUser.UserIndex}. {res.DisconnectUser.Nickname}");
+            builder.AppendLine($"user: {res.UserIndex}");
             RichTextBoxString(builder.ToString());
             return true;
         }

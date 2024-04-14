@@ -6,22 +6,22 @@ namespace ServerGrpc.DB
     public class DBConnection
     {
         private readonly string _connectStr;
-
-        private MySqlConnection _connection;
+        private readonly MySqlConnection _connection;
 
         public DBConnection(string connectStr)
         {
             _connectStr = connectStr;
-            _connection = new MySqlConnection(connectStr);
+            _connection = new MySqlConnection(_connectStr);
         }
 
         public MySqlConnection GetConnection()
         {
-            if (_connection.State != System.Data.ConnectionState.Open)
+            var connection = _connection.Clone();
+            if (connection.State != System.Data.ConnectionState.Open)
             {
-                _connection.Open();
+                connection.Open();
             }
-            return _connection;
+            return connection;
         }
     }
 

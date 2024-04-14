@@ -9,13 +9,13 @@ enum StreamPacket {
     STREAM_PACKET_CONNECT_REQ = 10;       // c2s
     STREAM_PACKET_CONNECT_RES = 11;       // s2c
 
-    STREAM_PACKET_DISCONNECTED = 20;     // s2c, c2s,
+    STREAM_PACKET_USER_CONNECT = 15;      // s2c
+    STREAM_PACKET_USER_DISCONNECT = 16;   // s2c
 
-    STREAM_PACKET_USER_CONNECT = 30;      // s2c
-    STREAM_PACKET_USER_DISCONNECT = 31;   // s2c
+    STREAM_PACKET_DISCONNECTED = 20;      // s2c, c2s,
 
-    STREAM_PACKET_MESSAGE_SEND = 100;      // c2s
-    STREAM_PACKET_MESSAGE_RECV = 101;      // s2c
+    STREAM_PACKET_MESSAGE_SEND = 100;     // c2s
+    STREAM_PACKET_MESSAGE_RECV = 101;     // s2c
 }
 
 enum UnaryDataType {

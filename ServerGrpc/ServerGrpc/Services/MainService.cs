@@ -22,7 +22,7 @@ namespace ServerGrpc.Services
             return default;
         }
 
-        public async Task<LoginRes> Login(LoginReq requset, ClientSession session)
+        public async Task<LoginRes> Login(LoginReq requset, string xtid)
         {
             return default;
         }
