@@ -1,7 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
 
-namespace ServerGrpc.Grpc
+namespace ServerGrpc.Grpc.Interceptors
 {
     public class AutoHeaderInterceptor : Interceptor
     {

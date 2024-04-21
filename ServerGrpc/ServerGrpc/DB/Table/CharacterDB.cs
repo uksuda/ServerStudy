@@ -11,8 +11,8 @@ namespace ServerGrpc.DB.Table
         public string nickname { get; set; }
         public int lv { get; set; }
         public long exp { get; set; }
-        public DateTime create { get; set; }
-        public DateTime update { get; set; }
+        public DateTime create_time { get; set; }
+        public DateTime update_time { get; set; }
 
         public static TimeSpan Expire => TimeSpan.FromMinutes(1);
 
@@ -26,8 +26,8 @@ namespace ServerGrpc.DB.Table
                 nickname = name,
                 lv = level,
                 exp = expVal,
-                create = createTime,
-                update = updateTime
+                create_time = createTime,
+                update_time = updateTime
             };
         }
 
@@ -42,19 +42,19 @@ namespace ServerGrpc.DB.Table
 
         public static (string, DynamicParameters) Update(CharacterDB db)
         {
-            var query = $@"update {Table} set {nameof(lv)}=@{nameof(lv)}, {nameof(exp)}=@{nameof(exp)}, {nameof(update)}=@{nameof(update)} where {nameof(mber_no)}=@{nameof(mber_no)}";
+            var query = $@"update {Table} set {nameof(lv)}=@{nameof(lv)}, {nameof(exp)}=@{nameof(exp)}, {nameof(update_time)}=@{nameof(update_time)} where {nameof(mber_no)}=@{nameof(mber_no)}";
             var param = new DynamicParameters();
             param.Add(nameof(mber_no), db.mber_no);
             param.Add(nameof(lv), db.lv);
             param.Add(nameof(exp), db.exp);
-            param.Add(nameof(update), db.update);
+            param.Add(nameof(update_time), db.update_time);
             return (query, param);
         }
 
         public static (string, DynamicParameters) Insert(CharacterDB db)
         {
-            var query = $@"insert into {Table} ({nameof(mber_no)}, {nameof(character_no)}, {nameof(job)}, {nameof(nickname)}, {nameof(lv)}, {nameof(exp)}, {nameof(create)}, {nameof(update)})
-                           values (@{nameof(mber_no)}, @{nameof(character_no)}, @{nameof(job)}, @{nameof(nickname)}, @{nameof(lv)}, @{nameof(exp)}, @{nameof(create)}, @{nameof(update)})";
+            var query = $@"insert into {Table} ({nameof(mber_no)}, {nameof(character_no)}, {nameof(job)}, {nameof(nickname)}, {nameof(lv)}, {nameof(exp)}, {nameof(create_time)}, {nameof(update_time)})
+                           values (@{nameof(mber_no)}, @{nameof(character_no)}, @{nameof(job)}, @{nameof(nickname)}, @{nameof(lv)}, @{nameof(exp)}, @{nameof(create_time)}, @{nameof(update_time)})";
 
             var param = new DynamicParameters();
             param.Add(nameof(mber_no), db.mber_no);
@@ -63,8 +63,8 @@ namespace ServerGrpc.DB.Table
             param.Add(nameof(nickname), db.nickname);
             param.Add(nameof(lv), db.lv);
             param.Add(nameof(exp), db.exp);
-            param.Add(nameof(create), db.create);
-            param.Add(nameof(update), db.update);
+            param.Add(nameof(create_time), db.create_time);
+            param.Add(nameof(update_time), db.update_time);
 
             return (query, param);
         }

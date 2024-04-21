@@ -3,10 +3,12 @@ using MySqlConnector.Logging;
 using ServerGrpc.Common;
 using ServerGrpc.Controller;
 using ServerGrpc.DB;
-using ServerGrpc.Grpc;
+using ServerGrpc.Grpc.Interceptors;
+using ServerGrpc.Grpc.Session;
 using ServerGrpc.Infra;
 using ServerGrpc.Logger;
 using ServerGrpc.Services;
+using System.Net.Sockets;
 using System.Reflection;
 
 namespace ServerGrpc
@@ -16,6 +18,8 @@ namespace ServerGrpc
         private readonly CancellationTokenSource _tokenSource;
         private readonly ILogger _logger;
         private readonly string[] _args;
+
+        private IHost _host;
 
         public AppMain(ILogger logger, string[] args)
         {
@@ -27,15 +31,15 @@ namespace ServerGrpc
 
         public void Run()
         {
-            var app = CreateHostBuilder(_logger, _args).Build();
-            var lifeTime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-            
+            _host = CreateHostBuilder(_logger, _args).Build();
+            var lifeTime = _host.Services.GetRequiredService<IHostApplicationLifetime>();
+
             //var tokenSource = app.Services.GetRequiredService<CancellationTokenSource>();
             //lifeTime.ApplicationStarted;
             //lifeTime.ApplicationStopping;
             //lifeTime.ApplicationStarted;
 
-            app.Run();
+            _host.Run();
 
             //AppDomain.CurrentDomain.ProcessExit += (s, e) =>
             //{
@@ -78,11 +82,6 @@ namespace ServerGrpc
             builder.ConfigureServices((ctx, services) =>
             {
                 var isDevelop = (ctx.HostingEnvironment.IsEnvironment("development") || OperatingSystem.IsWindows());
-                var appsettings = ctx.Configuration.Get<AppSettings>();
-                services.AddSingleton(appsettings);
-
-                var jwtBuilder = new JwtTokenBuilder(appsettings);
-                services.AddSingleton(jwtBuilder);
 
                 services.AddAuthorization(options =>
                 {
@@ -108,6 +107,9 @@ namespace ServerGrpc
                 })
                 .AddJwtBearer(options =>
                 {
+                    var jwtBuilder = _host.Services.GetRequiredService<JwtTokenBuilder>();
+                    var clientManager = _host.Services.GetRequiredService<ClientManager>();
+
                     options.TokenValidationParameters = jwtBuilder.TokenValidationParameter;
 
                     options.RequireHttpsMetadata = false;
@@ -124,10 +126,11 @@ namespace ServerGrpc
                     //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appsettings.Jwt.Secret)),
                     //};
                     options.Events = new JwtBearerEvents();
-                    options.Events.OnTokenValidated = (context) =>
-                    {
-                        return Task.CompletedTask;
-                    };
+                    options.Events.OnTokenValidated = clientManager.CheckToken;
+                    //options.Events.OnTokenValidated = (context) =>
+                    //{
+                    //    return Task.CompletedTask;
+                    //};
                     options.Events.OnMessageReceived = (context) =>
                     {
                         return Task.CompletedTask;
@@ -158,9 +161,16 @@ namespace ServerGrpc
 
                 services.AddControllers().AddApplicationPart(Assembly.GetExecutingAssembly());
 
-                // cancel token
+                // 
                 //services.AddSingleton<CancellationTokenSource>();
                 services.AddSingleton(_tokenSource);
+
+                var appsettings = ctx.Configuration.Get<AppSettings>();
+                services.AddSingleton(appsettings);
+
+                services.AddSingleton<JwtTokenBuilder>();
+                services.AddSingleton<ClientManager>();
+
 
                 // service
                 services.AddSingleton<MainService>();
@@ -172,8 +182,6 @@ namespace ServerGrpc
 
                 services.AddSingleton<AccountRedisContext>();
                 services.AddSingleton<GameRedisContext>();
-
-                services.AddSingleton<ClientManager>();
             });
         }
         public void Configure(IWebHostBuilder builder)

@@ -6,23 +6,23 @@ namespace ServerGrpc.DB.Table
     {
         public const string Table = "t_member";
         public int mber_no { get; set; }
-        public string id { get; set; }
+        public string member_id { get; set; }
         public string password { get; set; }
-        public DateTime create { get; set; }
-        public DateTime last_login { get; set; }
+        public DateTime create_time { get; set; }
+        public DateTime last_login_time { get; set; }
 
         public static TimeSpan Expire => TimeSpan.FromMinutes(1);
 
-        public static MemberDB Create(int mberNo, string idStr, string passStr, DateTime createTime, DateTime loginTime)
+        public static MemberDB Create(int mberNo, string memberId, string pass, DateTime createTime, DateTime loginTime)
         {
             
             return new MemberDB
             {
                 mber_no = mberNo,
-                id = idStr,
-                password = passStr,
-                create = createTime,
-                last_login = loginTime
+                member_id = memberId,
+                password = pass,
+                create_time = createTime,
+                last_login_time = loginTime
             };
         }
 
@@ -37,31 +37,31 @@ namespace ServerGrpc.DB.Table
 
         public static (string, DynamicParameters) Select(string id)
         {
-            var query = $@"select * from {Table} where {nameof(id)}=@{nameof(id)}";
+            var query = $@"select * from {Table} where {nameof(member_id)}=@{nameof(member_id)}";
             var param = new DynamicParameters();
-            param.Add(nameof(id), id);
+            param.Add(nameof(member_id), id);
             return (query, param);
         }
 
         public static (string, DynamicParameters) Update(int mberNo, DateTime now)
         {
-            var query = $@"update {Table} set {nameof(last_login)}=@{nameof(last_login)} where {nameof(mber_no)}=@{nameof(mber_no)}";
+            var query = $@"update {Table} set {nameof(last_login_time)}=@{nameof(last_login_time)} where {nameof(mber_no)}=@{nameof(mber_no)}";
             var param = new DynamicParameters();
             param.Add(nameof(mber_no), mberNo);
-            param.Add(nameof(last_login), now);
+            param.Add(nameof(last_login_time), now);
             return (query, param);
         }
 
         public static (string, DynamicParameters) Insert(MemberDB db)
         {
-            var query = $@"insert into {Table} ({nameof(id)}, {nameof(password)}, {nameof(create)}, {nameof(last_login)})
-                           values (@{nameof(id)}, @{nameof(password)}, @{nameof(create)}, @{nameof(last_login)})";
+            var query = $@"insert into {Table} ({nameof(member_id)}, {nameof(password)}, {nameof(create_time)}, {nameof(last_login_time)})
+                           values (@{nameof(member_id)}, @{nameof(password)}, @{nameof(create_time)}, @{nameof(last_login_time)})";
 
             var param = new DynamicParameters();
-            param.Add(nameof(id), db.id);
+            param.Add(nameof(member_id), db.member_id);
             param.Add(nameof(password), db.password);
-            param.Add(nameof(create), db.create);
-            param.Add(nameof(last_login), db.last_login);
+            param.Add(nameof(create_time), db.create_time);
+            param.Add(nameof(last_login_time), db.last_login_time);
 
             return (query, param);
         }

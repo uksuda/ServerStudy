@@ -9,6 +9,9 @@ namespace ServerGrpc.Infra
 {
     public class JwtTokenBuilder
     {
+        public const string GUID = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti;
+        public const string MBER_NO = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId;
+
         private const int ADMIN_TOKEN_EXPIRE_SEC = 60 * 5; // 5분
         private const int USER_TOKEN_EXPIRE_SEC = 60 * 5;
 
@@ -74,8 +77,8 @@ namespace ServerGrpc.Infra
             var claims = new[]
             {
                 new Claim(ClaimTypes.Role, ServerPolicy.Admin),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, guid),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId, mberNo.ToString()),
+                new Claim(GUID, guid),
+                new Claim(MBER_NO, mberNo.ToString()),
             };
             return new ClaimsIdentity(claims);
         }
@@ -85,8 +88,8 @@ namespace ServerGrpc.Infra
             var claims = new[]
             {
                 new Claim(ClaimTypes.Role, ServerPolicy.User),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, guid),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId, mberNo.ToString()),
+                new Claim(GUID, guid),
+                new Claim(MBER_NO, mberNo.ToString()),
             };
             return new ClaimsIdentity(claims);
         }

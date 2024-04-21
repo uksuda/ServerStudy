@@ -116,11 +116,27 @@ namespace ServerGrpc.DB.Worker
             return mberDB;
         }
 
+        public async Task<MemberDB> GetMemberById(string mberId)
+        {
+            // not in cache
+            var (query, param) = MemberDB.Select(mberId);
+            var select = new DBSelectInfo(DataBaseType.Account, query, param);
+            await _selector.Write(select);
+
+            var temp = await select.CallAsync();
+            var mberDB = temp.Cast<MemberDB>().ToList().FirstOrDefault();
+            if (mberDB != null)
+            {
+                await SetMemberToCache(mberDB);
+            }
+            return mberDB;
+        }
+
         public async ValueTask UpdateMember(MemberDB db)
         {
             await SetMemberToCache(db);
 
-            var (query, param) = MemberDB.Update(db.mber_no, db.last_login);
+            var (query, param) = MemberDB.Update(db.mber_no, db.last_login_time);
             var update = new DBUpdateInfo(DataBaseType.Account, query, param, MemberDB.Table);
             await _updater.Write(update);
         }

@@ -4,6 +4,7 @@ using Game.Main;
 using ServerGrpc.Common;
 using ServerGrpc.Grpc;
 using ServerGrpc.Services;
+using ServerGrpc.Grpc.Session;
 
 namespace ServerGrpc.Controller
 {

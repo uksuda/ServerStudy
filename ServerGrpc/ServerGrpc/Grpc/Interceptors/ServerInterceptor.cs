@@ -3,7 +3,7 @@ using Grpc.Core;
 using ServerGrpc.Common;
 using System.Diagnostics;
 
-namespace ServerGrpc.Grpc
+namespace ServerGrpc.Grpc.Interceptors
 {
     public class ServerInterceptor : Interceptor
     {
@@ -12,6 +12,15 @@ namespace ServerGrpc.Grpc
         public ServerInterceptor(ILogger<ServerInterceptor> logger)
         {
             _logger = logger;
+        }
+
+        private void ThrowCheckContextError(ServerCallContext context)
+        {
+            var (code, xtid) = context.GetContextError();
+            if (code != Game.Types.ResultCode.Success)
+            {
+                throw ErrorHandler.Error(code, $"error - xtid: {xtid}");
+            }
         }
 
         private string MakePreMsg(ServerCallContext context)
@@ -32,7 +41,7 @@ namespace ServerGrpc.Grpc
                 return $"[Xtid]: {xtid} [Method]: {method} - ";
             }
 
-            var mber = session.MBER_NO;
+            var mber = session.MberNo;
             return $"[Xtid]: {xtid} [Method]: {method} [Mber]: {mber} - ";
         }
 
@@ -71,6 +80,8 @@ namespace ServerGrpc.Grpc
 
             try
             {
+                ThrowCheckContextError(context);
+
                 LogMessage(context, "Begin. ", LogLevel.Debug);
                 await continuation(requestStream, responseStream, context);
                 LogMessage(context, "End. ", LogLevel.Debug);
@@ -91,6 +102,8 @@ namespace ServerGrpc.Grpc
             TResponse response = null;
             try
             {
+                ThrowCheckContextError(context);
+
                 _logger.LogDebug($"request: {request}");
 
                 LogMessage(context, "Begin. ", LogLevel.Debug);
