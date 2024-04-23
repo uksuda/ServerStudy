@@ -54,7 +54,6 @@ namespace ServerGrpc.Grpc
         }
         #endregion
 
-
         #region ServerCall Context
         public static void SetXtid(this ServerCallContext context, string xtid)
         {

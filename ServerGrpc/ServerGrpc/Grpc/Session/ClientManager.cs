@@ -23,9 +23,16 @@ namespace ServerGrpc.Grpc.Session
 
         public async Task CheckToken(TokenValidatedContext ctx)
         {
+            var xtid = ctx.HttpContext.GetXtid();
+            if (string.IsNullOrEmpty(xtid) == true)
+            {
+                xtid = Guid.NewGuid().ToString("N");
+            }
+
             if (ctx.SecurityToken.ValidTo > DateTime.UtcNow)
             {
                 ctx.HttpContext.SetContextErr(ResultCode.TokenExpire);
+                ctx.HttpContext.SetXtid(xtid);
                 return;
             }
 
@@ -34,10 +41,10 @@ namespace ServerGrpc.Grpc.Session
             if (int.TryParse(mberNoStr, out int mberNo) == false)
             {
                 ctx.HttpContext.SetContextErr(ResultCode.TokenInvalid);
+                ctx.HttpContext.SetXtid(xtid);
                 return;
             }
 
-            var xtid = Guid.NewGuid().ToString("N");
             var session = new ClientSession(mberNo, xtid);
 
             ctx.HttpContext.SetClientSession(session);

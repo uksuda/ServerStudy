@@ -16,6 +16,7 @@ namespace ServerGrpc.Logger
                 //.MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
                 //.MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
                 //.MinimumLevel.Override("Default", Serilog.Events.LogEventLevel.Fatal)
+                .MinimumLevel.Override("ServerGrpc", Serilog.Events.LogEventLevel.Debug)
                 .WriteTo.Console()
                 .WriteTo.File(path, rollingInterval: RollingInterval.Day)
                 .CreateBootstrapLogger();

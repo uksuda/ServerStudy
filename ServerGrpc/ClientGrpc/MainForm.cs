@@ -36,27 +36,67 @@ namespace ClientGrpc
             ButtonEnableChange(false);
         }
 
+        private void RichTextBoxString(string s)
+        {
+            rich_text_box_detail_info.Focus();
+            rich_text_box_detail_info.AppendText(s);
+            rich_text_box_detail_info.ScrollToCaret();
+
+            //rich_text_box_detail_info.AppendText(Environment.NewLine);
+            //rich_text_box_detail_info.AppendText(s);
+            //rich_text_box_detail_info.SelectionStart = rich_text_box_detail_info.TextLength;
+            //rich_text_box_detail_info.ScrollToCaret();
+            //rich_text_box_detail_info.Update();
+        }
+
+        private void ErrorMsg(string s)
+        {
+            MessageBox.Show(s, "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+        }
+
+        private void ButtonEnableChange(bool enable)
+        {
+            button_join.Enabled = enable;
+            button_login.Enabled = enable;
+            button_command.Enabled = enable;
+            button_message.Enabled = enable;
+            button_stream_open.Enabled = enable;
+            button_stream_close.Enabled = enable;
+        }
+
+        private void RecvMessageCallBack(string msg)
+        {
+            Invoke(new MethodInvoker(() =>
+            {
+                if (string.IsNullOrEmpty(msg) == false)
+                {
+                    //MessageBox.Show(msg);
+                    RichTextBoxString(msg);
+                }
+            }));
+        }
+
+        #region button call back
         private void button_server_connect_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(text_box_server_ip.Text) == true)
             {
-                MessageBox.Show("server ip is empty");
+                ErrorMsg("server ip is empty");
                 return;
             }
 
-            try
-            {
-                _client = new GrpcClient();
-                _client.InitChannel(text_box_server_ip.Text);
-                _client.SetStreamCallBack(DispatchStream);
+            _client = new GrpcClient();
+            _client.InitChannel(text_box_server_ip.Text);
 
-                ButtonEnableChange(true);
-                RichTextBoxString($"{text_box_server_ip.Text} server connected");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"error : {ex}");
-            }
+            RichTextBoxString($"{text_box_server_ip.Text} server connected");
+            ButtonEnableChange(true);
+
+            //_client.SetCommandCallBack()
+        }
+
+        private void button_clear_log_Click(object sender, EventArgs e)
+        {
+            rich_text_box_detail_info.Clear();
         }
 
         private async void button_join_Click(object sender, EventArgs e)
@@ -113,30 +153,19 @@ namespace ClientGrpc
                 MessageSend = msg,
             };
 
-            try
-            {
-                await _client.SendMsg(data);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"message_btn_click error: {ex.Message}, {ex.InnerException}");
-            }
+            await _client.SendMsg(data);
         }
 
-        private void RichTextBoxString(string s)
+        private async void button_stream_open_Click(object sender, EventArgs e)
         {
-            rich_text_box_detail_info.Focus();
-            rich_text_box_detail_info.AppendText(s);
-            rich_text_box_detail_info.ScrollToCaret();
+
         }
 
-        private void ButtonEnableChange(bool enable)
+        private async void button_stream_close_Click(object sender, EventArgs e)
         {
-            button_join.Enabled = enable;
-            button_login.Enabled = enable;
-            button_command.Enabled = enable;
-            button_message.Enabled = enable;
+
         }
+        #endregion
 
         #region Dispatch Stream
         private bool DispatchStream(StreamMsg data)

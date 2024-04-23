@@ -1,5 +1,7 @@
 ﻿using Grpc.Core;
 using Game.Main;
+using ServerGrpc.Logger;
+using System.Reflection;
 
 namespace ServerGrpc.Grpc.Session
 {
@@ -9,6 +11,8 @@ namespace ServerGrpc.Grpc.Session
         public string XTID_STREAM => _session.Xtid_Stream;
         public int MBER => _session.MberNo;
 
+        private readonly ILogger _logger = AppLogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IAsyncStreamReader<StreamMsg> _reader;
         private readonly IServerStreamWriter<StreamMsg> _writer;
 
@@ -17,7 +21,6 @@ namespace ServerGrpc.Grpc.Session
 
         private readonly CancellationTokenSource _tokenSource;
 
-        private Action<StreamMsg> _callback;
         private int _clientIndex;
 
         public ClientStream(IAsyncStreamReader<StreamMsg> request, IServerStreamWriter<StreamMsg> response, ServerCallContext context)
@@ -36,7 +39,7 @@ namespace ServerGrpc.Grpc.Session
             _clientIndex = index;
         }
 
-        public async ValueTask ReadAsync(Func<StreamMsg, Task<bool>> msgCallBack)
+        public async ValueTask ReadAsync(Func<StreamMsg, bool> msgCallBack)
         {
             await Task.Run(async () =>
             {
@@ -45,38 +48,41 @@ namespace ServerGrpc.Grpc.Session
                     var data = _reader.Current;
                     if (msgCallBack != null)
                     {
-                        await msgCallBack.Invoke(data);
+                        msgCallBack.Invoke(data);
                     }
                 }
             });
         }
 
-        public void SetMSgCallBack(Action<StreamMsg> callBack)
+        public async Task<bool> SendMsg(StreamMsg data)
         {
-            _callback = callBack;
-        }
-
-        public async ValueTask StartReadAsync()
-        {
-            await Task.Run(async () =>
+            if (data.Packet == Game.Types.StreamPacket.None)
             {
-                while (await _reader.MoveNext(_tokenSource.Token))
-                {
-                    var data = _reader.Current;
-                    if (_callback != null)
-                    {
-                        _callback.Invoke(data);
-                    }
-                }
-            });
-        }
+                return false;
+            }
 
-        public async ValueTask SendMsg(StreamMsg data)
-        {
             if (_tokenSource.IsCancellationRequested == false)
             {
-                await _writer.WriteAsync(data);
+                try
+                {
+                    await _writer.WriteAsync(data);
+                    return true;
+                }
+                catch (RpcException e)
+                {
+                    _logger.LogError($"send err - mber: {_session.MberNo} : {e}");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"send err - {e}");
+                }                
             }
+            return false;
+        }
+
+        public async ValueTask SendAndDisconnect(StreamMsg data)
+        {
+            await SendMsg(data).ContinueWith(t => { Disconnect(); });
         }
 
         public void Disconnect()
@@ -85,6 +91,7 @@ namespace ServerGrpc.Grpc.Session
             {
                 _tokenSource.Cancel();
             }
+            _tokenSource.Dispose();
         }
     }
 }

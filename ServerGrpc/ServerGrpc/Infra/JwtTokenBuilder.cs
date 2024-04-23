@@ -10,7 +10,8 @@ namespace ServerGrpc.Infra
     public class JwtTokenBuilder
     {
         public const string GUID = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti;
-        public const string MBER_NO = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId;
+        //public const string MBER_NO = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId;
+        public const string MBER_NO = "mber_no";
 
         private const int ADMIN_TOKEN_EXPIRE_SEC = 60 * 5; // 5분
         private const int USER_TOKEN_EXPIRE_SEC = 60 * 5;

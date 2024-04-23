@@ -50,6 +50,9 @@
             button_command = new System.Windows.Forms.Button();
             button_message = new System.Windows.Forms.Button();
             button_server_connect = new System.Windows.Forms.Button();
+            button_stream_open = new System.Windows.Forms.Button();
+            button_stream_close = new System.Windows.Forms.Button();
+            button_clear_log = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
             // rich_text_box_detail_info
@@ -68,7 +71,7 @@
             button_join.TabIndex = 1;
             button_join.Text = "Join";
             button_join.UseVisualStyleBackColor = true;
-            button_join.Click += new System.EventHandler(this.button_join_Click);
+            button_join.Click += button_join_Click;
             // 
             // text_box_server_ip
             // 
@@ -153,7 +156,7 @@
             // label_nickname
             // 
             label_nickname.AutoSize = true;
-            label_nickname.Location = new System.Drawing.Point(514, 198);
+            label_nickname.Location = new System.Drawing.Point(514, 247);
             label_nickname.Name = "label_nickname";
             label_nickname.Size = new System.Drawing.Size(63, 15);
             label_nickname.TabIndex = 13;
@@ -161,7 +164,7 @@
             // 
             // text_box_nickname
             // 
-            text_box_nickname.Location = new System.Drawing.Point(587, 195);
+            text_box_nickname.Location = new System.Drawing.Point(587, 244);
             text_box_nickname.Name = "text_box_nickname";
             text_box_nickname.Size = new System.Drawing.Size(162, 23);
             text_box_nickname.TabIndex = 12;
@@ -208,7 +211,7 @@
             button_login.TabIndex = 19;
             button_login.Text = "Login";
             button_login.UseVisualStyleBackColor = true;
-            button_login.Click += new System.EventHandler(this.button_login_Click);
+            button_login.Click += button_login_Click;
             // 
             // button_command
             // 
@@ -218,7 +221,7 @@
             button_command.TabIndex = 21;
             button_command.Text = "Command";
             button_command.UseVisualStyleBackColor = true;
-            button_command.Click += new System.EventHandler(this.button_command_Click);
+            button_command.Click += button_command_Click;
             // 
             // button_message
             // 
@@ -228,7 +231,7 @@
             button_message.TabIndex = 22;
             button_message.Text = "Message";
             button_message.UseVisualStyleBackColor = true;
-            button_message.Click += new System.EventHandler(this.button_message_Click);
+            button_message.Click += button_message_Click;
             // 
             // button_server_connect
             // 
@@ -238,13 +241,43 @@
             button_server_connect.TabIndex = 23;
             button_server_connect.Text = "Connect";
             button_server_connect.UseVisualStyleBackColor = true;
-            button_server_connect.Click += new System.EventHandler(this.button_server_connect_Click);
+            button_server_connect.Click += button_server_connect_Click;
+            // 
+            // button_stream_open
+            // 
+            button_stream_open.Location = new System.Drawing.Point(527, 434);
+            button_stream_open.Name = "button_stream_open";
+            button_stream_open.Size = new System.Drawing.Size(110, 23);
+            button_stream_open.TabIndex = 24;
+            button_stream_open.Text = "Stream Open";
+            button_stream_open.UseVisualStyleBackColor = true;
+            // 
+            // button_stream_close
+            // 
+            button_stream_close.Location = new System.Drawing.Point(661, 434);
+            button_stream_close.Name = "button_stream_close";
+            button_stream_close.Size = new System.Drawing.Size(110, 23);
+            button_stream_close.TabIndex = 25;
+            button_stream_close.Text = "Stream Close";
+            button_stream_close.UseVisualStyleBackColor = true;
+            // 
+            // button_clear_log
+            // 
+            button_clear_log.Location = new System.Drawing.Point(767, 48);
+            button_clear_log.Name = "button_clear_log";
+            button_clear_log.Size = new System.Drawing.Size(110, 23);
+            button_clear_log.TabIndex = 26;
+            button_clear_log.Text = "Clear Log";
+            button_clear_log.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(895, 505);
+            Controls.Add(button_clear_log);
+            Controls.Add(button_stream_close);
+            Controls.Add(button_stream_open);
             Controls.Add(button_server_connect);
             Controls.Add(button_message);
             Controls.Add(button_command);
@@ -297,5 +330,8 @@
         private System.Windows.Forms.Button button_command;
         private System.Windows.Forms.Button button_message;
         private System.Windows.Forms.Button button_server_connect;
+        private System.Windows.Forms.Button button_stream_open;
+        private System.Windows.Forms.Button button_stream_close;
+        private System.Windows.Forms.Button button_clear_log;
     }
 }

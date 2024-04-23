@@ -5,7 +5,6 @@ using Game.Types;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ClientGrpc.Client
 {
@@ -14,15 +13,17 @@ namespace ClientGrpc.Client
         private const string AUTHORIZATION = "Authorization";
 
         private GrpcChannel _channel;
-
         private Main.MainClient _mainClient;
 
-        private Func<StreamMsg, bool> _callBack;
+        private string _serverToken = string.Empty;
+
+        private Func<StreamMsg, bool> _streamCallBack;
+        private Action<string> _messageCallBack;
+        private Action<UnaryData> _commandCallBack;
+
 
         private IAsyncStreamReader<StreamMsg> _streamReader;
         private IClientStreamWriter<StreamMsg> _streamWriter;
-
-        private string _serverToken = string.Empty;
 
         private readonly CancellationTokenSource _tokenSource;
 
@@ -33,7 +34,20 @@ namespace ClientGrpc.Client
 
         public void SetStreamCallBack(Func<StreamMsg, bool> callBack)
         {
-            _callBack = callBack;
+            _streamCallBack -= callBack;
+            _streamCallBack += callBack;
+        }
+
+        public void SetMessageCallBack(Action<string> callBack)
+        {
+            _messageCallBack -= callBack;
+            _messageCallBack += callBack;
+        }
+
+        public void SetCommandCallBack(Action<UnaryData> callBack)
+        {
+            _commandCallBack -= callBack;
+            _commandCallBack += callBack;
         }
 
         public bool InitChannel(string serverAddress)
@@ -59,6 +73,62 @@ namespace ClientGrpc.Client
             return true;
         }
 
+        public async ValueTask SendMsg(StreamMsg data)
+        {
+            try
+            {
+                if (_tokenSource.IsCancellationRequested == false)
+                {
+                    await _streamWriter.WriteAsync(data);
+                }
+            }
+            catch (RpcException e)
+            {
+                _messageCallBack?.Invoke($"rpc exception - {e}");
+            }
+            catch (Exception e)
+            {
+                _messageCallBack?.Invoke($"exception - {e}");
+            }
+        }
+
+        public bool StreamOpen()
+        {
+            var call = _mainClient.StreamOpen(cancellationToken: _tokenSource.Token);
+            _streamReader = call.ResponseStream;
+            _streamWriter = call.RequestStream;
+
+            try
+            {
+                _ = Task.Run(async () =>
+                {
+                    while (await _streamReader.MoveNext(_tokenSource.Token))
+                    {
+                        var data = _streamReader.Current;
+                        if (_streamCallBack != null)
+                        {
+                            _streamCallBack.Invoke(data);
+                        }
+                    }
+                    await _streamWriter.CompleteAsync();
+                });
+            }
+            catch (RpcException e)
+            {
+                _messageCallBack?.Invoke($"rpc exception {e.StatusCode} m: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                _messageCallBack?.Invoke($"exception. {e.Message}");
+            }
+            finally
+            {
+                _messageCallBack?.Invoke($"disconnected");
+            }
+            return true;
+        }
+
+        #region Grpc Unary
         public async Task<(ResultCode, string, JoinRes)> Join(JoinReq req)
         {
             try
@@ -105,68 +175,6 @@ namespace ClientGrpc.Client
                 return (e.ToString(), null);
             }
         }
-
-        public async ValueTask SendMsg(StreamMsg data)
-        {
-            try
-            {
-                if (_tokenSource.IsCancellationRequested == false)
-                {
-                    await _streamWriter.WriteAsync(data);
-                }
-            }
-            catch (OperationCanceledException e)
-            {
-                MessageBox.Show($"canceled exception - {e}");
-            }
-            catch (InvalidOperationException e)
-            {
-                MessageBox.Show($"invalid exception - {e}");
-            }
-            catch (RpcException e)
-            {
-                MessageBox.Show($"rpc exception - {e}");
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"exception - {e}");
-            }
-        }
-
-        public bool StreamOpen()
-        {
-            var call = _mainClient.StreamOpen(cancellationToken: _tokenSource.Token);
-            _streamReader = call.ResponseStream;
-            _streamWriter = call.RequestStream;
-
-            try
-            {
-                _ = Task.Run(async () =>
-                {
-                    while (await _streamReader.MoveNext(_tokenSource.Token))
-                    {
-                        var data = _streamReader.Current;
-                        if (_callBack != null)
-                        {
-                            _callBack.Invoke(data);
-                        }
-                    }
-                    await _streamWriter.CompleteAsync();
-                });
-            }
-            catch (RpcException e)
-            {
-                MessageBox.Show($"rpc exception {e.StatusCode} m: {e.Message}");
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"exception. {e.Message}");
-            }
-            finally
-            {
-                MessageBox.Show($"disconnected");
-            }
-            return true;
-        }
+        #endregion
     }
 }

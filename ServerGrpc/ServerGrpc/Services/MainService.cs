@@ -96,7 +96,7 @@ namespace ServerGrpc.Services
         #endregion
 
         #region StreamData
-        public async Task<bool> StreamDispatch(StreamMsg data, ClientStream client, ClientManager manager)
+        public bool StreamDispatch(StreamMsg data, ClientStream client, ClientManager manager)
         {
             switch (data.Packet)
             {
