@@ -19,8 +19,6 @@ namespace ClientGrpc.Client
 
         private Func<StreamMsg, bool> _streamCallBack;
         private Action<string> _messageCallBack;
-        private Action<UnaryData> _commandCallBack;
-
 
         private IAsyncStreamReader<StreamMsg> _streamReader;
         private IClientStreamWriter<StreamMsg> _streamWriter;
@@ -42,12 +40,6 @@ namespace ClientGrpc.Client
         {
             _messageCallBack -= callBack;
             _messageCallBack += callBack;
-        }
-
-        public void SetCommandCallBack(Action<UnaryData> callBack)
-        {
-            _commandCallBack -= callBack;
-            _commandCallBack += callBack;
         }
 
         public bool InitChannel(string serverAddress)

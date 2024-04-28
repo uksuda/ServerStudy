@@ -10,6 +10,7 @@ namespace ClientGrpc
 {
     public partial class MainForm : Form
     {
+        private LogForm _logForm;
         private GrpcClient _client;
 
         public MainForm()
@@ -18,7 +19,7 @@ namespace ClientGrpc
             InitUI();
         }
 
-        public void InitUI()
+        private void InitUI()
         {
             rich_text_box_detail_info.Clear();
             label_token_value.ResetText();
@@ -34,6 +35,8 @@ namespace ClientGrpc
             text_box_params.Clear();
 
             ButtonEnableChange(false);
+
+            text_box_server_ip.Text = $"{ClientConst.SERVER_ADDR}:{ClientConst.SERVER_PORT}";
         }
 
         private void RichTextBoxString(string s)
@@ -47,6 +50,15 @@ namespace ClientGrpc
             //rich_text_box_detail_info.SelectionStart = rich_text_box_detail_info.TextLength;
             //rich_text_box_detail_info.ScrollToCaret();
             //rich_text_box_detail_info.Update();
+        }
+
+        private void RichTextBoxString_LogForm(string s)
+        {
+            if (_logForm == null || _logForm.IsDisposed == true)
+            {
+                return;
+            }
+            _logForm.RichTextBoxString(s);
         }
 
         private void ErrorMsg(string s)
@@ -71,7 +83,8 @@ namespace ClientGrpc
                 if (string.IsNullOrEmpty(msg) == false)
                 {
                     //MessageBox.Show(msg);
-                    RichTextBoxString(msg);
+                    //RichTextBoxString(msg);
+                    RichTextBoxString_LogForm(msg);
                 }
             }));
         }
@@ -87,6 +100,8 @@ namespace ClientGrpc
 
             _client = new GrpcClient();
             _client.InitChannel(text_box_server_ip.Text);
+            _client.SetStreamCallBack(DispatchStream);
+            _client.SetMessageCallBack(RecvMessageCallBack);
 
             RichTextBoxString($"{text_box_server_ip.Text} server connected");
             ButtonEnableChange(true);
@@ -94,9 +109,25 @@ namespace ClientGrpc
             //_client.SetCommandCallBack()
         }
 
-        private void button_clear_log_Click(object sender, EventArgs e)
+        private void button_clear_main_log_Click(object sender, EventArgs e)
         {
             rich_text_box_detail_info.Clear();
+        }
+
+        private void button_open_log_form_Click(object sender, EventArgs e)
+        {
+            if (_logForm == null)
+            {
+                _logForm = new LogForm();
+            }
+            if (_logForm.IsDisposed == true)
+            {
+                _logForm.Show();
+            }
+            else
+            {
+                _logForm.Close();
+            }
         }
 
         private async void button_join_Click(object sender, EventArgs e)

@@ -32,3 +32,5 @@ ServerGrpc/ClientGrpc/Protos/
 ServerGrpc/ServerGrpc/obj/
 ServerGrpc/ServerGrpc/bin/
 ServerGrpc/ServerGrpc/Protos/
+ServerGrpc/DataManager/obj/
+ServerGrpc/DataManager/bin/

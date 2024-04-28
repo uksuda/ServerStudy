@@ -63,8 +63,15 @@ namespace ServerGrpc.Services
             var characterList = await _dataWorker.GetCharacterDBList(mberDb.mber_no);
             var token = _tokenBuilder.GenerateToken(xtid, mberDb.mber_no);
 
-
-            return default;
+            var res = new LoginRes
+            {
+                Result = new Game.Common.Result
+                {
+                    Code = Game.Types.ResultCode.Success
+                },
+                Token = token,
+            };
+            return res;
         }
         #endregion
 

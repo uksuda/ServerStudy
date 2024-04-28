@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Game.Common;
 
 namespace ServerGrpc.DB.Table
 {
@@ -67,6 +68,16 @@ namespace ServerGrpc.DB.Table
             param.Add(nameof(update_time), db.update_time);
 
             return (query, param);
+        }
+        #endregion
+
+        #region Proto
+        public CharacterInfo ToProto()
+        {
+            return new CharacterInfo
+            {
+                
+            };
         }
         #endregion
     }

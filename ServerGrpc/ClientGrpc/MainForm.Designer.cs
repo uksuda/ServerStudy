@@ -52,7 +52,8 @@
             button_server_connect = new System.Windows.Forms.Button();
             button_stream_open = new System.Windows.Forms.Button();
             button_stream_close = new System.Windows.Forms.Button();
-            button_clear_log = new System.Windows.Forms.Button();
+            button_clear_main_log = new System.Windows.Forms.Button();
+            button_open_log_form = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
             // rich_text_box_detail_info
@@ -261,21 +262,31 @@
             button_stream_close.Text = "Stream Close";
             button_stream_close.UseVisualStyleBackColor = true;
             // 
-            // button_clear_log
+            // button_clear_main_log
             // 
-            button_clear_log.Location = new System.Drawing.Point(767, 48);
-            button_clear_log.Name = "button_clear_log";
-            button_clear_log.Size = new System.Drawing.Size(110, 23);
-            button_clear_log.TabIndex = 26;
-            button_clear_log.Text = "Clear Log";
-            button_clear_log.UseVisualStyleBackColor = true;
+            button_clear_main_log.Location = new System.Drawing.Point(767, 41);
+            button_clear_main_log.Name = "button_clear_main_log";
+            button_clear_main_log.Size = new System.Drawing.Size(110, 23);
+            button_clear_main_log.TabIndex = 26;
+            button_clear_main_log.Text = "Clear Main";
+            button_clear_main_log.UseVisualStyleBackColor = true;
+            // 
+            // button_open_log_form
+            // 
+            button_open_log_form.Location = new System.Drawing.Point(767, 70);
+            button_open_log_form.Name = "button_open_log_form";
+            button_open_log_form.Size = new System.Drawing.Size(110, 23);
+            button_open_log_form.TabIndex = 27;
+            button_open_log_form.Text = "Open Log";
+            button_open_log_form.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(895, 505);
-            Controls.Add(button_clear_log);
+            Controls.Add(button_open_log_form);
+            Controls.Add(button_clear_main_log);
             Controls.Add(button_stream_close);
             Controls.Add(button_stream_open);
             Controls.Add(button_server_connect);
@@ -332,6 +343,7 @@
         private System.Windows.Forms.Button button_server_connect;
         private System.Windows.Forms.Button button_stream_open;
         private System.Windows.Forms.Button button_stream_close;
-        private System.Windows.Forms.Button button_clear_log;
+        private System.Windows.Forms.Button button_clear_main_log;
+        private System.Windows.Forms.Button button_open_log_form;
     }
 }

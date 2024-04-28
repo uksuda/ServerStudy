@@ -8,7 +8,6 @@ using ServerGrpc.Grpc.Session;
 using ServerGrpc.Infra;
 using ServerGrpc.Logger;
 using ServerGrpc.Services;
-using System.Net.Sockets;
 using System.Reflection;
 
 namespace ServerGrpc
