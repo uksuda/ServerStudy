@@ -3,11 +3,13 @@ using MySqlConnector.Logging;
 using ServerGrpc.Common;
 using ServerGrpc.Controller;
 using ServerGrpc.DB;
+using ServerGrpc.DB.Worker;
 using ServerGrpc.Grpc.Interceptors;
 using ServerGrpc.Grpc.Session;
 using ServerGrpc.Infra;
 using ServerGrpc.Logger;
 using ServerGrpc.Services;
+using ServerGrpc.Services.Worker;
 using System.Reflection;
 
 namespace ServerGrpc
@@ -107,7 +109,7 @@ namespace ServerGrpc
                 .AddJwtBearer(options =>
                 {
                     var jwtBuilder = _host.Services.GetRequiredService<JwtTokenBuilder>();
-                    var clientManager = _host.Services.GetRequiredService<ClientManager>();
+                    var sessionManager = _host.Services.GetRequiredService<SessionManager>();
 
                     options.TokenValidationParameters = jwtBuilder.TokenValidationParameter;
 
@@ -125,7 +127,7 @@ namespace ServerGrpc
                     //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appsettings.Jwt.Secret)),
                     //};
                     options.Events = new JwtBearerEvents();
-                    options.Events.OnTokenValidated = clientManager.CheckToken;
+                    options.Events.OnTokenValidated = sessionManager.CheckToken;
                     //options.Events.OnTokenValidated = (context) =>
                     //{
                     //    return Task.CompletedTask;
@@ -168,11 +170,17 @@ namespace ServerGrpc
                 services.AddSingleton(appsettings);
 
                 services.AddSingleton<JwtTokenBuilder>();
-                services.AddSingleton<ClientManager>();
+                services.AddSingleton<SessionManager>();
 
+                services.AddSingleton<DBSelector>();
+                services.AddSingleton<DBUpdater>();
+                services.AddSingleton<DataWorker>();
 
                 // service
                 services.AddSingleton<MainService>();
+
+                services.AddSingleton<CommandExecuter>();
+                services.AddSingleton<StreamDispatcher>();
 
                 // context
                 services.AddSingleton<AccountDBContext>();

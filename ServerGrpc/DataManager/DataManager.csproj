@@ -8,7 +8,9 @@
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
 	<!--<DebugType>embedded</DebugType>-->
-    <!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->	  
+    <!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>

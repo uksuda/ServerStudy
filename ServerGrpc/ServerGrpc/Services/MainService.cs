@@ -5,6 +5,7 @@ using ServerGrpc.DB.Table;
 using ServerGrpc.DB.Worker;
 using ServerGrpc.Grpc.Session;
 using ServerGrpc.Infra;
+using ServerGrpc.Services.Worker;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -15,14 +16,22 @@ namespace ServerGrpc.Services
         private readonly ILogger<MainService> _logger;
         private readonly JwtTokenBuilder _tokenBuilder;
         private readonly DataWorker _dataWorker;
+
+        private readonly CommandExecuter _commandExecuter;
+        private readonly StreamDispatcher _streamDispatcher;
+
         public MainService(
             ILogger<MainService> logger,
             JwtTokenBuilder tokenBuilder,
-            DataWorker dataWorker)
+            DataWorker dataWorker,
+            CommandExecuter commandExecuter,
+            StreamDispatcher streamDispatcher)
         {
             _logger = logger;
             _tokenBuilder = tokenBuilder;
             _dataWorker = dataWorker;
+            _commandExecuter = commandExecuter;
+            _streamDispatcher = streamDispatcher;
         }
 
         #region Join & Login
@@ -76,45 +85,46 @@ namespace ServerGrpc.Services
         #endregion
 
         #region Unary Data
-        public async Task<UnaryData> UnaryDataSend(UnaryData requset, ClientSession session)
+        public async Task<UnaryData> UnaryDataSend(UnaryData requset, GameSession session)
         {
-            if (requset != null)
+            try
             {
-                _logger.LogDebug($"{MethodBase.GetCurrentMethod()} - {requset}");
+                var res = await _commandExecuter.CommandExecute(session, requset);
+                return res;
             }
-
-            UnaryData response = null;
-            switch (requset.Type)
+            catch (ServerException e)
             {
-                case Game.Types.UnaryDataType.CommandReq:
-                    response = await UnaryDispatch_CommandReq(requset.CommandReq, session);
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException($"invalid request type {requset.Type}");
+                e.Response = ErrorHandler.ErrorResponse_Unary(e, requset.Packet);
+                throw;
             }
-
-            return response;
-        }
-
-        private async Task<UnaryData> UnaryDispatch_CommandReq(Unary_CommandReq request, ClientSession session)
-        {
-            return default;
         }
         #endregion
 
         #region StreamData
-        public bool StreamDispatch(StreamMsg data, ClientStream client, ClientManager manager)
+        public async Task<bool> StreamDispatch(ClientSession client)
         {
-            switch (data.Packet)
+            await client.ReadAsync((data) =>
             {
-                case Game.Types.StreamPacket.Disconnected:
-                    break;
-                case Game.Types.StreamPacket.MessageSend:
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException($"invalid stream data {data.Packet}");
-            }
+                try
+                {
+                    return _streamDispatcher.StreamDispatch(client, data);
+                }
+                catch (ServerException e)
+                {
+                    if (e.Response != null)
+                    {
+                        var streamMsg = (StreamData)e.Response;
+                        _ = Task.Run(async () =>
+                        {
+                            await client.SendMsg(streamMsg);
+                        });
+                        _logger.LogError($"StreamDispatch err: {e}");
+                    }
+                    return true;
+                }
+            });
 
+            _logger.LogDebug($"StreamDispatch end. {client.Mber}");
             return true;
         }
         #endregion

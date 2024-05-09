@@ -6,7 +6,7 @@ namespace ServerGrpc.Grpc
 {
     public static class GrpcExtension
     {
-        public const string CLIENT_SESSION = "client_session";
+        public const string GAME_SESSION = "game_session";
         public const string XTID = "xtid";
         public const string CONTEXT_ERROR = "session_error";
 
@@ -25,16 +25,16 @@ namespace ServerGrpc.Grpc
             return string.Empty;
         }
 
-        public static void SetClientSession(this HttpContext ctx, ClientSession session)
+        public static void SetSession(this HttpContext ctx, GameSession session)
         {
-            ctx.Items.Add(CLIENT_SESSION, session);
+            ctx.Items.Add(GAME_SESSION, session);
         }
 
-        public static ClientSession GetClientSession(this HttpContext ctx)
+        public static GameSession GetSession(this HttpContext ctx)
         {
-            if (ctx.Items.TryGetValue(CLIENT_SESSION, out var session) == true)
+            if (ctx.Items.TryGetValue(GAME_SESSION, out var session) == true)
             {
-                return session as ClientSession;
+                return session as GameSession;
             }
             return null;
         }
@@ -75,25 +75,25 @@ namespace ServerGrpc.Grpc
             return httpCtx.GetXtid();
         }
 
-        public static ClientSession GetClientSession(this ServerCallContext context)
+        public static GameSession GetSession(this ServerCallContext context)
         {
             var httpCtx = context.GetHttpContext();
             if (httpCtx == null)
             {
                 throw new NullReferenceException("http context is empty");
             }
-            return httpCtx.GetClientSession();
+            return httpCtx.GetSession();
         }
 
         //
-        public static void SetClientSession(this ServerCallContext context, ClientSession session)
+        public static void SetSession(this ServerCallContext context, GameSession session)
         {
             var httpCtx = context.GetHttpContext();
             if (httpCtx == null)
             {
                 throw new NullReferenceException("http context is empty");
             }
-            httpCtx.SetClientSession(session);
+            httpCtx.SetSession(session);
         }
 
         //

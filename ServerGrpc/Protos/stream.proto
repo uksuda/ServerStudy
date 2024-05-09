@@ -11,7 +11,8 @@ message Stream_ConnectReq {
 }
 
 message Stream_ConnectRes {
-    game.types.ResultCode result = 1;
+    game.types.ResultCode code = 1;
+    string msg = 2;
 }
 
 message Stream_Disconnected {
@@ -19,11 +20,9 @@ message Stream_Disconnected {
 }
 
 message Stream_UserConnect {
-    game.common.UserInfo connect_user = 1;
 }
 
 message Stream_UserDisconnect {
-    int32 user_index = 1;
 }
 
 message Stream_MessageSend {
@@ -31,6 +30,5 @@ message Stream_MessageSend {
 }
 
 message Stream_MessageRecv {
-    game.common.UserInfo send_user = 1;
     string message = 2;
 }

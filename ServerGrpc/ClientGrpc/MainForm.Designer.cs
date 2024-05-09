@@ -54,6 +54,7 @@
             button_stream_close = new System.Windows.Forms.Button();
             button_clear_main_log = new System.Windows.Forms.Button();
             button_open_log_form = new System.Windows.Forms.Button();
+            button_open_helpform = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
             // rich_text_box_detail_info
@@ -280,11 +281,21 @@
             button_open_log_form.Text = "Open Log";
             button_open_log_form.UseVisualStyleBackColor = true;
             // 
+            // button_open_helpform
+            // 
+            button_open_helpform.Location = new System.Drawing.Point(826, 470);
+            button_open_helpform.Name = "button_open_helpform";
+            button_open_helpform.Size = new System.Drawing.Size(57, 23);
+            button_open_helpform.TabIndex = 28;
+            button_open_helpform.Text = "Help";
+            button_open_helpform.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(895, 505);
+            Controls.Add(button_open_helpform);
             Controls.Add(button_open_log_form);
             Controls.Add(button_clear_main_log);
             Controls.Add(button_stream_close);
@@ -345,5 +356,6 @@
         private System.Windows.Forms.Button button_stream_close;
         private System.Windows.Forms.Button button_clear_main_log;
         private System.Windows.Forms.Button button_open_log_form;
+        private System.Windows.Forms.Button button_open_helpform;
     }
 }

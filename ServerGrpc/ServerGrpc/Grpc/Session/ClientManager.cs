@@ -1,4 +1,6 @@
-﻿using Game.Types;
+﻿using Game.Main;
+using Game.Types;
+using Grpc.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ServerGrpc.Infra;
 using System.Collections.Concurrent;
@@ -6,16 +8,16 @@ using System.Security.Claims;
 
 namespace ServerGrpc.Grpc.Session
 {
-    public class ClientManager
+    public class SessionManager
     {
-        private readonly ILogger<ClientManager> _logger;
+        private readonly ILogger<SessionManager> _logger;
         private readonly CancellationTokenSource _tokenSource;
 
-        private readonly ConcurrentDictionary<int, ClientStream> _clientMap = new ConcurrentDictionary<int, ClientStream>();
-        private readonly ConcurrentDictionary<string, ClientStream> _clientIdMap = new ConcurrentDictionary<string, ClientStream>();
+        private readonly ConcurrentDictionary<int, ClientSession> _clientMap = new ConcurrentDictionary<int, ClientSession>();
+        private readonly ConcurrentDictionary<string, ClientSession> _clientIdMap = new ConcurrentDictionary<string, ClientSession>();
 
-        public ClientManager(
-            ILogger<ClientManager> logger,
+        public SessionManager(
+            ILogger<SessionManager> logger,
             CancellationTokenSource tokenSource)
         {
             _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(tokenSource.Token);
@@ -45,20 +47,27 @@ namespace ServerGrpc.Grpc.Session
                 return;
             }
 
-            var session = new ClientSession(mberNo, xtid);
+            var session = new GameSession(mberNo, xtid);
 
-            ctx.HttpContext.SetClientSession(session);
+            ctx.HttpContext.SetSession(session);
+
+            _logger.LogDebug($"CheckToken called. mber {mberNo}");
             await Task.CompletedTask;
         }
 
-        public bool AddClient(ClientStream client)
+        public ClientSession AddClient(IAsyncStreamReader<StreamData> reqStream, IServerStreamWriter<StreamData> resStream, ServerCallContext context)
         {
-            _clientMap.TryAdd(_clientIdMap.Count, client);
-            return true;
+            ClientSession client = new ClientSession(reqStream, resStream, context);
+            if (_clientMap.TryAdd(client.Mber, client) == false)
+            {
+                return null;
+            }
+            return client;
         }
 
-        public bool RemoveClient()
+        public bool RemoveClient(int mberNo)
         {
+            _clientMap.TryRemove(mberNo, out _);
             return true;
         }
     }

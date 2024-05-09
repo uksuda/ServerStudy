@@ -14,7 +14,7 @@ service Main {
   rpc Join (JoinReq) returns (JoinRes);
   rpc Login (LoginReq) returns (LoginRes);
   rpc UnaryDataSend (UnaryData) returns (UnaryData);
-  rpc StreamOpen (stream StreamMsg) returns (stream StreamMsg);
+  rpc StreamOpen (stream StreamData) returns (stream StreamData);
 }
 
 // Join
@@ -42,7 +42,7 @@ message LoginRes {
 }
 
 
-message StreamMsg {
+message StreamData {
   game.types.StreamPacket packet = 1;
   oneof data{
     game.stream.Stream_ConnectReq connect_req = 10;
@@ -59,9 +59,11 @@ message StreamMsg {
 }
 
 message UnaryData {
-  game.types.UnaryDataType type = 1;
+  game.types.UnaryDataType packet = 1;
   oneof data {
     game.unary.Unary_CommandReq command_req = 10;
     game.unary.Unary_CommandRes command_res = 11;
+    game.unary.Unary_CreateCharacterReq create_char_req = 20;
+    game.unary.Unary_CreateCharacterRes create_char_res = 21;
   }
 }

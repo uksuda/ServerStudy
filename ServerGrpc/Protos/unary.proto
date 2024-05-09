@@ -13,6 +13,18 @@ message Unary_CommandReq {
 }
 
 message Unary_CommandRes {
-    game.types.ResultCode result = 1;
+    game.types.ResultCode code = 1;
     string cmd_res = 2;
+}
+
+message Unary_CreateCharacterReq {
+    int32 character_no = 1;
+    game.types.JobType job = 2;
+    string nick_name = 3;
+}
+
+message Unary_CreateCharacterRes {
+    game.types.ResultCode code = 1;
+    game.common.CharacterInfo created = 2;
+    string msg = 3;
 }

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d58d0750-72a5-4711-a1bd-c4f08a158088</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>GameCommon</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Character\Game_Character.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Item\Game_Item.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Monster\Game_Monster.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Zone\Game_Zone.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CHARACTER.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CONST_GAME.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CONST_STRING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\GameDataManager.cs" />
+  </ItemGroup>
+</Project>

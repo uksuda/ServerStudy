@@ -164,7 +164,7 @@ namespace ClientGrpc
 
             var unaryData = new UnaryData
             {
-                Type = Game.Types.UnaryDataType.CommandReq,
+                Packet = Game.Types.UnaryDataType.CommandReq,
                 CommandReq = msg,
             };
 
@@ -178,7 +178,7 @@ namespace ClientGrpc
             {
                 Message = "",
             };
-            var data = new StreamMsg()
+            var data = new StreamData()
             {
                 Packet = Game.Types.StreamPacket.MessageSend,
                 MessageSend = msg,
@@ -199,21 +199,21 @@ namespace ClientGrpc
         #endregion
 
         #region Dispatch Stream
-        private bool DispatchStream(StreamMsg data)
+        private bool DispatchStream(StreamData data)
         {
             var recvString = $"stream recv: {data.Packet}";
             RichTextBoxString(recvString);
             switch (data.DataCase)
             {
-                case StreamMsg.DataOneofCase.ConnectRes:
+                case StreamData.DataOneofCase.ConnectRes:
                     return DispatchStream_ConnectRes(data.ConnectRes);
-                case StreamMsg.DataOneofCase.Disconnected:
+                case StreamData.DataOneofCase.Disconnected:
                     return DispatchStream_Disconnected(data.Disconnected);
-                case StreamMsg.DataOneofCase.UserConnect:
+                case StreamData.DataOneofCase.UserConnect:
                     return DispatchStream_UserConnect(data.UserConnect);
-                case StreamMsg.DataOneofCase.UserDisconnect:
+                case StreamData.DataOneofCase.UserDisconnect:
                     return DispatchStream_UserDisconnect(data.UserDisconnect);
-                case StreamMsg.DataOneofCase.MessageRecv:
+                case StreamData.DataOneofCase.MessageRecv:
                     return DispatchStream_MessageRecv(data.MessageRecv);
                 default:
                     return false;
@@ -222,7 +222,7 @@ namespace ClientGrpc
 
         private bool DispatchStream_ConnectRes(Stream_ConnectRes res)
         {
-            var resultStr = $"stream recv: {Game.Types.StreamPacket.ConnectRes} status code: {res.Result}";
+            var resultStr = $"stream recv: {Game.Types.StreamPacket.ConnectRes} status code: {res.Code}";
             RichTextBoxString(resultStr);
             return true;
         }
@@ -237,7 +237,6 @@ namespace ClientGrpc
         {
             var builder = new StringBuilder();
             builder.AppendLine($"stream recv: {Game.Types.StreamPacket.UserConnect}");
-            builder.AppendLine($"user: {res.ConnectUser.UserIndex}. {res.ConnectUser.Nickname}");
             RichTextBoxString(builder.ToString());
             return true;
         }
@@ -246,7 +245,6 @@ namespace ClientGrpc
         {
             var builder = new StringBuilder();
             builder.AppendLine($"stream recv: {Game.Types.StreamPacket.UserDisconnect}");
-            builder.AppendLine($"user: {res.UserIndex}");
             RichTextBoxString(builder.ToString());
             return true;
         }
@@ -255,7 +253,6 @@ namespace ClientGrpc
         {
             var builder = new StringBuilder();
             builder.AppendLine($"stream recv: {Game.Types.StreamPacket.MessageRecv}");
-            builder.AppendLine($"user: {res.SendUser.UserIndex}. {res.SendUser.Nickname}");
             builder.AppendLine($"message: {res.Message}");
             RichTextBoxString(builder.ToString());
             return true;
@@ -265,7 +262,7 @@ namespace ClientGrpc
         #region Dispatch Unary
         private bool DispatchUnary(UnaryData data)
         {
-            var recvString = $"unary recv: {data.Type}";
+            var recvString = $"unary recv: {data.Packet}";
             RichTextBoxString(recvString);
 
             switch (data.DataCase)
@@ -279,8 +276,8 @@ namespace ClientGrpc
 
         private bool DispatchUnary_CommandRes(Unary_CommandRes res)
         {
-            var resultStr = $"unary recv: {Game.Types.UnaryDataType.CommandRes} status code: {res.Result}\r\n";
-            RichTextBoxString(resultStr + res.Result);
+            var resultStr = $"unary recv: {Game.Types.UnaryDataType.CommandRes} status code: {res.Code}\r\n";
+            RichTextBoxString(resultStr + res.CmdRes);
             return true;
         }
         #endregion

@@ -7,6 +7,9 @@
     <UseWindowsForms>true</UseWindowsForms>
 	<PublishSingleFile>true</PublishSingleFile>
 	<SelfContained>true</SelfContained>
+	<!--<DebugType>embedded</DebugType>-->
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 	<!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -25,7 +28,7 @@
   <ItemGroup>
 	<PackageReference Include="Google.Protobuf" Version="3.26.1" />
 	<PackageReference Include="Grpc.Net.Client" Version="2.62.0" />
-	<PackageReference Include="Grpc.Tools" Version="2.62.0" developmentDependency="true">
+	<PackageReference Include="Grpc.Tools" Version="2.63.0" developmentDependency="true">
 		<PrivateAssets>all</PrivateAssets>
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
@@ -36,5 +39,7 @@
 	<Folder Include="Protos\" />
     <Folder Include="Client\" />
   </ItemGroup>
+	
+  <Import Project="..\GameCommon\GameCommon.projitems" Label="Shared" />
 
 </Project>

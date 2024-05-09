@@ -17,11 +17,11 @@ namespace ClientGrpc.Client
 
         private string _serverToken = string.Empty;
 
-        private Func<StreamMsg, bool> _streamCallBack;
+        private Func<StreamData, bool> _streamCallBack;
         private Action<string> _messageCallBack;
 
-        private IAsyncStreamReader<StreamMsg> _streamReader;
-        private IClientStreamWriter<StreamMsg> _streamWriter;
+        private IAsyncStreamReader<StreamData> _streamReader;
+        private IClientStreamWriter<StreamData> _streamWriter;
 
         private readonly CancellationTokenSource _tokenSource;
 
@@ -30,7 +30,7 @@ namespace ClientGrpc.Client
             _tokenSource = new CancellationTokenSource();
         }
 
-        public void SetStreamCallBack(Func<StreamMsg, bool> callBack)
+        public void SetStreamCallBack(Func<StreamData, bool> callBack)
         {
             _streamCallBack -= callBack;
             _streamCallBack += callBack;
@@ -65,7 +65,7 @@ namespace ClientGrpc.Client
             return true;
         }
 
-        public async ValueTask SendMsg(StreamMsg data)
+        public async ValueTask SendMsg(StreamData data)
         {
             try
             {

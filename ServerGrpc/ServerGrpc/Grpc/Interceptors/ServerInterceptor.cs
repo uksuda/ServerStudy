@@ -31,7 +31,7 @@ namespace ServerGrpc.Grpc.Interceptors
             }
 
             var method = context.Method;
-            var session = context.GetClientSession();
+            var session = context.GetSession();
 
             string xtid = string.Empty;
 
@@ -74,6 +74,42 @@ namespace ServerGrpc.Grpc.Interceptors
         }
 
         #region Server's handler
+        public override async Task<TResponse> ClientStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, ServerCallContext context, ClientStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            try
+            {
+                LogCall<TRequest, TResponse>(MethodType.ClientStreaming, context);
+
+                LogMessage(context, "Begin. ", LogLevel.Debug);
+                var res = await continuation(requestStream, context);
+                LogMessage(context, "End. ", LogLevel.Debug);
+
+                return res;
+            }
+            catch (Exception e)
+            {
+                LogError(context, e);
+                throw;
+            }
+        }
+
+        public override async Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            try
+            {
+                LogCall<TRequest, TResponse>(MethodType.ServerStreaming, context);
+
+                LogMessage(context, "Begin. ", LogLevel.Debug);
+                await continuation(request, responseStream, context);
+                LogMessage(context, "End. ", LogLevel.Debug);
+            }
+            catch (Exception e)
+            {
+                LogError(context, e);
+                throw;
+            }
+        }
+
         public override async Task DuplexStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, DuplexStreamingServerMethod<TRequest, TResponse> continuation)
         {
             LogCall<TRequest, TResponse>(MethodType.DuplexStreaming, context);
@@ -115,6 +151,10 @@ namespace ServerGrpc.Grpc.Interceptors
             catch (ServerException e)
             {
                 LogError(context, e);
+                if (e.Response != null)
+                {
+                    return (TResponse)e.Response;
+                }
                 response = ErrorHandler.ErrorResponse<TResponse>(e.Code, e.Msg);
                 return response;
             }
@@ -129,42 +169,6 @@ namespace ServerGrpc.Grpc.Interceptors
                 var time = sw.ElapsedMilliseconds;
                 LogMessage(context, $"[Elapsed]={time}ms", LogLevel.Debug);
                 _logger.LogDebug($"response: {response}");
-            }
-        }
-
-        public override async Task<TResponse> ClientStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, ServerCallContext context, ClientStreamingServerMethod<TRequest, TResponse> continuation)
-        {
-            try
-            {
-                LogCall<TRequest, TResponse>(MethodType.ClientStreaming, context);
-
-                LogMessage(context, "Begin. ", LogLevel.Debug);
-                var res = await continuation(requestStream, context);
-                LogMessage(context, "End. ", LogLevel.Debug);
-
-                return res;
-            }
-            catch (Exception e)
-            {
-                LogError(context, e);
-                throw;
-            }
-        }
-
-        public override async Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
-        {
-            try
-            {
-                LogCall<TRequest, TResponse>(MethodType.ServerStreaming, context);
-
-                LogMessage(context, "Begin. ", LogLevel.Debug);
-                await continuation(request, responseStream, context);
-                LogMessage(context, "End. ", LogLevel.Debug);
-            }
-            catch (Exception e)
-            {
-                LogError(context, e);
-                throw;
             }
         }
         #endregion

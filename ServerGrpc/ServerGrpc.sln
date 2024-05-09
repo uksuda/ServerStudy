@@ -14,7 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{B01E63
 		Protos\unary.proto = Protos\unary.proto
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGrpc", "ClientGrpc\ClientGrpc.csproj", "{C862D9AC-F00B-4137-A6E3-352D957C9A56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientGrpc", "ClientGrpc\ClientGrpc.csproj", "{C862D9AC-F00B-4137-A6E3-352D957C9A56}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GameCommon", "GameCommon\GameCommon.shproj", "{D58D0750-72A5-4711-A1BD-C4F08A158088}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +38,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {22FA18DA-22E2-451E-97B3-415DFFE0863C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		GameCommon\GameCommon.projitems*{5d77a5b6-ed88-4a16-bfbd-4904f7f12722}*SharedItemsImports = 5
+		GameCommon\GameCommon.projitems*{c862d9ac-f00b-4137-a6e3-352d957c9a56}*SharedItemsImports = 5
+		GameCommon\GameCommon.projitems*{d58d0750-72a5-4711-a1bd-c4f08a158088}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

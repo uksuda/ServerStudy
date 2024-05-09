@@ -14,18 +14,54 @@ message Result {
     string msg = 2;
 }
 
-message UserInfo {
-    int32 user_index = 1;
-    string job = 2;
-    string nickname = 3;
-    int32 level = 4;
+message MonsterInfo {
+    int32 no = 1;
+    int32 monster_id = 2;
+    int32 level = 3;
+    int32 hp = 4;
 }
 
+// 외부
 message CharacterInfo {
-    int32 character_no = 1;
-    string job = 2;
-    string nickname = 3;
-    int32 level = 4;
-    int64 exp = 5;
-    int64 create = 6;
+    game.types.JobType job = 1;
+    string nickname = 2;
+    int32 level = 3;
+    int32 max_hp = 4;
+    int32 max_mp = 5;
+    int32 hp = 6;
+    int32 mp = 7;
+    repeated int32 equip_item_nos = 8; // equip item no
+}
+
+// 내정보
+message MyCharacterInfo {
+    CharacterInfo character = 1;
+    int32 character_no = 2;
+    repeated EquipInfo equip_items = 3;
+    repeated ConsumeItem consume_items = 4;
+}
+
+message StatusInfo {
+    game.types.StatusType status = 1;
+    int32 value = 2;
+}
+
+message EquipInfo {
+    int64 no = 1;
+    game.types.ItemEquipType equip = 2;
+    int32 item_id = 3;
+    repeated StatusInfo item_status = 4;
+}
+
+message ConsumeItem {
+    int64 no = 1;
+    int32 item_id = 2;
+}
+
+message ZoneInfo {
+    int32 index = 1;
+    int32 x = 2;
+    int32 y = 3;
+    repeated CharacterInfo character_list = 4;
+    repeated MonsterInfo monster_list = 5;
 }

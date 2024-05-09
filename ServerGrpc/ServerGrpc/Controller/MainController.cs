@@ -5,6 +5,7 @@ using ServerGrpc.Common;
 using ServerGrpc.Grpc;
 using ServerGrpc.Services;
 using ServerGrpc.Grpc.Session;
+using System.Text;
 
 namespace ServerGrpc.Controller
 {
@@ -14,16 +15,16 @@ namespace ServerGrpc.Controller
         private readonly ILogger<MainController> _logger;
         private readonly MainService _service;
 
-        private readonly ClientManager _clientManager;
+        private readonly SessionManager _sessionManager;
 
         public MainController(
             ILogger<MainController> logger, 
             MainService service,
-            ClientManager clientManager)
+            SessionManager sessionManager)
         {
             _service = service;
             _logger = logger;
-            _clientManager = clientManager;
+            _sessionManager = sessionManager;
         }
 
         [AllowAnonymous]
@@ -70,7 +71,7 @@ namespace ServerGrpc.Controller
         {
             try
             {
-                var session = context.GetClientSession();
+                var session = context.GetSession();
                 return await _service.UnaryDataSend(requset, session);
             }
             catch (Exception)
@@ -79,30 +80,32 @@ namespace ServerGrpc.Controller
             }
         }
 
-        public override async Task StreamOpen(IAsyncStreamReader<StreamMsg> reqStream, IServerStreamWriter<StreamMsg> resStream, ServerCallContext context)
+        public override async Task StreamOpen(IAsyncStreamReader<StreamData> reqStream, IServerStreamWriter<StreamData> resStream, ServerCallContext context)
         {
             // https://learn.microsoft.com/ko-kr/aspnet/core/grpc/services?view=aspnetcore-7.0
 
-            var client = new ClientStream(reqStream, resStream, context);
-
+            ClientSession client = null;
             try
             {
-                _logger.LogDebug("client connectted");
-
-                await client.ReadAsync((data) =>
+                client = _sessionManager.AddClient(reqStream, resStream, context);
+                if (client == null)
                 {
-                    //_logger.LogDebug($"recv data packet: {data.Packet}");
-                    return _service.StreamDispatch(data, client, _clientManager);
-                });
-            }
-            catch (RpcException e)
-            {
-                throw;
+                    throw ErrorHandler.Error(Game.Types.ResultCode.UnknownError, "stream open fail");
+                }
+
+                await _service.StreamDispatch(client);
             }
             catch (Exception e)
             {
-                _logger.LogError(e.ToString());
-                throw;
+                var sb = new StringBuilder();
+                sb.AppendLine($" - {e.Message}");
+                var ie = e.InnerException;
+                if (ie != null)
+                {
+                    //sb.AppendLine($"inner - {ie.Message}");
+                    sb.AppendLine($"inner - {ie.Message}");
+                }
+                _logger.LogError($"StreamOpen : {sb}");
             }
             finally
             {

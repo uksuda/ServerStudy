@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
+	<!--<DebugType>embedded</DebugType>-->
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -38,5 +41,7 @@
   <ItemGroup>
     <Folder Include="Protos\" />
   </ItemGroup>
+
+  <Import Project="..\GameCommon\GameCommon.projitems" Label="Shared" />
 
 </Project>
