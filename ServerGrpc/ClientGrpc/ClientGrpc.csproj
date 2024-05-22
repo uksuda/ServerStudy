@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>disable</Nullable>
+    <!--<Nullable>enable</Nullable>-->
     <UseWindowsForms>true</UseWindowsForms>
 	<PublishSingleFile>true</PublishSingleFile>
 	<SelfContained>true</SelfContained>
@@ -26,13 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Google.Protobuf" Version="3.26.1" />
-	<PackageReference Include="Grpc.Net.Client" Version="2.62.0" />
-	<PackageReference Include="Grpc.Tools" Version="2.63.0" developmentDependency="true">
-		<PrivateAssets>all</PrivateAssets>
-		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	</PackageReference>
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+	<PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
   </ItemGroup>
 	
   <ItemGroup>

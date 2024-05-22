@@ -27,6 +27,9 @@ namespace DataManager
         public const string DATA_FILE_NAME = "DATA_";
         public const string CONST_FILE_NAME = "DATA_CONST_";
 
+        public const string MAP_FILE_PATH = "/Map";
+        public const string MAP_INFO_PARSER_FILE = "/DATA_ZONE_INFO.txt";
+
         public static string GetFilePath(string path)
         {
             if (string.IsNullOrEmpty(path) == true)

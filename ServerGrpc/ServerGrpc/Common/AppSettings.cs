@@ -36,6 +36,7 @@
 
     public class AppSettings
     {
+        public string DataPath { get; set; }
         public JwtSection Jwt { get; set; }
         public Dictionary<DataBaseType, DatabaseSection> Database { get; set; }
         public Dictionary<CacheType, RedisSection> Caches { get; set; }

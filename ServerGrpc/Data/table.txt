@@ -1,0 +1,63 @@
+#--------------------------------- const data
+character_max_count (fixed)
+base inven size (fixed)
+max_gold_amount
+/ copper_exchange_to_silver
+/ silver_exchange_to_gold
+
+base recovery_tick (second)
+base battle tick 
+
+
+
+#--------------------------------- normal data
+item id : unique
+ : equip + consume
+ : equip start -- 100000
+ : consume start -- 1000
+rate : fixed 10000 rate
+status : need formula
+- att, def :: character base
+- (str, dex, vital, energy) :: job base
+- bonus status count by grade :: normal 0, magic 1, rare 2, unique 3
+- bonus effect count by grade :: normal 0~1, magic 1~2, rare 2~3, unique 3~4
+- total = level  by (character + job) + equip
+
+zone : (index, x, y - (0, 0) ~ (x, y)) 
+- x -1 : west, x + 1 : east, y + 1 : north, y - 1 : south ( + special move)
+- move list  -- DIRECTION_TYPE to int
+
+
+
+# ------------------------------- data table
+data_character
+level, exp (to next level), max hp, max mp, base status (att, def)
+
+
+data_job_(job_type)
+level, base status (str, dex, vital, energy), add hp, add mp
+
+
+data_equip_item (+ data_bonus_status) -- inven size one by one
+- base + bonus (0 ~ )
+id, grade_type, equip_type (string), base att, base def, bonus att, bonus def, [ bonus status group id (str, dex, vital, energy), bonus effect group id ]
+
+data_bonus_status
+id, group id (grade), bonus status type, value min value max
+
+data_consume_item (+ material, recovery ... data_) -- inven size amount by max_count
+id, consume_type, max_count, use_value, (+ sub_id)
+
+
+data_zone (ref map.txt)
+index, group_id (zone group), x, y, 
+move list (string -- DIRECTION_TYPE to int), special move (string -- special index or zone name string), monster group id list (string)
+
+data_monster
+id, group id, grade, name, level, att, def, gen rate (group max 10000), base drop rate, base_drop group id, special drop rate, special drop group id
+
+data_base_drop
+id, group id, type (equip or consume), item_id, rate
+
+data_special_drop
+id, group id, type (equip or consume), item_id, rate

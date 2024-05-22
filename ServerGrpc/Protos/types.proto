@@ -12,6 +12,29 @@ enum JobType {
   JOB_TYPE_MAX = 4;
 }
 
+enum DirectionType {
+  DIRECTION_TYPE_NONE = 0;
+  DIRECTION_TYPE_WEST = 1;
+  DIRECTION_TYPE_EAST = 2;
+  DIRECTION_TYPE_NORTH = 3;
+  DIRECTION_TYPE_SOUTH = 4;
+}
+
+// DATA_ZONE start index
+enum ZoneStartIndex {
+  ZONE_START_INDEX_NONE = 0;
+  ZONE_START_INDEX_TUTORIAL = 1;
+  ZONE_START_INDEX_NORMAL = 1001;
+}
+
+enum GradeType {
+  GRADE_NONE = 0;
+  GRADE_NORMAL = 1;
+  GRADE_MAGIC = 2;
+  GRADE_RARE = 3;
+  GRADE_UNIQUE = 4;
+}
+
 enum StatusType {
   STATUS_TYPE_NONE = 0;
   STATUS_TYPE_STR = 1;
@@ -20,6 +43,8 @@ enum StatusType {
   STATUS_TYPE_ENERGY = 4;
   STATUS_TYPE_ATT = 5;
   STATUS_TYPE_DEF = 6;
+  STATUS_TYPE_HP = 7;
+  STATUS_TYPE_MP = 8;
 }
 
 enum MonsterStateType {
@@ -46,6 +71,14 @@ enum ItemEquipType {
   ITEM_EQUIP_TYPE_BOOTS = 5;
 }
 
+enum ConsumeType {
+  CONSUME_TYPE_NONE = 0;
+  CONSUME_TYPE_HP = 1;
+  CONSUME_TYPE_MP = 2;
+  CONSUME_TYPE_BOTH = 3;
+}
+
+// --------------------------------------------------------
 enum StreamPacket {
     STREAM_PACKET_NONE = 0;
     STREAM_PACKET_CONNECT_REQ = 10;       // c2s

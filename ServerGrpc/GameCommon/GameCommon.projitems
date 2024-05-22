@@ -9,13 +9,23 @@
     <Import_RootNamespace>GameCommon</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DataBuilder\DataBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Character\Game_Character.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Item\Game_Item.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Monster\Game_Monster.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameCommon\Zone\Game_Zone.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_BONUS_STATUS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CHARACTER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CONST_GAME.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CONST_STRING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_CONSUME_ITEM.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_DROP_ITEM.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_EQUIP_ITEM.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_JOB_ARCHER.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_JOB_KNIGHT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_JOB_MAGICIAN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_MONSTER.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\DATA_ZONE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameDataTables\GameDataManager.cs" />
   </ItemGroup>
 </Project>

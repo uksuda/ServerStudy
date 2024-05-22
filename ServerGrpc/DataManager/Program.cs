@@ -1,6 +1,6 @@
 ﻿using DataManager.Data;
 using DataManager.GameTable;
-using DataManager.Test;
+using GameDataTables;
 using System;
 
 namespace DataManager
@@ -11,6 +11,11 @@ namespace DataManager
         {
             var path = (args.Length > 0) ? args[0] : string.Empty;
             var reader = new DataFileReader(path);
+
+            reader.ReadMapExcelFile();
+            reader.ParserZoneInfo(reader.MapInfo);
+            return;
+
             reader.ReadExcelFiles();
 
             var parser = new DataParser();

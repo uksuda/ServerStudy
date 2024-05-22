@@ -1,0 +1,19 @@
+
+db data : save fixed value by data table
+
+
+DB
+t_member (member info)
+
+t_character (+ ? ) auto increment -- character_no
+ : character_no, mber no, index, job, name, lv, exp, update_time
+
+(owner) (t_equip_item row count (equipped == false) + t_consume_item row <= inven size)
+t_equip_item ( auto -- index)
+ : index, item id, owner, grade, att value, def value, bonus status type 1~3, bonus status value 1~3,  
+  bonus effect type 1~4, bonus effect value 1~4, equipped
+t_consume_item ( auto -- index)
+ : index, item id, owner, amount
+
+
+
