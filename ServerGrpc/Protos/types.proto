@@ -62,6 +62,12 @@ enum CharacterStateType {
   CHARACTER_STATE_TYPE_DEAD = 3;
 }
 
+enum ItemType {
+  ITEM_TYPE_NONE = 0;
+  ITEM_TYPE_EQUIP = 1;
+  ITEM_TYPE_CONSUME = 2;
+}
+
 enum ItemEquipType {
   ITEM_EQUIP_TYPE_NONE = 0;
   ITEM_EQUIP_TYPE_WEAPON = 1;
